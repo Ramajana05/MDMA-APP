@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:forestapp/design/topNavBarDecoration.dart';
+
+class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final VoidCallback? onMenuPressed;
+
+  const TopNavBar({Key? key, required this.title, this.onMenuPressed})
+      : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(70);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text(
+        title,
+        style: topNavBarDecoration.getTitleTextStyle(),
+      ),
+      backgroundColor: Color.fromARGB(255, 232, 241, 232),
+      centerTitle: true,
+      elevation: 0,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(4.0),
+        child: Container(
+          decoration: topNavBarDecoration.getBoxDecoration(),
+          height: 4.0,
+        ),
+      ),
+      leading: ColorFiltered(
+      colorFilter: ColorFilter.mode(
+      Colors.green, // Change this to the desired color
+      BlendMode.srcIn,
+  ),
+    child: IconButton(
+    icon: Icon(Icons.menu),
+    onPressed: onMenuPressed,
+  ),
+),
+    );
+  }
+}
