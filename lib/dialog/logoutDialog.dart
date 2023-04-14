@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
+import 'package:forestapp/screen/loginScreen.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({Key? key}) : super(key: key);
@@ -24,7 +25,12 @@ class LogoutDialog extends StatelessWidget {
           child: Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
           child: Text('Log out'),
           style: ElevatedButton.styleFrom(
             primary: Colors.green,
