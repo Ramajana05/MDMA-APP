@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
+import 'package:forestapp/dialog/logoutDialog.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -28,16 +29,27 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           height: 4.0,
         ),
       ),
-      leading: ColorFiltered(
-      colorFilter: ColorFilter.mode(
-      Colors.green, // Change this to the desired color
-      BlendMode.srcIn,
-  ),
-    child: IconButton(
-    icon: Icon(Icons.menu),
-    onPressed: onMenuPressed,
-  ),
-),
+      leading: IconButton(
+        icon: const Icon(Icons.brightness_4),
+        onPressed: () {
+          // TODO: Implement dark mode functionality
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => LogoutDialog(),
+            );
+            // TODO: Implement logout functionality
+          },
+        ),
+      ],
+      iconTheme: IconThemeData(
+        color: Colors.green, // Change this to the desired color
+      ),
     );
   }
 }
