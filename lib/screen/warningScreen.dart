@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar';
+import 'package:forestapp/widget/topNavBar.dart';
 
 class WarningScreen extends StatefulWidget {
   WarningScreen({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class WarningScreen extends StatefulWidget {
 }
 
 class _WarningScreen extends State<WarningScreen> {
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),

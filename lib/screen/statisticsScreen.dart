@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar';
+import 'package:forestapp/widget/topNavBar.dart';
 
 class StatisticsScreen extends StatefulWidget {
   StatisticsScreen({Key? key}) : super(key: key);

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/loginScreen.dart';
-import 'package:forestapp/widget/bottomNavBar';
+import 'package:forestapp/widget/bottomNavBar.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
+      //home: DashboardScreen(),
     );
   }
 }
