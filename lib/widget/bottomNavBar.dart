@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
-import 'package:forestapp/screen/profileScreen.dart';
+import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 
 class BottomTabBar extends StatefulWidget {
@@ -22,7 +21,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    ProfileScreen(),
+    AlertScreen(),
   ];
 
   @override
@@ -60,8 +59,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'Scanner',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.warning),
+              label: 'Alerts',
             ),
           ],
           selectedLabelStyle: const TextStyle(

@@ -29,7 +29,7 @@ class LogoutDialog extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+            ); // Close the dialog
           },
           child: Text('Log out'),
           style: ElevatedButton.styleFrom(
