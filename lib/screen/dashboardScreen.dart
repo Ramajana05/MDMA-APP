@@ -22,11 +22,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
+          WarningWidget(message: "Your phone is about to overheat"),
+          WarningWidget(message: "Your battery is running low"),
+          WarningWidget(message: "Your device storage is almost full"),
           Padding(
             padding: const EdgeInsets.only(bottom: 25),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Text('Dashboard Screen'),
             ),
           ),
         ],

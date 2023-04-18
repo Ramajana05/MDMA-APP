@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         systemNavigationBarColor: Color.fromARGB(0, 255, 255, 255)));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DamagesDashboardScreen(),
+      home: LoginPage(),
       //home: DashboardScreen(),
     );
   }
