@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopNavBarBasic(
-        title: 'Login',
+        title: 'Login',returnStatus: false,
       ),
       body: Center(
         child: Container(

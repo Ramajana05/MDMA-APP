@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/screen/DamagesDashboardScreen.dart';
+import 'package:forestapp/screen/damagesDashboardScreen.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 import 'package:forestapp/screen/damageReport.dart';

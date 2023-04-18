@@ -21,7 +21,7 @@ class _DamageReportState extends State<DamageReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopNavBarBasic(
-        title: 'Schadenbericht',
+        title: 'Schadenbericht',returnStatus: true,
       ),
       body: Center(
         child: Container(
