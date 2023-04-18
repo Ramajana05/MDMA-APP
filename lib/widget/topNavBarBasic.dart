@@ -10,6 +10,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   const TopNavBarBasic({Key? key, required this.title, this.onMenuPressed,required this.returnStatus })
       : super(key: key);
 
+
   @override
   Size get preferredSize => const Size.fromHeight(70);
 
