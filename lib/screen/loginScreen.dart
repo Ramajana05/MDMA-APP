@@ -46,9 +46,14 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 165, 245, 198),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 16.0, // Set the font size to 16
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -97,13 +102,6 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     }
                   },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsets>(
                       EdgeInsets.symmetric(horizontal: 20.0),
@@ -112,12 +110,19 @@ class _LoginPageState extends State<LoginPage> {
                       Color.fromARGB(255, 243, 243, 243),
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Theme.of(context).primaryColor,
+                      Color.fromARGB(255, 95, 230, 151),
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
