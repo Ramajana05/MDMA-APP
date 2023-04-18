@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forestapp/screen/DamagesDashboardScreen.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/loginScreen.dart';
+import 'package:forestapp/screen/damageReport.dart';
 import 'package:forestapp/widget/bottomNavBar.dart';
 
 void main() {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         systemNavigationBarColor: Color.fromARGB(0, 255, 255, 255)));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: DamagesDashboardScreen(),
       //home: DashboardScreen(),
     );
   }
