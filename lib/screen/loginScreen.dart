@@ -18,7 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopNavBarBasic(
-        title: 'Login',returnStatus: false,
+        title: 'Login',
+        returnStatus: false,
       ),
       body: Center(
         child: Container(
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'Bitte gebe deine email ein';
                     }
                     return null;
                   },
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Passwort',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return 'Bitte gebe dein Passwort ein';
                     }
                     return null;
                   },
@@ -97,7 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Invalid email or password')),
+                          SnackBar(
+                              content: Text('Email oder Passwort ungültig')),
                         );
                       }
                     }

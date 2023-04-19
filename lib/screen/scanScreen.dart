@@ -14,7 +14,7 @@ class _ScanScreen extends State<ScanScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'Scanner',
+        title: 'SCANNER',
         onMenuPressed: () {
           // Add your side panel logic here
         },

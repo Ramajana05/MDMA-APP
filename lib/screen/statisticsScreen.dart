@@ -14,7 +14,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'Statistics',
+        title: 'STATISTIK',
         onMenuPressed: () {
           // Add your side panel logic here
         },

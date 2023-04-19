@@ -16,7 +16,7 @@ class _MapScreen extends State<MapScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'Map',
+        title: 'KARTE',
         onMenuPressed: () {
           // Add your side panel logic here
         },

@@ -9,20 +9,20 @@ class LogoutDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Logout',
+        'Ausloggen',
         style: LogOutDecoration.getTitleTextStyle(),
       ),
       content: Row(
         children: [
           //Icon(Icons.warning, color: Colors.orange),
           SizedBox(width: 8.0),
-          Text('Are you sure you want to log out?'),
+          Text('Wirklich ausloggen?'),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Cancel'),
+          child: Text('Abbrechen'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -31,7 +31,7 @@ class LogoutDialog extends StatelessWidget {
               MaterialPageRoute(builder: (context) => LoginPage()),
             ); // Close the dialog
           },
-          child: Text('Log out'),
+          child: Text('Ausloggen'),
           style: ElevatedButton.styleFrom(
             primary: Colors.green,
             shape: RoundedRectangleBorder(

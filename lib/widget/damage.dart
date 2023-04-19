@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 
 //Please don't delete this part, it could be that we have to implement this widget as a class
 
-
-
-
-
 // class DamagesListItemWidget extends StatefulWidget {
 //   final String damageTitle;
 //   final String damageDescription;
@@ -44,7 +40,7 @@ Widget DamagesListItemWidget(String damageTitle, String damageDescription,
         child: ListTile(
           title: Text(status,
               style: TextStyle(
-                  color: status == 'abgeschlossen'
+                  color: status == 'Abgeschlossen'
                       ? Colors.green
                       : status == "In Bearbeitung"
                           ? Colors.red

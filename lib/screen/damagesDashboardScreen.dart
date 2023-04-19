@@ -14,7 +14,7 @@ class DamagesDashboardScreen extends StatefulWidget {
 class _DamagesDashboardScreen extends State<DamagesDashboardScreen> {
   //Dummy Data
   List<Widget> damagesList = [
-    DamagesListItemWidget("Baum umgefallen", "Beim Spielplatz", "abgeschlossen",
+    DamagesListItemWidget("Baum umgefallen", "Beim Spielplatz", "Abgeschlossen",
         "Stand 09-05-2023"),
     DamagesListItemWidget(
         "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
@@ -64,7 +64,7 @@ class _DamagesDashboardScreen extends State<DamagesDashboardScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'SCHADENSÜBERBLICK',
+        title: 'SCHADEN BERICHTE',
         onMenuPressed: () {
           // Add your side panel logic here
         },

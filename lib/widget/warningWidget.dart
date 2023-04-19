@@ -31,7 +31,7 @@ class WarningWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("WARNING",
+                Text("WARNUNG",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
                 SizedBox(height: 8.0),

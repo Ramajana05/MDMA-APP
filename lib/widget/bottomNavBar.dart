@@ -45,15 +45,15 @@ class _BottomTabBarState extends State<BottomTabBar> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
-              label: 'Dashboard',
+              label: 'Dash',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.graphic_eq),
-              label: 'Statistics',
+              label: 'Statistik',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.pin_drop),
-              label: 'Maps',
+              label: 'Karte',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
@@ -61,7 +61,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.report),
-              label: 'Damage',
+              label: 'Berichte',
             ),
           ],
           selectedLabelStyle: const TextStyle(
