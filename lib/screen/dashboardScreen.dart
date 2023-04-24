@@ -16,7 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var airPressure = 1013;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 227, 227, 227),
+      backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'Dashboard',
         onMenuPressed: () {
@@ -29,16 +29,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Container(
             height: 70,
             alignment: Alignment.centerLeft,
-            //   decoration: BoxDecoration(
-            //  color: Colors.white,
-            //  boxShadow: [
-            //        BoxShadow(
-            //               color: Colors.grey.withOpacity(0.4),
-            //             spreadRadius: 1,
-            //        blurRadius: 5,
-            //        offset: const Offset(0, 3)),
-            //      ],
-            //     ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.4),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3)),
+              ],
+            ),
             //Overview Text
             child: const Padding(
               padding: EdgeInsets.only(left: 20),

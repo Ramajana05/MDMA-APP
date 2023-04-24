@@ -14,7 +14,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'Statistics',
+        title: 'Statistik',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -23,7 +23,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
         padding: const EdgeInsets.only(bottom: 25),
         child: Align(
           alignment: Alignment.bottomCenter,
-          child: Text('Statistics Screen'),
+          child: Text('Statistik Screen'),
         ),
       ),
     );

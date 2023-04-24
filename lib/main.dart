@@ -40,48 +40,48 @@ class _MyAppState extends State<MyApp> {
         statusBarColor: Color.fromARGB(0, 53, 51, 51),
         systemNavigationBarColor: Color.fromARGB(0, 255, 255, 255)));
     return MaterialApp(
-      title: "Forest App",
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(
-        onLoginSuccess: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                body: _widgetOptions.elementAt(_selectedIndex),
-                bottomNavigationBar: BottomNavigationBar(
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.space_dashboard),
-                      label: 'Dashboard',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.bar_chart),
-                      label: 'Statistic',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.location_on),
-                      label: 'Location',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications),
-                      label: 'DamageDashboard',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.warning),
-                      label: 'Warnings',
-                    ),
-                  ],
-                  currentIndex: _selectedIndex,
-                  selectedItemColor: Colors.blue,
-                  unselectedItemColor: Colors.grey,
-                  onTap: _onItemTapped,
-                ),
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: _widgetOptions.elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.space_dashboard),
+                label: 'Dashboard',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bar_chart),
+                label: 'Statistik',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.location_on),
+                label: 'Standort',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'Schäden',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.warning),
+                label: 'Warnungen',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color.fromARGB(255, 31, 158, 80),
+            unselectedItemColor: Colors.black,
+            onTap: _onItemTapped,
+          ),
+          bottomSheet: Container(
+            height: 8,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF2DFFD9),
+                  Color(0xFF00FF57),
+                ],
               ),
             ),
-          );
-        },
-      ),
-    );
+          ),
+        ));
   }
 }

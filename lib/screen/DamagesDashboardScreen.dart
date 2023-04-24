@@ -64,7 +64,7 @@ class _DamagesDashboardScreen extends State<DamagesDashboardScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'SCHADENSÜBERBLICK',
+        title: 'Schäden',
         onMenuPressed: () {
           // Add your side panel logic here
         },

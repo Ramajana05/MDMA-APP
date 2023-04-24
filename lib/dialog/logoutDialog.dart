@@ -3,10 +3,7 @@ import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
 class LogoutDialog extends StatelessWidget {
-  const LogoutDialog({Key? key, required this.onLoginSuccess})
-      : super(key: key);
-
-  final void Function() onLoginSuccess;
+  const LogoutDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +13,7 @@ class LogoutDialog extends StatelessWidget {
         style: LogOutDecoration.getTitleTextStyle(),
       ),
       content: Row(
-        children: const [
+        children: [
           //Icon(Icons.warning, color: Colors.orange),
           SizedBox(width: 8.0),
           Text('Are you sure you want to log out?'),
@@ -25,23 +22,22 @@ class LogoutDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () {
-            // Navigator.pushReplacement(
-            //   context,
-            // MaterialPageRoute(builder: (context) => LoginPage()),
-            //     ); // Close the dialog
-            //    onLoginSuccess();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            ); // Close the dialog
           },
+          child: Text('Log out'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            primary: Colors.green,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
           ),
-          child: const Text('Log out'),
         ),
       ],
       shape: RoundedRectangleBorder(
@@ -49,7 +45,7 @@ class LogoutDialog extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 8.0,
-      contentPadding: const EdgeInsets.symmetric(
+      contentPadding: EdgeInsets.symmetric(
         horizontal: 16.0,
         vertical: 8.0,
       ),
