@@ -5,6 +5,9 @@ import 'package:forestapp/widget/bottomNavBar.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key, required this.onLoginSuccess}) : super(key: key);
+
+  final VoidCallback onLoginSuccess;
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -94,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => BottomTabBar()),
-                        );
+                        ).then((value) => onLoginSuccess(context));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Invalid email or password')),
@@ -131,6 +134,13 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  onLoginSuccess(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => DashboardScreen()),
     );
   }
 }
