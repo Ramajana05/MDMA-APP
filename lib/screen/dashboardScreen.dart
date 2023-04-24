@@ -22,9 +22,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
-          WarningWidget(message: "Warnungs Beispiel 1"),
-          WarningWidget(message: "Warnungs Beispiel 2"),
-          WarningWidget(message: "Warnungs Beispiel 3"),
+          WarningWidget(
+            message: "Your battery is running low",
+            isWarnung: true,
+            iconColor: Color.fromARGB(255, 244, 146, 54),
+          ),
+          WarningWidget(
+            message: "Your battery is running low",
+            isWarnung: false,
+            iconColor: Color.fromARGB(255, 54, 143, 244),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 25),
             child: Align(

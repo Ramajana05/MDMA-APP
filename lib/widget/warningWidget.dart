@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
+  final bool isWarnung;
+  final Color iconColor;
 
-  WarningWidget({required this.message});
+  WarningWidget({
+    required this.message,
+    this.isWarnung = true,
+    this.iconColor = Colors.yellow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +18,7 @@ class WarningWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Color.fromARGB(
-              255, 216, 216, 216), // Set the background color to green
+          color: Color.fromARGB(255, 216, 216, 216),
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
@@ -26,16 +31,27 @@ class WarningWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.warning, color: Colors.yellow[800], size: 32.0),
+            Icon(
+              Icons.warning,
+              color: iconColor,
+              size: 32.0,
+            ),
             SizedBox(width: 16.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("WARNUNG",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+                Text(
+                  isWarnung ? "Warnung" : "Neuigkeit",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
                 SizedBox(height: 8.0),
-                Text(message, style: TextStyle(fontSize: 16.0)),
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 16.0),
+                ),
               ],
             ),
           ],

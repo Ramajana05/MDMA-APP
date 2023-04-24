@@ -22,6 +22,30 @@ class _MapScreen extends State<MapScreen> {
         },
       ),
       body: MapSample(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Add"),
+                content: Text("You pressed the add button!"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("Close"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color.fromARGB(255, 117, 241, 169),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -52,8 +76,9 @@ class MapSampleState extends State<MapSample> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
-        mapType: MapType.hybrid,
+        mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
+        zoomControlsEnabled: false,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },

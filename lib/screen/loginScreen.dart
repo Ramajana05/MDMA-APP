@@ -14,6 +14,11 @@ class _LoginPageState extends State<LoginPage> {
   String? _email;
   String? _password;
 
+  final gradientColors = [
+  Color.fromARGB(255, 95, 230, 151),
+  Color.fromARGB(255, 165, 245, 198),
+];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
