@@ -39,10 +39,10 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.logout),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => LogoutDialog(),
-            );
+            //  showDialog(
+            //     context: context,
+            //    builder: (context) => LogoutDialog(),
+            //    );
             // TODO: Implement logout functionality
           },
         ),
