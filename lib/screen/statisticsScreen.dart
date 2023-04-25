@@ -25,7 +25,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'STATISTIKS',
+        title: 'STATISTIK',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -34,7 +34,6 @@ class _StatisticsScreen extends State<StatisticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-
             Container(
               decoration: const BoxDecoration(
                   border: Border(
@@ -80,7 +79,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                             text: "Temparatur",
                           ),
                           Tab(
-                            text: "Lüftfeuchtigkeit",
+                            text: "Luftfeuchtigkeit",
                           )
                         ],
                       ),
@@ -95,145 +94,193 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                         Container(
                           child: ListView(
                             shrinkWrap: true,
-                            children: [Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Besucheranzahl der letzen Woche",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Besucheranzahl der letzen Woche",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 30, bottom: 10),
-                                  width: 300,
-                                  height: 300,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white70,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          blurRadius: 4,
-                                          offset: Offset(4, 8), // Shadow position
-                                        ),
-                                      ],
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          top: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          right: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          left: BorderSide(
-                                              color: Colors.grey, width: 0.5))),
-                                  child: DChartBar(
-                                    data: const [
-                                      {
-                                        'id': 'Bar',
-                                        'data': [
-                                          {'domain': 'Donnerstag', 'measure': 2},
-                                          {'domain': 'Freitag', 'measure': 18},
-                                          {'domain': 'Samstag', 'measure': 10},
-                                          {'domain': 'Sonntag', 'measure': 20},
-                                          {'domain': 'Montag', 'measure': 3},
-                                          {'domain': 'Dienstag', 'measure': 12},
-                                          {'domain': 'Heute', 'measure': 8},
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 30,
+                                        bottom: 10),
+                                    width: 300,
+                                    height: 300,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 4,
+                                            offset:
+                                                Offset(4, 8), // Shadow position
+                                          ),
                                         ],
-                                      },
-                                    ],
-                                    domainLabelRotation:270  ,
-                                    xAxisTitle: "Woche 20",
-                                    yAxisTitle: "Besucheranzahl",
-                                    axisLineTick: 2,
-                                    axisLinePointTick: 2,
-                                    axisLinePointWidth: 10,
-                                    axisLineColor: Colors.black38,
-                                    domainLabelFontSize: 10,
-                                    measureLabelPaddingToAxisLine: 16,
-                                    domainLabelPaddingToAxisLine: 60,
-                                    barColor: (barData, index, id) =>
-                                        Colors.green,
-                                    showBarValue: true,
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Besucheranzahl an den Standorte",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 30, bottom: 10),
-                                  width: 300,
-                                  height: 300,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white70,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          blurRadius: 4,
-                                          offset: Offset(4, 8), // Shadow position
-                                        ),
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            top: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            right: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            left: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: DChartBar(
+                                      data: const [
+                                        {
+                                          'id': 'Bar',
+                                          'data': [
+                                            {
+                                              'domain': 'Donnerstag',
+                                              'measure': 2
+                                            },
+                                            {
+                                              'domain': 'Freitag',
+                                              'measure': 18
+                                            },
+                                            {
+                                              'domain': 'Samstag',
+                                              'measure': 10
+                                            },
+                                            {
+                                              'domain': 'Sonntag',
+                                              'measure': 20
+                                            },
+                                            {'domain': 'Montag', 'measure': 3},
+                                            {
+                                              'domain': 'Dienstag',
+                                              'measure': 12
+                                            },
+                                            {'domain': 'Heute', 'measure': 8},
+                                          ],
+                                        },
                                       ],
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          top: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          right: BorderSide(
-                                              color: Colors.grey, width: 0.5),
-                                          left: BorderSide(
-                                              color: Colors.grey, width: 0.5))),
-                                  child: DChartBar(
-                                    data: const [
-                                      {
-                                        'id': 'Bar',
-                                        'data': [
-                                          {'domain': 'Walderlebnispfad', 'measure': 2},
-                                          {'domain': 'Waldheide', 'measure': 18},
-                                          {'domain': 'Grillstelle', 'measure': 10},
-                                          {'domain': 'NSG Köpfertal', 'measure': 20},
-                                          {'domain': 'Sportpfad', 'measure': 3},
-                                          {'domain': 'MTB-Downhillstrecke', 'measure': 6},
-                                          {'domain': '(Hoch-)Schulwald', 'measure': 14},
-                                        ],
-                                      },
-                                    ],
-                                    domainLabelRotation: 270,
-                                    xAxisTitle: "Standort",
-                                    yAxisTitle: "Besucheranzahl",
-                                    axisLineTick: 2,
-                                    axisLinePointTick: 2,
-                                    axisLinePointWidth: 10,
-                                    axisLineColor: Colors.black38,
-                                    measureLabelPaddingToAxisLine: 16,
-                                    domainLabelPaddingToAxisLine: 100,
-                                    domainLabelFontSize: 10,
-                                    barColor: (barData, index, id) =>
-                                    Colors.green,
-                                    showBarValue: true,
+                                      domainLabelRotation: 270,
+                                      xAxisTitle: "Woche 20",
+                                      yAxisTitle: "Besucheranzahl",
+                                      axisLineTick: 2,
+                                      axisLinePointTick: 2,
+                                      axisLinePointWidth: 10,
+                                      axisLineColor: Colors.black38,
+                                      domainLabelFontSize: 10,
+                                      measureLabelPaddingToAxisLine: 16,
+                                      domainLabelPaddingToAxisLine: 60,
+                                      barColor: (barData, index, id) =>
+                                          Colors.green,
+                                      showBarValue: true,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )],
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Besucheranzahl an den Standorten",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 30,
+                                        bottom: 10),
+                                    width: 300,
+                                    height: 300,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 4,
+                                            offset:
+                                                Offset(4, 8), // Shadow position
+                                          ),
+                                        ],
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            top: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            right: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            left: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: DChartBar(
+                                      data: const [
+                                        {
+                                          'id': 'Bar',
+                                          'data': [
+                                            {
+                                              'domain': 'Walderlebnispfad',
+                                              'measure': 2
+                                            },
+                                            {
+                                              'domain': 'Waldheide',
+                                              'measure': 18
+                                            },
+                                            {
+                                              'domain': 'Grillstelle',
+                                              'measure': 10
+                                            },
+                                            {
+                                              'domain': 'NSG Köpfertal',
+                                              'measure': 20
+                                            },
+                                            {
+                                              'domain': 'Sportpfad',
+                                              'measure': 3
+                                            },
+                                            {
+                                              'domain': 'MTB-Downhillstrecke',
+                                              'measure': 6
+                                            },
+                                            {
+                                              'domain': '(Hoch-)Schulwald',
+                                              'measure': 14
+                                            },
+                                          ],
+                                        },
+                                      ],
+                                      domainLabelRotation: 270,
+                                      xAxisTitle: "Standort",
+                                      yAxisTitle: "Besucheranzahl",
+                                      axisLineTick: 2,
+                                      axisLinePointTick: 2,
+                                      axisLinePointWidth: 10,
+                                      axisLineColor: Colors.black38,
+                                      measureLabelPaddingToAxisLine: 16,
+                                      domainLabelPaddingToAxisLine: 100,
+                                      domainLabelFontSize: 10,
+                                      barColor: (barData, index, id) =>
+                                          Colors.green,
+                                      showBarValue: true,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         ),
                         Container(
@@ -316,7 +363,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Temapartuen der letzten Woche",
+                                  "Temperaturen der letzten Woche",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -368,7 +415,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                   domainLabelRotation: 270,
                                   domainLabelPaddingToAxisLine: 60,
                                   xAxisTitle: "Woche 20",
-                                  yAxisTitle: "Temparatur",
+                                  yAxisTitle: "Temperatur",
                                   axisLineTick: 2,
                                   axisLinePointTick: 2,
                                   axisLinePointWidth: 10,

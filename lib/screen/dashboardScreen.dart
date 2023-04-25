@@ -18,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: TopNavBar(
-        title: 'Dashboard',
+        title: 'DASHBOARD',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -66,7 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             //    ],
             //      ),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
                     height: 200,
@@ -74,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         color: const Color(0xff86ffd6),
                         borderRadius: BorderRadius.circular(20)),
                     padding:
-                        const EdgeInsets.only(top: 20, left: 30, right: 30),
+                        const EdgeInsets.only(top: 20, left: 15, right: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.only(
-                          top: 20, left: 35, right: 35, bottom: 20),
+                          top: 20, left: 20, right: 25, bottom: 20),
                       child: Column(
                         children: [
                           const Text(
@@ -141,7 +141,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.only(
-                          left: 40, right: 40, top: 20, bottom: 20),
+                          left: 30, right: 30, top: 15, bottom: 15),
                       child: Column(children: [
                         const Text(
                           'Luftdruck',
