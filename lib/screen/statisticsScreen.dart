@@ -291,6 +291,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                       ],
                                     },
                                   ],
+
                                   domainLabelRotation: 270,
                                   domainLabelPaddingToAxisLine: 60,
                                   domainLabelFontSize: 10,
