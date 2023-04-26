@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.forestapp.forestapp">
    <application
-        android:label="forestapp"
+        android:label="Forest"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyChKDLO6nlsMeORg9K9RFmpwO8a2qnvh7M"/>
         <activity
