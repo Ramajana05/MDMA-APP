@@ -12,11 +12,11 @@ class topNavBarDecoration {
         end: Alignment.centerRight,
       ),
       border: Border(
-      bottom: BorderSide(
-      color: Color(0xFF00BFA6),
-              width: 9.0,
-    ),
-  ),
+        bottom: BorderSide(
+          color: Color(0xFF00BFA6),
+          width: 12.0,
+        ),
+      ),
     );
   }
 

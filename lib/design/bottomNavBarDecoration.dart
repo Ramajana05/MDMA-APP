@@ -19,5 +19,13 @@ BoxDecoration bottomNavBarDecoration2 = BoxDecoration(
       width: 7.0,
     ),
   ),
-  gradient: bottomNavBarDecoration.gradient,
+  gradient: LinearGradient(
+    colors: [
+      Color(0xFF2DFFD9),
+      Color(0xFF00FF57),
+    ],
+    begin: Alignment.bottomLeft,
+    end: Alignment.bottomRight,
+  ),
+   backgroundBlendMode: BlendMode.srcOver,
 );

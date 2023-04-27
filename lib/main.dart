@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/widget/bottomNavBar';
+import 'package:forestapp/screen/damagesDashboardScreen.dart';
+import 'package:forestapp/screen/dashboardScreen.dart';
+import 'package:forestapp/screen/loginScreen.dart';
+import 'package:forestapp/screen/damageReport.dart';
+import 'package:forestapp/widget/bottomNavBar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +21,8 @@ class MyApp extends StatelessWidget {
         systemNavigationBarColor: Color.fromARGB(0, 255, 255, 255)));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BottomTabBar(),
+      home: LoginPage(),
+      //home: DashboardScreen(),
     );
   }
 }

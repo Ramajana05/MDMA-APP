@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar';
+import 'package:forestapp/widget/topNavBar.dart';
 
 class ScanScreen extends StatefulWidget {
   ScanScreen({Key? key}) : super(key: key);
@@ -12,9 +12,9 @@ class _ScanScreen extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 227, 227, 227),
+      backgroundColor: Colors.white,
       appBar: TopNavBar(
-        title: 'Scanner',
+        title: 'SCANNER',
         onMenuPressed: () {
           // Add your side panel logic here
         },

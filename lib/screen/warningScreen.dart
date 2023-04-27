@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar';
+import 'package:forestapp/widget/topNavBar.dart';
 
-class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+class WarningScreen extends StatefulWidget {
+  WarningScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreen();
+  State<WarningScreen> createState() => _WarningScreen();
 }
 
-class _ProfileScreen extends State<ProfileScreen> {
- @override
+class _WarningScreen extends State<WarningScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 227, 227, 227),
       appBar: TopNavBar(
-        title: 'Profile',
+        title: 'Warning',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -23,7 +23,7 @@ class _ProfileScreen extends State<ProfileScreen> {
         padding: const EdgeInsets.only(bottom: 25),
         child: Align(
           alignment: Alignment.bottomCenter,
-          child: Text('Profile Screen'),
+          child: Text('Warning Screen'),
         ),
       ),
     );

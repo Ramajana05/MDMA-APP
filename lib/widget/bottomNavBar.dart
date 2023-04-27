@@ -4,8 +4,9 @@ import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
-import 'package:forestapp/screen/profileScreen.dart';
+import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
+import 'package:forestapp/screen/damagesDashboardScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    ProfileScreen(),
+    DamagesDashboardScreen(),
   ];
 
   @override
@@ -34,33 +35,34 @@ class _BottomTabBarState extends State<BottomTabBar> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _index,
           showUnselectedLabels: false,
-          selectedItemColor: Color.fromARGB(255, 28, 56, 45),
+           unselectedItemColor: Colors.black,
+          selectedItemColor: Color.fromARGB(255, 31, 158, 80),
           onTap: (value) {
             setState(() {
               _index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 227, 227, 227),
+          backgroundColor: Colors.white,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
-              label: 'Dashboard',
+              label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.graphic_eq),
-              label: 'Statistics',
+              label: 'Statistik',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.pin_drop),
-              label: 'Maps',
+              label: 'Karte',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
               label: 'Scanner',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.report),
+              label: 'Berichte',
             ),
           ],
           selectedLabelStyle: const TextStyle(
