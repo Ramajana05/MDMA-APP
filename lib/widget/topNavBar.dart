@@ -48,7 +48,8 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ],
       iconTheme: IconThemeData(
-        color: Colors.green, // Change this to the desired color
+        color: Color.fromARGB(
+            255, 40, 233, 127), // Change this to the desired color
       ),
     );
   }
