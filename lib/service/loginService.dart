@@ -57,13 +57,13 @@ class LoginService {
   }
 
   Future<bool> performLogin(
-      String email, String password, BuildContext context) async {
+      String username, String password, BuildContext context) async {
     try {
       final database = await _initDatabase();
 
       final result = await database.rawQuery(
         'SELECT * FROM User WHERE Username = ? AND Password = ?',
-        [email, password],
+        [username, password],
       );
 
       await database.close();
