@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/overviewWidget.dart';
 import 'package:forestapp/widget/tabBarWidget.dart';
@@ -62,15 +63,13 @@ class _MapScreen extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SidePanel(),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: TopNavBar(
-          title: 'KARTE',
-          onMenuPressed: () {
-            // Add your side panel logic here
-          },
-        ),
+      appBar: TopNavBar(
+        title: 'KARTE',
+        onMenuPressed: () {
+          // Add your side panel logic here
+        },
       ),
       // Add your body here
 

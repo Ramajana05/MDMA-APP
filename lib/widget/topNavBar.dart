@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -10,7 +11,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: topNavBarDecoration.getTitleTextStyle(),
       ),
-      backgroundColor: Color.fromARGB(255, 232, 241, 232),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -30,9 +31,12 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       leading: IconButton(
-        icon: const Icon(Icons.brightness_4),
+        icon: const Icon(
+          Icons.menu,
+          color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+        ),
         onPressed: () {
-          // TODO: Implement dark mode functionality
+          Scaffold.of(context).openDrawer();
         },
       ),
       actions: [

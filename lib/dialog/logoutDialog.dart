@@ -22,7 +22,14 @@ class LogoutDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Abbrechen'),
+          child: Text(
+            'Abbrechen',
+            style: TextStyle(
+              color: Colors.grey, // Set the text color to green
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
@@ -33,7 +40,7 @@ class LogoutDialog extends StatelessWidget {
           },
           child: Text('Ausloggen'),
           style: ElevatedButton.styleFrom(
-            primary: Colors.green,
+            primary: Color.fromARGB(255, 40, 233, 127),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
@@ -41,7 +48,7 @@ class LogoutDialog extends StatelessWidget {
         ),
       ],
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(9.0),
       ),
       backgroundColor: Colors.white,
       elevation: 8.0,

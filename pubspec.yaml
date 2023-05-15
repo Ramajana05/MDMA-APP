@@ -30,11 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # flutter_sqflite: ^<latest_version>
   d_chart: ^2.2.11
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dotted_border: ^2.0.0+3
+  sqflite: ^2.0.0+3
+  path_provider: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +64,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/
+    - assets/database/MDMADatabase.db
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
