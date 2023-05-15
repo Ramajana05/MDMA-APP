@@ -7,9 +7,11 @@ import 'package:forestapp/widget/customStatisticContainerWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:d_chart/d_chart.dart';
+import 'package:intl/intl.dart';
 import '../Model/IntervalTypeEnum.dart';
 import '../dialog/logoutDialog.dart';
 import '../widget/checkBoxValuesForCharts.dart';
+import 'dart:ui';
 
 class StatisticsScreen extends StatefulWidget {
   StatisticsScreen({Key? key}) : super(key: key);
@@ -19,6 +21,16 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreen extends State<StatisticsScreen> {
+   DateTime? _date;
+
+  String _dateText() {
+    String dateText = '';
+    _date == null
+        ? dateText = 'Heute'
+        : dateText = '${_date?.day}.${_date?.month}';
+    return dateText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,18 +54,54 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                         bottom:
                             BorderSide(color: Colors.blueGrey, width: 0.5))),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 15),
+                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Overview",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
-                      Text("Heute",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold))
+                      ElevatedButton.icon(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll<Color>(Colors.white),
+                            side: MaterialStatePropertyAll<BorderSide>(
+                                BorderSide(color: Colors.black54, width: 0.5))),
+                        onPressed: () async {
+                          final currentDate = DateTime.now();
+                          final oneMonthAgo =
+                              currentDate.subtract(const Duration(days: 30));
+                          final myTheme = ThemeData(
+                            colorScheme: const ColorScheme.light(
+                              primary: Colors.green, // Customize primary color
+                              onPrimary: Colors.black87, // Customize text color
+                            ),
+                          );
+                          final result = await showDatePicker(
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(data: myTheme, child: child!);
+                              },
+                              context: context,
+                              initialDate: currentDate,
+                              firstDate: oneMonthAgo,
+                              lastDate: currentDate);
+                          if (result != null) {
+                            setState(() {
+                              _date = result;
+                            });
+                          }
+                        },
+                        icon: Icon(
+                          Icons.calendar_today,
+                          color: Colors.black,
+                        ),
+                        label: Text(
+                          _dateText(),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
                     ],
                   ),
                 ),

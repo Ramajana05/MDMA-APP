@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../Model/DataCategoryEnum.dart';
 import '../Model/IntervalTypeEnum.dart';
+import '../screen/statisticsScreen.dart';
 import 'checkBoxValuesForCharts.dart';
 import '../Model/DataModel.dart';
 

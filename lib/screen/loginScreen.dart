@@ -94,8 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                       _formKey.currentState?.save();
                       // Replace this with authentication logic
                       // just validating the email and password rn
-                      if (_email == 'user@example.com' &&
-                          _password == 'password') {
+                      if (_email == 'a' &&
+                          _password == 'a') {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
