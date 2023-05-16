@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
-class LogoutDialog extends StatelessWidget {
-  const LogoutDialog({Key? key}) : super(key: key);
+class ProblemDialog extends StatelessWidget {
+  const ProblemDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Ausloggen',
+        'Probleme',
         style: LogOutDecoration.getTitleTextStyle(),
       ),
       content: Row(
         children: [
           //Icon(Icons.warning, color: Colors.orange),
           SizedBox(width: 8.0),
-          Text('Wirklich ausloggen?'),
+          Text('Wenden Sie sich bitte an den Support'),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(
-            'Abbrechen',
+            'Zurück',
             style: TextStyle(
               color: Colors.grey, // Set the text color to green
               fontSize: 14.0,
@@ -32,13 +32,8 @@ class LogoutDialog extends StatelessWidget {
           ),
         ),
         ElevatedButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            ); // Close the dialog
-          },
-          child: Text('Ausloggen'),
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('Ok'),
           style: ElevatedButton.styleFrom(
             primary: Color.fromARGB(255, 40, 233, 127),
             shape: RoundedRectangleBorder(

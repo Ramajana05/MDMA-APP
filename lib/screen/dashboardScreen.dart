@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -19,9 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'DASHBOARD',
-        onMenuPressed: () {
-          // Add your side panel logic here
-        },
+        onMenuPressed: () {},
       ),
       body: Column(
         children: [
