@@ -47,7 +47,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  
   google_maps_flutter: ^2.2.0
   mobile_scanner: ^3.2.0
 

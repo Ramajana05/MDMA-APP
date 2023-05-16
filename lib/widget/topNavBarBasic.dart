@@ -7,9 +7,12 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
   final bool returnStatus;
 
-  const TopNavBarBasic({Key? key, required this.title, this.onMenuPressed,required this.returnStatus })
+  const TopNavBarBasic(
+      {Key? key,
+      required this.title,
+      this.onMenuPressed,
+      required this.returnStatus})
       : super(key: key);
-
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -22,7 +25,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: topNavBarDecoration.getTitleTextStyle(),
       ),
-      backgroundColor: Color.fromARGB(255, 232, 241, 232),
+      backgroundColor: Color.fromARGB(255, 248, 245, 245),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(

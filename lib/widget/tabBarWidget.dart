@@ -52,38 +52,47 @@ class _TabBarWidgetState extends State<TabBarWidget>
     //refreshMarkers
   }
 
-  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 0.5,
+    return Material(
+      // Wrap TabBar with Material
+      elevation: 2, // Apply desired elevation for shadow effect
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          border: Border(
+            top: BorderSide(
+              color: Colors.black,
+              width: 0.5,
+            ),
           ),
         ),
-      ),
-      child: TabBar(
-        controller: _tabController,
-        isScrollable: false,
-        labelColor: widget.labelColor,
-        indicatorColor: widget.indicatorColor,
-        unselectedLabelColor: widget.unselectedLabelColor,
-        labelPadding: EdgeInsets.symmetric(
-          horizontal: screenWidth / (6 * widget.tabTexts.length),
-        ),
-        tabs: List.generate(
-          widget.tabTexts.length,
-          (index) => GestureDetector(
-            // Modified
-            onTap: () {
-              widget.onTabSelected(index); // Call the callback function
-              _tabController.index = index;
-            },
-            child: Tab(
-              text: widget.tabTexts[index],
+        child: TabBar(
+          controller: _tabController,
+          isScrollable: false,
+          labelColor: widget.labelColor,
+          indicator: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: widget.indicatorColor, // Use desired indicator color
+                width: 2.0, // Use desired indicator thickness
+              ),
+            ),
+          ),
+          unselectedLabelColor: widget.unselectedLabelColor,
+          labelPadding: EdgeInsets.symmetric(
+            horizontal: screenWidth / (6 * widget.tabTexts.length),
+          ),
+          tabs: List.generate(
+            widget.tabTexts.length,
+            (index) => GestureDetector(
+              onTap: () {
+                widget.onTabSelected(index); // Call the callback function
+                _tabController.index = index;
+              },
+              child: Tab(
+                text: widget.tabTexts[index],
+              ),
             ),
           ),
         ),

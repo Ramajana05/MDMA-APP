@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
+import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/damagesDashboardScreen.dart';
-import '../screen/statisticsScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -35,13 +36,13 @@ class _BottomTabBarState extends State<BottomTabBar> {
           currentIndex: _index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-          selectedItemColor: Color.fromARGB(255, 40, 233, 127),
+          selectedItemColor: Color.fromARGB(204, 12, 156, 77),
           onTap: (value) {
             setState(() {
               _index = value;
             });
           },
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 248, 245, 245),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),

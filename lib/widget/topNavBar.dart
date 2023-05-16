@@ -20,7 +20,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: topNavBarDecoration.getTitleTextStyle(),
       ),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -41,12 +41,14 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.logout),
+          icon: const Icon(Icons.refresh),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => LogoutDialog(),
-            );
+            //showDialog(
+            //context: context,
+
+            //builder: (context) => LogoutDialog(),
+
+            //);
             // TODO: Implement logout functionality
           },
         ),

@@ -66,7 +66,7 @@ class SidePanel extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text('Profile'),
+            title: Text('Website'),
             onTap: () => Navigator.of(context).pop(),
           ),
           ListTile(
@@ -74,7 +74,7 @@ class SidePanel extends StatelessWidget {
             onTap: () => Navigator.of(context).pop(),
           ),
           ListTile(
-            title: Text('Fragen und Antwort'),
+            title: Text('Hilfe'),
             onTap: () => Navigator.of(context).pop(),
           ),
           ListTile(
