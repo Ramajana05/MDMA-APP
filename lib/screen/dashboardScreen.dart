@@ -15,6 +15,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     DateTime now = DateTime.now();
     DateTime tomorrow = now.add(const Duration(days: 1));
     DateTime afterTomorrow = now.add(const Duration(days: 2));
+     DateTime afterAfter = now.add(const Duration(days: 3));
 
     var temperature = 25;
     var visitors = 1234;
@@ -47,7 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       WeatherItem(
         weekday: '',
-        date: afterTomorrow,
+        date: afterAfter,
         weatherIcon: Icons.sunny_snowing,
         temperature: 10,
         rainPercentage: 2,
