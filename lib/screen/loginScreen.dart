@@ -117,22 +117,41 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 2.0),
-                        child: Center(
-                          child: Text(
-                            'Willkommen bei der',
-                            style: TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      _formKey.currentState?.save();
+                      // Replace this with authentication logic
+                      // just validating the email and password rn
+                      if (_email == 'a' &&
+                          _password == 'a') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BottomTabBar()),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text('Email oder Passwort ungültig')),
+                        );
+                      }
+                    }
+                  },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 20.0),
+                    ),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 243, 243, 243),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 95, 230, 151),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 40.0),
