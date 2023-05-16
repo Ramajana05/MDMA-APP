@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../widget/topNavBar.dart';
 
@@ -27,7 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         weekday: '',
         date: DateTime.now(),
         weatherIcon: Icons.wb_sunny,
-        temperature: temperature,
+        temperature: 25,
         rainPercentage: 10,
         windStrength: 12.5,
       ),
@@ -35,7 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         weekday: '',
         date: tomorrow,
         weatherIcon: Icons.cloud,
-        temperature: temperature,
+        temperature: 13,
         rainPercentage: 50,
         windStrength: 8.2,
       ),
@@ -43,16 +41,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         weekday: '',
         date: afterTomorrow,
         weatherIcon: Icons.grain,
-        temperature: temperature,
-        rainPercentage: 80,
+        temperature: -5,
+        rainPercentage: 20,
         windStrength: 6.8,
       ),
       WeatherItem(
         weekday: '',
         date: afterTomorrow,
         weatherIcon: Icons.sunny_snowing,
-        temperature: temperature,
-        rainPercentage: 30,
+        temperature: 10,
+        rainPercentage: 2,
         windStrength: 6.8,
       ),
     ];
@@ -275,7 +273,7 @@ class WeatherItem extends StatelessWidget {
     return Column(
       children: [
         Text(germanWeekday),
-        Text(' ${date.day}.$formattedMonth'),
+        Text(' ${date.day}.$formattedMonth.'),
         Icon(
           weatherIcon,
           size: 50,
@@ -284,9 +282,10 @@ class WeatherItem extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.water,
-              size: 24,
+            Image.asset(
+              'assets/icons8-water-24.png',
+              height: 17,
+              width: 17,
               color: Colors.blue,
             ),
             Text(' $rainPercentage%'),
