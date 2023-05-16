@@ -35,14 +35,14 @@ class _BottomTabBarState extends State<BottomTabBar> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _index,
           showUnselectedLabels: false,
-           unselectedItemColor: Colors.black,
-          selectedItemColor: Color.fromARGB(255, 31, 158, 80),
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Color.fromARGB(204, 12, 156, 77),
           onTap: (value) {
             setState(() {
               _index = value;
             });
           },
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 248, 245, 245),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),

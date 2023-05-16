@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 Widget DamagesListItemWidget(String damageTitle, String damageDescription,
     String status, String createDate) {
   return Card(
-    color: Colors.white60,
+    color: Color.fromARGB(249, 255, 255, 255),
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Flexible(
         flex: 3,
@@ -40,11 +40,11 @@ Widget DamagesListItemWidget(String damageTitle, String damageDescription,
         child: ListTile(
           title: Text(status,
               style: TextStyle(
-                  color: status == 'Abgeschlossen'
-                      ? Colors.green
-                      : status == "In Bearbeitung"
-                          ? Colors.red
-                          : Colors.orangeAccent)),
+                  color: status == 'Temperatur'
+                      ? Color.fromARGB(255, 26, 216, 112)
+                      : status == "Luftdruck"
+                          ? const Color.fromARGB(255, 67, 54, 244)
+                          : Color.fromARGB(255, 124, 55, 235))),
           subtitle: Text(createDate),
         ),
       ),

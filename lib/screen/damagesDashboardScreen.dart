@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
+import 'package:forestapp/widget/topNavBar.dart';
+import 'package:forestapp/widget/overviewWidget.dart';
+import 'package:forestapp/widget/tabBarWidget.dart';
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:forestapp/widget/mapObjects.dart';
+
+import 'package:flutter/material.dart';
 import 'package:forestapp/widget/damage.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 
@@ -14,132 +23,93 @@ class DamagesDashboardScreen extends StatefulWidget {
 class _DamagesDashboardScreen extends State<DamagesDashboardScreen> {
   //Dummy Data
   List<Widget> damagesList = [
-    DamagesListItemWidget("Baum umgefallen", "Beim Spielplatz", "Abgeschlossen",
-        "Stand 09-05-2023"),
     DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
+        "Sensor 1", "Long und Lat", "Luftdruck", "Stand 09-05-2023"),
     DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
+        "Sensor 2", "Long und Lat", "Temperatur", "Stand 01-10-2023"),
     DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
+        "Sensor 3", "Long und Lat", "Temperatur", "Stand 01-10-2023"),
     DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "Noch Offen", "Stand 01-10-2023"),
+        "Sensor 4", "Beim Grillplatz", "Luftdruck", "Stand 01-10-2023"),
     DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "Noch Offen", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "Noch Offen", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "Noch Offen", "Stand 01-10-2023"),
-    DamagesListItemWidget(
-        "Vandalismus", "Beim Grillplatz", "In Bearbeitung", "Stand 01-10-2023")
+        "Standort 1", "Beim Grillplatz", "", "Stand 01-10-2023")
   ];
 
   //method to navigate to damagereport
   get onPressed => null;
 
-  //get onPressed =>Navigator.push(context,MaterialPageRoute(builder:(context)=> DamageReport())) ;
+  //final Completer<GoogleMapController> _controller = Completer(); // Added
 
-  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 227, 227, 227),
+      drawer: SidePanel(),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: TopNavBar(
-        title: 'SCHADEN BERICHTE',
+        title: 'ÜBERSICHT',
         onMenuPressed: () {
           // Add your side panel logic here
         },
       ),
-      body: ListView(children: [
-        Column(
+      body: DefaultTabController(
+        length: 3,
+        child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(color: Colors.white60, boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                )
-              ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Schäden",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DamageReport()));
-                      },
-                      icon: const Icon(Icons.add),
-                      color: Colors.black,
-                      tooltip: "Neues Bericht")
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 30, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Beschreibung",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            OverviewContainer(text: "Sensoren und Standorte"),
+            TabBar(
+              labelColor: const Color.fromARGB(
+                  255, 40, 233, 127), // Selected tab font color
+              unselectedLabelColor: Colors.grey, // Unselected tab font color
+              indicator: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: const Color.fromARGB(
+                        255, 40, 233, 127), // Underline color
+                    width: 2.0, // Underline thickness
                   ),
-                  Text("Status",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                child: ListView.builder(
-                  physics: const ScrollPhysics(parent: null),
-                  shrinkWrap: true,
-                  itemCount: damagesList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      child: damagesList[index],
-                      //   onTap: () {
-                      //   Navigator.push(
-                      //       context, MaterialPageRoute(builder:(context)
-                      //   =>
-                      //       DamageReportOverview()
-                      // }
-                    );
-                  },
                 ),
+              ),
+              labelStyle: TextStyle(
+                fontSize: 16, // Font size of selected tab
+                fontWeight: FontWeight.bold, // Font weight of selected tab
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 16, // Font size of unselected tab
+              ),
+              tabs: [
+                Tab(text: 'Alle'),
+                Tab(text: 'Standorte'),
+                Tab(text: 'Sensoren'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  // Tab Views
+                  ListView.builder(
+                    itemCount: damagesList.length,
+                    itemBuilder: (context, index) {
+                      return damagesList[index];
+                    },
+                  ),
+                  ListView.builder(
+                    itemCount: damagesList.length,
+                    itemBuilder: (context, index) {
+                      return damagesList[index];
+                    },
+                  ),
+                  ListView.builder(
+                    itemCount: damagesList.length,
+                    itemBuilder: (context, index) {
+                      return damagesList[index];
+                    },
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      ]),
+      ),
     );
   }
 }
