@@ -83,8 +83,8 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.white, systemNavigationBarColor: Colors.white));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-      //home: BottomTabBar(),
+      //home: LoginPage(),
+      home: BottomTabBar(),
     );
   }
 }
