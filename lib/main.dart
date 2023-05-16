@@ -4,7 +4,9 @@ import 'package:forestapp/screen/damagesDashboardScreen.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 import 'package:forestapp/screen/damageReport.dart';
+import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/widget/bottomNavBar.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
