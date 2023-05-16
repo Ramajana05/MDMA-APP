@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # flutter_sqflite: ^<latest_version>
   d_chart: ^2.2.11
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,12 +40,16 @@ dependencies:
   fl_chart: ^0.62.0
   intl: ^0.18.1
   wakelock: ^0.6.1+2
+  sqflite: ^2.0.0+3
+  path_provider: ^2.0.5
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   google_maps_flutter: ^2.2.0
+  mobile_scanner: ^3.2.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -65,9 +70,8 @@ flutter:
 
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/database/MDMADatabase.db
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -94,6 +98,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  
+
 fonts:
   - family: Poppins
     fonts:

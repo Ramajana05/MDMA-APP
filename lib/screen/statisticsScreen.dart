@@ -36,7 +36,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: TopNavBar(
-        title: 'STATISTIKS',
+        title: 'STATISTIK',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -46,6 +46,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+
             Flexible(
               flex: 1,
               child: Container(
@@ -60,6 +61,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                     children: [
                       const Text(
                         "Overview",
+
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.bold),
                       ),
@@ -155,6 +157,315 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                 contentPadding: EdgeInsets.only(right: 0),
                                 title: const Text(
                                   "Temparaturen",
+            DefaultTabController(
+                length: 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      child: const TabBar(
+                        isScrollable: true,
+                        labelColor: Colors.green,
+                        indicatorColor: Colors.green,
+                        unselectedLabelColor: Colors.black,
+                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                        tabs: [
+                          Tab(
+                            text: "Besucher",
+                          ),
+                          Tab(
+                            text: "Sensoren",
+                          ),
+                          Tab(
+                            text: "Temparatur",
+                          ),
+                          Tab(
+                            text: "Luftfeuchtigkeit",
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 400,
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              top: BorderSide(color: Colors.grey, width: 0.5))),
+                      child: TabBarView(children: <Widget>[
+                        Container(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Besucheranzahl der letzen Woche",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 30,
+                                        bottom: 10),
+                                    width: 300,
+                                    height: 300,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 4,
+                                            offset:
+                                                Offset(4, 8), // Shadow position
+                                          ),
+                                        ],
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            top: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            right: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            left: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: DChartBar(
+                                      data: const [
+                                        {
+                                          'id': 'Bar',
+                                          'data': [
+                                            {
+                                              'domain': 'Donnerstag',
+                                              'measure': 2
+                                            },
+                                            {
+                                              'domain': 'Freitag',
+                                              'measure': 18
+                                            },
+                                            {
+                                              'domain': 'Samstag',
+                                              'measure': 10
+                                            },
+                                            {
+                                              'domain': 'Sonntag',
+                                              'measure': 20
+                                            },
+                                            {'domain': 'Montag', 'measure': 3},
+                                            {
+                                              'domain': 'Dienstag',
+                                              'measure': 12
+                                            },
+                                            {'domain': 'Heute', 'measure': 8},
+                                          ],
+                                        },
+                                      ],
+                                      domainLabelRotation: 270,
+                                      xAxisTitle: "Woche 20",
+                                      yAxisTitle: "Besucheranzahl",
+                                      axisLineTick: 2,
+                                      axisLinePointTick: 2,
+                                      axisLinePointWidth: 10,
+                                      axisLineColor: Colors.black38,
+                                      domainLabelFontSize: 10,
+                                      measureLabelPaddingToAxisLine: 16,
+                                      domainLabelPaddingToAxisLine: 60,
+                                      barColor: (barData, index, id) =>
+                                          Colors.green,
+                                      showBarValue: true,
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Besucheranzahl an den Standorten",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 30,
+                                        bottom: 10),
+                                    width: 300,
+                                    height: 300,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 4,
+                                            offset:
+                                                Offset(4, 8), // Shadow position
+                                          ),
+                                        ],
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            top: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            right: BorderSide(
+                                                color: Colors.grey, width: 0.5),
+                                            left: BorderSide(
+                                                color: Colors.grey,
+                                                width: 0.5))),
+                                    child: DChartBar(
+                                      data: const [
+                                        {
+                                          'id': 'Bar',
+                                          'data': [
+                                            {
+                                              'domain': 'Walderlebnispfad',
+                                              'measure': 2
+                                            },
+                                            {
+                                              'domain': 'Waldheide',
+                                              'measure': 18
+                                            },
+                                            {
+                                              'domain': 'Grillstelle',
+                                              'measure': 10
+                                            },
+                                            {
+                                              'domain': 'NSG Köpfertal',
+                                              'measure': 20
+                                            },
+                                            {
+                                              'domain': 'Sportpfad',
+                                              'measure': 3
+                                            },
+                                            {
+                                              'domain': 'MTB-Downhillstrecke',
+                                              'measure': 6
+                                            },
+                                            {
+                                              'domain': '(Hoch-)Schulwald',
+                                              'measure': 14
+                                            },
+                                          ],
+                                        },
+                                      ],
+                                      domainLabelRotation: 270,
+                                      xAxisTitle: "Standort",
+                                      yAxisTitle: "Besucheranzahl",
+                                      axisLineTick: 2,
+                                      axisLinePointTick: 2,
+                                      axisLinePointWidth: 10,
+                                      axisLineColor: Colors.black38,
+                                      measureLabelPaddingToAxisLine: 16,
+                                      domainLabelPaddingToAxisLine: 100,
+                                      domainLabelFontSize: 10,
+                                      barColor: (barData, index, id) =>
+                                          Colors.green,
+                                      showBarValue: true,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Sensoren Feldstärke am Standort",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 10),
+                                width: 300,
+                                height: 230,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white70,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 4,
+                                        offset: Offset(4, 8), // Shadow position
+                                      ),
+                                    ],
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        top: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        right: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        left: BorderSide(
+                                            color: Colors.grey, width: 0.5))),
+                                child: DChartBar(
+                                  data: const [
+                                    {
+                                      'id': 'Bar',
+                                      'data': [
+                                        {'domain': 'TemSen 1', 'measure': 12},
+                                        {'domain': 'TemSen 2', 'measure': 18},
+                                        {'domain': 'TemSen 5', 'measure': 5},
+                                        {'domain': 'HumiSen 4', 'measure': 30},
+                                        {'domain': 'TemSen 9', 'measure': 5},
+                                        {'domain': 'HumiSen 12', 'measure': 12},
+                                      ],
+                                    },
+                                  ],
+                                  domainLabelRotation: 270,
+                                  domainLabelPaddingToAxisLine: 60,
+                                  domainLabelFontSize: 10,
+                                  xAxisTitle: "Sensor",
+                                  yAxisTitle: "Feldstärke",
+                                  axisLineTick: 2,
+                                  axisLinePointTick: 2,
+                                  axisLinePointWidth: 10,
+                                  axisLineColor: Colors.green,
+                                  measureLabelPaddingToAxisLine: 16,
+                                  barColor: (barData, index, id) =>
+                                      Colors.green,
+                                  showBarValue: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Temperaturen der letzten Woche",
                                   style: TextStyle(
                                       fontSize: 10, color: Colors.pink),
                                 ),
@@ -191,6 +502,63 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                 },
                                 controlAffinity: ListTileControlAffinity
                                     .leading, //  <-- leading Checkbox
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 10),
+                                width: 300,
+                                height: 230,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white70,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 4,
+                                        offset: Offset(4, 8), // Shadow position
+                                      ),
+                                    ],
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        top: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        right: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        left: BorderSide(
+                                            color: Colors.grey, width: 0.5))),
+                                child: DChartBar(
+                                  data: const [
+                                    {
+                                      'id': 'Bar',
+                                      'data': [
+                                        {'domain': 'Donnerstag', 'measure': 2},
+                                        {'domain': 'Freitag', 'measure': 18},
+                                        {'domain': 'Samstag', 'measure': 10},
+                                        {'domain': 'Sonntag', 'measure': 20},
+                                        {'domain': 'Montag', 'measure': 3},
+                                        {'domain': 'Dienstag', 'measure': 12},
+                                        {'domain': 'Heute', 'measure': 8},
+                                      ],
+                                    },
+                                  ],
+                                  domainLabelRotation: 270,
+                                  domainLabelPaddingToAxisLine: 60,
+                                  xAxisTitle: "Woche 20",
+                                  yAxisTitle: "Temperatur",
+                                  axisLineTick: 2,
+                                  axisLinePointTick: 2,
+                                  axisLinePointWidth: 10,
+                                  axisLineColor: Colors.green,
+                                  domainLabelFontSize: 10,
+                                  measureLabelPaddingToAxisLine: 16,
+                                  barColor: (barData, index, id) =>
+                                      Colors.green,
+                                  showBarValue: true,
+                                ),
                               ),
                             ),
                           ],
