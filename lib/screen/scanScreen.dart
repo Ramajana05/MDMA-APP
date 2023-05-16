@@ -53,7 +53,12 @@ class _ScanScreen extends State<ScanScreen> {
               },
             ),
             iconSize: 32.0,
-            onPressed: () => cameraController.switchCamera(),
+            onPressed: () => {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('switched Camera'),
+              )),
+              cameraController.switchCamera()
+            },
           ),
         ],
       ),
@@ -62,7 +67,11 @@ class _ScanScreen extends State<ScanScreen> {
         controller: cameraController,
         onDetect: (barcode) {
           final String code = barcode.raw.toString();
-          debugPrint('Barcode found! $code');
+          //debugPrint('Barcode found! $code');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //content: Text(code),
+            content: Text("QR wurde erfolgreich gescannt"),
+          ));
         },
       ),
     );
