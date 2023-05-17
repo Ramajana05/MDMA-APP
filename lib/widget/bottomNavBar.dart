@@ -58,11 +58,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
-              label: 'Scanner',
+              label: ' QR Code',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.report),
-              label: 'Berichte',
+              label: 'Sensoren',
             ),
           ],
           selectedLabelStyle: const TextStyle(

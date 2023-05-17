@@ -19,7 +19,7 @@ class _ScanScreen extends State<ScanScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 232, 241, 232),
         title: Text(
-          "Scan Code",
+          "CODE SCANNEN",
           style: topNavBarDecoration.getTitleTextStyle(),
         ),
         actions: [
