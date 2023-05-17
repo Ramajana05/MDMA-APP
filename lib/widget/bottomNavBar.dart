@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
-import 'package:forestapp/screen/damagesDashboardScreen.dart';
+import '../screen/DamagesDashboardScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
