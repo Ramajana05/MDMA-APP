@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
 
 class ScanScreen extends StatefulWidget {
   ScanScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _ScanScreen extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SidePanel(),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 232, 241, 232),
         title: Text(

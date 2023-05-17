@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:forestapp/widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -57,6 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
 
     return Scaffold(
+      drawer: SidePanel(),
       backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'DASHBOARD',

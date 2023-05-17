@@ -12,6 +12,7 @@ import '../Model/IntervalTypeEnum.dart';
 import '../dialog/logoutDialog.dart';
 import '../widget/checkBoxValuesForCharts.dart';
 import 'dart:ui';
+import 'package:forestapp/widget/sidePanelWidget.dart';
 
 class StatisticsScreen extends StatefulWidget {
   StatisticsScreen({Key? key}) : super(key: key);
@@ -34,6 +35,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SidePanel(),
       backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'STATISTIKS',
@@ -52,7 +54,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                 decoration: const BoxDecoration(
                     border: Border(
                         bottom:
-                        BorderSide(color: Colors.blueGrey, width: 0.5))),
+                            BorderSide(color: Colors.blueGrey, width: 0.5))),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 8, 10, 15),
                   child: Row(
@@ -66,13 +68,13 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                       ElevatedButton.icon(
                         style: const ButtonStyle(
                             backgroundColor:
-                            MaterialStatePropertyAll<Color>(Colors.white),
+                                MaterialStatePropertyAll<Color>(Colors.white),
                             side: MaterialStatePropertyAll<BorderSide>(
                                 BorderSide(color: Colors.black54, width: 0.5))),
                         onPressed: () async {
                           final currentDate = DateTime.now();
                           final oneMonthAgo =
-                          currentDate.subtract(const Duration(days: 30));
+                              currentDate.subtract(const Duration(days: 30));
                           final myTheme = ThemeData(
                             colorScheme: const ColorScheme.light(
                               primary: Colors.green, // Customize primary color
@@ -117,7 +119,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                     child: Text(
                       "Statistiken der letzen 12 Stunden",
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Column(
@@ -203,7 +205,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                     child: Text(
                       "Statistiken der letzten Woche",
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Column(
