@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class LoginService {
-  Future<Database> _initDatabase() async {
+class DatabaseInitializer {
+  Future<void> initDatabase() async {
     try {
       final documentsDirectory = await getApplicationDocumentsDirectory();
       final path = join(documentsDirectory.path, 'MDMA.db');
@@ -19,9 +18,6 @@ class LoginService {
         final dbAssetPath = await _getDatabaseAssetPath();
         await _copyDatabase(dbAssetPath, path);
       }
-
-      final database = await openDatabase(path);
-      return database;
     } catch (e) {
       // Handle any errors that occur during database initialization
       print('Database initialization failed: $e');
@@ -52,26 +48,6 @@ class LoginService {
     } catch (e) {
       // Handle any errors related to copying the database
       print('Error copying database: $e');
-      rethrow;
-    }
-  }
-
-  Future<bool> performLogin(
-      String username, String password, BuildContext context) async {
-    try {
-      final database = await _initDatabase();
-
-      final result = await database.rawQuery(
-        'SELECT * FROM User WHERE Username = ? AND Password = ?',
-        [username, password],
-      );
-
-      await database.close();
-
-      return result.isNotEmpty;
-    } catch (e) {
-      // Handle any errors that occur during login
-      print('Login failed: $e');
       rethrow;
     }
   }
