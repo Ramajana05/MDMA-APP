@@ -6,6 +6,7 @@ import 'package:forestapp/widget/tabBarWidget.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreen extends State<MapScreen> {
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 15.0,
+    zoom: 14.0,
   );
   late String _selectedTab;
   late Set<Circle> _circles;
@@ -60,6 +61,30 @@ class _MapScreen extends State<MapScreen> {
     });
   }
 
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw 'Location services are disabled.';
+    }
+
+    // Request location permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        throw 'Location permissions are denied.';
+      }
+    }
+
+    // Get current position
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,25 +119,47 @@ class _MapScreen extends State<MapScreen> {
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Add"),
-                content: Text("You pressed the add button!"),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text("Close"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+          // Get current location
+          _getCurrentLocation().then((Position position) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Aktueller Standort"),
+                  content: Text(
+                      "Latitude: ${position.latitude}\nLongitude: ${position.longitude}"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }).catchError((e) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Error"),
+                  content: Text("Failed to get current location: $e"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text("Close"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          });
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.location_on),
         backgroundColor: Color.fromARGB(255, 117, 241, 169),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -138,7 +185,7 @@ class MapSampleState extends State<MapSample> {
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 15.0,
+    zoom: 10.0,
   );
 
   @override

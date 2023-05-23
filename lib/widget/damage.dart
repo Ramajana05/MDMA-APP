@@ -19,35 +19,55 @@ import 'package:flutter/material.dart';
 //     return _DamagesListItemWidget();
 //   }
 // }
-
 Widget DamagesListItemWidget(String damageTitle, String damageDescription,
     String status, String createDate) {
+  Color statusColor = getStatusColor(status);
+  Color createDateColor = getCreateDateColor(createDate);
+
   return Card(
     color: Color.fromARGB(249, 255, 255, 255),
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Flexible(
-        flex: 3,
-        child: ListTile(
-          title: Text(damageTitle),
-          subtitle: Text(damageDescription),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 3,
+          child: ListTile(
+            title: Text(damageTitle),
+            subtitle: Text(damageDescription),
+          ),
         ),
-        // child: Column(
-        //   children: [Text(damageTitle), Text(damageTitle))],
-        // ),
-      ),
-      Flexible(
-        flex: 2,
-        child: ListTile(
-          title: Text(status,
-              style: TextStyle(
-                  color: status == 'Temperatur'
-                      ? Color.fromARGB(255, 26, 216, 112)
-                      : status == "Luftdruck"
-                          ? const Color.fromARGB(255, 67, 54, 244)
-                          : Color.fromARGB(255, 124, 55, 235))),
-          subtitle: Text(createDate),
+        Flexible(
+          flex: 2,
+          child: ListTile(
+            title: Text(
+              status,
+              style: TextStyle(color: statusColor),
+            ),
+            subtitle: Text(
+              createDate,
+              style: TextStyle(color: createDateColor),
+            ),
+          ),
         ),
-      ),
-    ]),
+      ],
+    ),
   );
+}
+
+Color getStatusColor(String status) {
+  if (status == 'Stark') {
+    return Color.fromARGB(255, 54, 54, 54);
+  } else if (status == 'Mittel') {
+    return Color.fromARGB(255, 43, 43, 43);
+  } else {
+    return Color.fromARGB(255, 63, 63, 63);
+  }
+}
+
+Color getCreateDateColor(String createDate) {
+  if (createDate == 'Online') {
+    return const Color.fromARGB(255, 96, 240, 100);
+  } else {
+    return Colors.black;
+  }
 }

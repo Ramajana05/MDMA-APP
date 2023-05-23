@@ -5,7 +5,7 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
-import '../screen/DamagesDashboardScreen.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    DamagesDashboardScreen(),
+    SensorListScreen(),
   ];
 
   @override
@@ -57,7 +57,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
-              label: ' QR Code',
+              label: 'QR Code',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.report),

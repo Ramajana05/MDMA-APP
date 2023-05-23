@@ -38,7 +38,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
       drawer: SidePanel(),
       backgroundColor: Colors.white,
       appBar: TopNavBar(
-        title: 'STATISTIKS',
+        title: 'STATISTIK',
         onMenuPressed: () {
           // Add your side panel logic here
         },
@@ -61,7 +61,7 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "Overview",
+                        "Übersicht",
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.bold),
                       ),

@@ -86,11 +86,6 @@ class SidePanel extends StatelessWidget {
           ),
           Spacer(),
           ListTile(
-            leading: Icon(Icons.settings), // Add leading icon
-            title: Text('Einstellungen'),
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          ListTile(
             leading: Icon(Icons.logout), // Add leading icon
             title: Text('Logout'),
             onTap: () {
