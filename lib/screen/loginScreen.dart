@@ -94,9 +94,9 @@ class _LoginPageState extends State<LoginPage> {
         body: Container(
             child: Center(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height * 0.65,
         width: MediaQuery.of(context).size.width * 0.97,
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 254, 254),
           borderRadius: BorderRadius.circular(20.0),
@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 40.0),
+                padding: EdgeInsets.only(bottom: 10.0),
                 child: Center(
                   child: Text(
                     'Forest App',
@@ -139,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              SizedBox(height: 10.0),
               Form(
                 key: _formKey,
                 autovalidateMode: AutovalidateMode
@@ -296,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 10.0),
                     GestureDetector(
                       onTap: () {
                         showDialog(
@@ -305,7 +306,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20.0),
+                        padding: EdgeInsets.only(top: 15.0),
                         child: Center(
                           child: Text(
                             'Probleme bei der Anmeldung',

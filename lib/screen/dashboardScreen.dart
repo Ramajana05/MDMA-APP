@@ -18,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     DateTime afterAfter = now.add(const Duration(days: 3));
 
     var temperature = 25;
-    var visitors = 1234;
+    var visitors = 120;
     var airPressure = 1013;
 
     final List<WeatherItem> weatherForecast = [
@@ -84,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: const Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              "Overview",
+              "Übersicht",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -100,27 +100,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               height: 200,
               decoration: BoxDecoration(
-                  color: const Color(0xff86ffd6),
-                  borderRadius: BorderRadius.circular(20)),
+                color: const Color(0xff86ffd6),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xff86ffd6), width: 5),
+              ),
               padding: const EdgeInsets.all(15),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Besucher Aktuell',
+                  Text(
+                    visitors.toString() + ' Personen',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 18,
+                      fontSize: 25,
+                      color: visitors > 2000 ? Colors.red : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    visitors.toString(),
+                  const Text(
+                    'Besucherzahl',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: visitors > 2000 ? Colors.red : Colors.black,
+                      color: Color.fromARGB(255, 78, 78, 78),
+                      fontSize: 18,
                     ),
                   ),
                 ],
@@ -136,25 +139,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    const Text(
-                      'Temperatur',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
                     Text(
                       '$temperature°C',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 22,
                         color: temperature >= 25
                             ? Colors.red
                             : temperature >= 15
                                 ? Colors.orange
                                 : Colors.blue,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Temperatur',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 78, 78, 78),
+                        fontSize: 18,
                       ),
                     ),
                   ],
@@ -169,14 +172,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 padding: const EdgeInsets.all(25),
                 child: Column(children: [
-                  const Text(
-                    'Luftdruck',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                   Text(
                     "${airPressure}hPa",
                     style: TextStyle(
@@ -185,6 +180,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: airPressure < 1000 || airPressure > 1100
                           ? Colors.red
                           : Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Luftdruck',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 78, 78, 78),
                     ),
                   ),
                 ]),
