@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
-import 'package:forestapp/widget/overviewWidget.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
 
 import 'dart:async';
@@ -133,7 +132,6 @@ class _SensorListScreenState extends State<SensorListScreen> {
         length: 1,
         child: Column(
           children: [
-            OverviewContainer(text: "Sensorliste Übersicht"),
             Expanded(
               child: TabBarView(
                 children: [

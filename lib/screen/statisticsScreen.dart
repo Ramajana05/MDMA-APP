@@ -60,11 +60,6 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Übersicht",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
                       ElevatedButton.icon(
                         style: const ButtonStyle(
                             backgroundColor:
