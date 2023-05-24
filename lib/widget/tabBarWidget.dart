@@ -60,12 +60,6 @@ class _TabBarWidgetState extends State<TabBarWidget>
       child: Container(
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
-          border: Border(
-            top: BorderSide(
-              color: Colors.black,
-              width: 0.5,
-            ),
-          ),
         ),
         child: TabBar(
           controller: _tabController,

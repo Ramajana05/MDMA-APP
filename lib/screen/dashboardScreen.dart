@@ -66,32 +66,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
       ),
       body: Column(children: [
-        //Overview Header
-        Container(
-          height: 70,
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3)),
-            ],
-          ),
-          //Overview Text
-          child: const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              "Übersicht",
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-          ),
-        ),
         //Visitors
         Container(
           padding: const EdgeInsets.all(16),

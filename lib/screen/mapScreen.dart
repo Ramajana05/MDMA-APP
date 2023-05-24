@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
-import 'package:forestapp/widget/overviewWidget.dart';
 import 'package:forestapp/widget/tabBarWidget.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -99,7 +98,6 @@ class _MapScreen extends State<MapScreen> {
       // Add your body here
 
       body: Column(children: [
-        OverviewContainer(text: "Karten Übersicht"),
         TabBarWidget(
           tabTexts: ['Alle', 'Standorte', 'Sensoren'],
           onTabSelected: _updateSelectedTab,

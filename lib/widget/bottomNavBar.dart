@@ -60,7 +60,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'QR Code',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.report),
+              icon: Icon(Icons.sensors),
               label: 'Sensoren',
             ),
           ],
