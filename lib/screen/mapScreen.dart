@@ -86,6 +86,10 @@ class _MapScreen extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth =
+        20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0;
+
     return Scaffold(
       drawer: SidePanel(),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -95,26 +99,77 @@ class _MapScreen extends State<MapScreen> {
           // Add your side panel logic here
         },
       ),
-      // Add your body here
-
-      body: Column(children: [
-        TabBarWidget(
-          tabTexts: ['Alle', 'Standorte', 'Sensoren'],
-          onTabSelected: _updateSelectedTab,
-        ),
-        Expanded(
-          child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            zoomControlsEnabled: false,
-            circles: _circles,
-            polygons: _polygons,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              TabBarWidget(
+                tabTexts: ['Alle', 'Standorte', 'Sensoren'],
+                onTabSelected: _updateSelectedTab,
+              ),
+              Expanded(
+                child: GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _kGooglePlex,
+                  zoomControlsEnabled: false,
+                  circles: _circles,
+                  polygons: _polygons,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
+              ),
+            ],
           ),
-        ),
-      ]),
+          Positioned(
+            bottom: 2,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Red',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Orange',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.green,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Green',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Get current location

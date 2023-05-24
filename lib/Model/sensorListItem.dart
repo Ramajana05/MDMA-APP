@@ -34,7 +34,52 @@ class SensorListItemWidget extends StatefulWidget {
 class _SensorListItemWidgetState extends State<SensorListItemWidget> {
   bool expanded = false;
 
-  @override
+  Widget _buildBatteryIcon(String chargerInfo) {
+    int batteryLevel = int.tryParse(chargerInfo) ?? 0;
+
+    if (batteryLevel >= 90) {
+      return Icon(
+        Icons.battery_full,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 75) {
+      return Icon(
+        Icons.battery_5_bar,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 60) {
+      return Icon(
+        Icons.battery_4_bar,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 45) {
+      return Icon(
+        Icons.battery_3_bar,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 30) {
+      return Icon(
+        Icons.battery_3_bar,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 15) {
+      return Icon(
+        Icons.battery_2_bar,
+        color: Colors.black,
+      );
+    } else if (batteryLevel >= 5) {
+      return Icon(
+        Icons.battery_1_bar,
+        color: Colors.black,
+      );
+    } else {
+      return Icon(
+        Icons.battery_0_bar,
+        color: Colors.black,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -84,7 +129,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                             SizedBox(height: 4),
                             SizedBox(width: 4),
                             Text(
-                              'Standort: ${widget.latitude}  ${widget.longitude}',
+                              'Standort: ${widget.latitude}, ${widget.longitude}',
                               style: TextStyle(
                                 fontSize: 15, // Adjust the font size here
                               ),
@@ -105,12 +150,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                         color: Colors.black,
                       ),
                       SizedBox(height: 4),
-                      Text(
-                        widget.createDate,
-                        style: TextStyle(
-                          fontSize: 15, // Adjust the font size here
-                        ),
-                      ),
+                      _buildBatteryIcon(widget.chargerInfo),
                     ],
                   ),
                 ),
