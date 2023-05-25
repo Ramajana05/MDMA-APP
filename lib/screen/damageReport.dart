@@ -21,7 +21,8 @@ class _DamageReportState extends State<DamageReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopNavBarBasic(
-        title: 'Schadenbericht',
+        title: 'SCHADENBERICHT',
+        returnStatus: true,
       ),
       body: Center(
         child: Container(
@@ -45,7 +46,7 @@ class _DamageReportState extends State<DamageReport> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text(
-                  'SchadenTitel',
+                  'Schaden Titel',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class _DamageReportState extends State<DamageReport> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your SchadenTitel';
+                      return 'Bitte fügen Sie einen Schaden Titel hinzu';
                     }
                     return null;
                   },
@@ -84,7 +85,7 @@ class _DamageReportState extends State<DamageReport> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your Beschreibung';
+                      return 'Bitte fügen Sie eine Beschreibung hinzu';
                     }
                     return null;
                   },
@@ -102,10 +103,10 @@ class _DamageReportState extends State<DamageReport> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                     height: 50,
-                    width: 210,
+                    width: 170,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 30, 143, 73),
+                        color: Color.fromARGB(255, 165, 245, 198),
                         borderRadius: BorderRadius.circular(30)),
                     child: DropdownButton<String>(
                       value: _dropdownValue,
@@ -153,7 +154,7 @@ class _DamageReportState extends State<DamageReport> {
                       ),
                     ),
                     label: Text(
-                      "Upload Additional file",
+                      "Bild hochladen",
                       style: TextStyle(
                         color: Colors.black,
                       ),
@@ -188,7 +189,7 @@ class _DamageReportState extends State<DamageReport> {
                       Color.fromARGB(255, 15, 15, 15),
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 30, 143, 73),
+                      Color.fromARGB(255, 165, 245, 198),
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(

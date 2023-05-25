@@ -17,7 +17,7 @@ class LogOutDecoration {
 
   static TextStyle getTitleTextStyle() {
     return TextStyle(
-      color: Color.fromARGB(255, 72, 231, 78),
+      color: Color.fromARGB(255, 40, 233, 127),
       fontWeight: FontWeight.bold,
       fontSize: 20.0,
     );
