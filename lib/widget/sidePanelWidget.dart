@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
 import 'package:forestapp/db/sessionProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:forestapp/screen/profileScreen.dart';
 
 class SidePanel extends StatelessWidget {
   Future<String?> _getLoggedInUsername() async {
@@ -69,7 +70,13 @@ class SidePanel extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.person), // Add leading icon
             title: Text('Profil'),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.public), // Add leading icon
