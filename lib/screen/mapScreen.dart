@@ -28,7 +28,7 @@ class _MapScreen extends State<MapScreen> {
   void initState() {
     super.initState();
     _selectedTab = 'alle';
-    _circles = MapObjects().getCircles();
+    _circles = MapObjects().getCircless(_handleCircleTap);
     _polygons = MapObjects().getPolygons();
   }
 
@@ -41,7 +41,7 @@ class _MapScreen extends State<MapScreen> {
               : 'sensoren';
       switch (_selectedTab) {
         case 'alle':
-          _circles = MapObjects().getCircles();
+          _circles = MapObjects().getCircless(_handleCircleTap);
           _polygons = MapObjects().getPolygons();
           break;
         case 'standorte':
@@ -49,7 +49,7 @@ class _MapScreen extends State<MapScreen> {
           _polygons = MapObjects().getPolygons();
           break;
         case 'sensoren':
-          _circles = MapObjects().getCircles();
+          _circles = MapObjects().getCircless(_handleCircleTap);
           _polygons = Set<Polygon>();
           break;
         default:
@@ -58,6 +58,78 @@ class _MapScreen extends State<MapScreen> {
           break;
       }
     });
+  }
+
+  void _handleCircleTap(CircleData circle) {
+    showBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        Timer(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+
+        return WillPopScope(
+          onWillPop: () async {
+            return true; // Allow back button to close the bottom sheet
+          },
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          circle.circleId.value,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'You tapped circle: ${circle.circleId.value}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -86,6 +158,10 @@ class _MapScreen extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth =
+        20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0;
+
     return Scaffold(
       drawer: SidePanel(),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -95,72 +171,125 @@ class _MapScreen extends State<MapScreen> {
           // Add your side panel logic here
         },
       ),
-      // Add your body here
-
-      body: Column(children: [
-        TabBarWidget(
-          tabTexts: ['Alle', 'Standorte', 'Sensoren'],
-          onTabSelected: _updateSelectedTab,
-        ),
-        Expanded(
-          child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            zoomControlsEnabled: false,
-            circles: _circles,
-            polygons: _polygons,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              TabBarWidget(
+                tabTexts: ['Alle', 'Standorte', 'Sensoren'],
+                onTabSelected: _updateSelectedTab,
+              ),
+              Expanded(
+                child: GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _kGooglePlex,
+                  zoomControlsEnabled: false,
+                  circles: _circles,
+                  polygons: _polygons,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
+              ),
+            ],
           ),
-        ),
-      ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Get current location
-          _getCurrentLocation().then((Position position) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Aktueller Standort"),
-                  content: Text(
-                      "Latitude: ${position.latitude}\nLongitude: ${position.longitude}"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Ok"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+          Positioned(
+            bottom: 2,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Red',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Orange',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      color: Colors.green,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Green',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
-                );
-              },
-            );
-          }).catchError((e) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Failed to get current location: $e"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Close"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          });
-        },
-        child: Icon(Icons.location_on),
-        backgroundColor: Color.fromARGB(255, 117, 241, 169),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      /*
+floatingActionButton: FloatingActionButton(
+  onPressed: () {
+    // Get current location
+    _getCurrentLocation().then((Position position) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Aktueller Standort"),
+            content: Text(
+                "Latitude: ${position.latitude}\nLongitude: ${position.longitude}"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Failed to get current location: $e"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+  },
+  child: Icon(Icons.location_on),
+  backgroundColor: Color.fromARGB(255, 117, 241, 169),
+),
+floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+*/
     );
   }
 }

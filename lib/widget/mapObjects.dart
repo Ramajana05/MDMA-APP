@@ -72,6 +72,48 @@ class MapObjects {
     strokeWidth: 2,
   );
 
+  Set<Circle> getCircless(Function(CircleData) onTap) {
+    return Set.from([
+      if (visible)
+        Circle(
+          circleId: circle1.circleId,
+          center: circle1.center,
+          radius: circle1.radius,
+          fillColor: circle1.fillColor,
+          strokeColor: circle1.strokeColor,
+          strokeWidth: circle1.strokeWidth,
+          consumeTapEvents: true,
+          onTap: () => onTap(circle1),
+        ),
+      if (visible)
+        Circle(
+          circleId: circle2.circleId,
+          center: circle2.center,
+          radius: circle2.radius,
+          fillColor: circle2.fillColor,
+          strokeColor: circle2.strokeColor,
+          strokeWidth: circle2.strokeWidth,
+          consumeTapEvents: true,
+          onTap: () => onTap(circle2),
+        ),
+      // Add other circles with onTap callback
+    ]);
+  }
+
+  Set<Polygon> getPolygonss(VoidCallback onTap) {
+    return Set.from([
+      // Define polygons using the toPolygon method and assign the onTap callback
+    ]);
+  }
+
+  // Define all objects (circles and polygons)...
+
+  Set<Overlay> getAllObjectss(VoidCallback onTap) {
+    return Set.from([
+      // Define all objects using the toCircle and toPolygon methods and assign the onTap callback
+    ]);
+  }
+
   static final CircleData circle2 = CircleData(
     circleId: CircleId('circle2'),
     center: LatLng(49.12130720429596, 9.276199658137801),
