@@ -15,7 +15,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: topNavBarDecoration.getTitleTextStyle(),
       ),
-      backgroundColor: Color.fromARGB(255, 248, 245, 245),
+      backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -34,6 +34,19 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
           decoration: topNavBarDecoration.getBoxDecoration(),
           height: 4.0,
         ),
+      ),
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back,
+          color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      iconTheme: IconThemeData(
+        color: Color.fromARGB(
+            255, 40, 233, 127), // Change this to the desired color
       ),
     );
   }
