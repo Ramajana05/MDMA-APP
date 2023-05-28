@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import '../widget/topNavBar.dart';
 
@@ -11,44 +12,78 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  DateTime today = DateTime.now();
-  DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
-  DateTime afterTomorrow = DateTime.now().add(const Duration(days: 2));
-  DateTime day3 = DateTime.now().add(const Duration(days: 3));
-
   var temperature = 0.0;
   var visitors = 4856;
-  var airPressure = 0;
+  var airPressure = 0.0;
 
   List<WeatherItem> weatherForecast = [];
 
-  Future<void> fetchWeatherData() async {
+  Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
-        'http://api.weatherapi.com/v1/current.json?key=27582f8ca711490a986134852231605&q=Heilbronn&aqi=no'));
+        'http://api.weatherapi.com/v1/forecast.json?key=27582f8ca711490a986134852231605&q=Heilbronn&days=5&aqi=no&alerts=no'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       final weatherData = data['current'];
-      final forecastData = data['forecast'];
+      final forecastData = data['forecast']['forecastday'];
 
       if (weatherData != null && forecastData != null) {
-        setState(() {
-          airPressure = weatherData['pressure_mb'].toDouble();
-          temperature = weatherData['temp_c'].toDouble();
+        final airPressure =
+            (weatherData['pressure_mb'] as num?)?.toDouble() ?? 0.0;
+        final temperature = (weatherData['temp_c'] as num?)?.toDouble() ?? 0.0;
 
-          weatherForecast =
-              List<WeatherItem>.from(forecastData.map((item) => WeatherItem(
-                    weekday: item['date'],
-                    date: DateTime.parse(item['date']),
-                    weatherIcon: item['day']['condition']['icon'],
-                    temperature: item['day']['maxtemp_c'].toDouble(),
-                    rainPercentage:
-                        item['day']['daily_chance_of_rain'].toDouble(),
-                    windSpeed: item['day']['maxwind_kph'].toDouble(),
-                  )));
+        List<WeatherItem> weatherItems =
+            forecastData.skip(1).map<WeatherItem>((item) {
+          final maxTemp = (item['day']['maxtemp_c']);
+          final rainPercentage =
+              (item['day']['daily_chance_of_rain"'] as num?)?.toDouble() ?? 0;
+          final windSpeed =
+              (item['day']['maxwind_kph'] as num?)?.toDouble() ?? 0;
+
+          final dateTime = DateTime.parse(item['date']);
+          final weekday = getGermanWeekday(dateTime.weekday);
+
+          return WeatherItem(
+            weekday: weekday,
+            date: item['date'],
+            weatherIcon: item['day']['condition']['icon'],
+            temperature: maxTemp,
+            rainPercentage: rainPercentage,
+            windSpeed: windSpeed,
+          );
+        }).toList();
+
+        setState(() {
+          this.airPressure = airPressure;
+          this.temperature = temperature;
+          weatherForecast = weatherItems;
         });
+
+        return weatherItems;
       }
+    }
+
+    return [];
+  }
+
+  String getGermanWeekday(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return 'Montag';
+      case DateTime.tuesday:
+        return 'Dienstag';
+      case DateTime.wednesday:
+        return 'Mittwoch';
+      case DateTime.thursday:
+        return 'Donnerstag';
+      case DateTime.friday:
+        return 'Freitag';
+      case DateTime.saturday:
+        return 'Samstag';
+      case DateTime.sunday:
+        return 'Sonntag';
+      default:
+        return '';
     }
   }
 
@@ -88,7 +123,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: const Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              "Overview",
+              "Übersicht",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -104,37 +139,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                height: 200,
                 decoration: BoxDecoration(
                   color: const Color(0xff86ffd6),
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xff86ffd6), width: 5),
                 ),
                 padding: const EdgeInsets.all(15),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Besucher Aktuell',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$visitors',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      visitors.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: visitors > 2000 ? Colors.red : Colors.black,
-                      ),
+                    Row(
+                      children: const [
+                        Text(
+                          'Besucher',
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.person,
+                          size: 40,
+                        ),
+                        Icon(
+                          Icons.person,
+                          size: 40,
+                        ),
+                        Icon(
+                          Icons.person,
+                          size: 40,
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-// Temperature and Air Pressure
-              Column(
+            ],
+          ),
+        ),
+        // Temperature
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(children: [
+              Row(
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -144,22 +209,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        const Text(
-                          'Temperatur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              '$temperature°C',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.black),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          '$temperature°C',
+                        Row(
+                          children: const [
+                            Text(
+                              'Temperatur',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.thermostat,
+                              size: 30,
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(width: 20),
+                  // Air Pressure
                   Container(
                     decoration: BoxDecoration(
                       color: const Color.fromRGBO(3, 255, 94, 0.25),
@@ -168,33 +253,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     padding: const EdgeInsets.all(25),
                     child: Column(
                       children: [
-                        const Text(
-                          'Luftdruck',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "$airPressure hPa",
+                              style: const TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          "${airPressure}hPa",
+                        Row(
+                          children: const [
+                            Text(
+                              'Luftdruck',
+                              style: TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/4352492.png',
+                              width: 33,
+                              height: 33,
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ]),
+          ],
         ),
+        //Weather Forecast
         Container(
           height: 70,
           alignment: Alignment.centerLeft,
-// Weather Text
+          // Weather Text
           child: const Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              "Wetter",
+              "Wettervorhersage",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -204,7 +310,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         const SizedBox(height: 10),
-// Weather
+        // Weather
         Expanded(
           child: GridView.builder(
             itemCount: weatherForecast.length,
@@ -213,7 +319,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ? 2
                   : 1, // Display 2 items in a row if width >= 350, otherwise display 1 item
               crossAxisSpacing: 10,
-              mainAxisSpacing: 0,
               childAspectRatio: 1,
             ),
             itemBuilder: (BuildContext context, int index) {
@@ -229,7 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 class WeatherItem {
   final String weekday;
-  final DateTime date;
+  final String date;
   final String weatherIcon;
   final double temperature;
   final double rainPercentage;
@@ -264,8 +369,14 @@ class WeatherItemCard extends StatelessWidget {
             Text(
               weatherData.weekday,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 15,
+              ),
+            ),
+            // Display the date
+            Text(
+              DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
+              style: const TextStyle(
+                fontSize: 14,
               ),
             ),
             // Display the temperature
@@ -279,19 +390,37 @@ class WeatherItemCard extends StatelessWidget {
             // Display the weather icon
             Image.network(
               'https:${weatherData.weatherIcon}',
-              width: 40,
-              height: 40,
+              width: 50,
+              height: 50,
               fit: BoxFit.cover,
             ),
             // Display the rain percentage
-            Text(
-              'Regen: ${weatherData.rainPercentage}%',
-              style: const TextStyle(fontSize: 16),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons8-water-24.png',
+                  height: 17,
+                  width: 17,
+                  color: Colors.blue,
+                ),
+                Text(
+                  '${weatherData.rainPercentage}%',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
             ),
             // Display the wind speed
-            Text(
-              'Wind: ${weatherData.windSpeed} km/h',
-              style: const TextStyle(fontSize: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.air, size: 24, color: Colors.grey),
+                Text(
+                  '${weatherData.windSpeed} km/h',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ],
         ),
