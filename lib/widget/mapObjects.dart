@@ -61,10 +61,8 @@ class PolygonData {
 }
 
 class MapObjects {
-  bool visible = true;
-
   static final CircleData circle1 = CircleData(
-    circleId: CircleId('circle1'),
+    circleId: CircleId('Sensor 1'),
     center: LatLng(49.11924788327113, 9.27132073211473),
     radius: 25,
     fillColor: Color.fromARGB(255, 128, 189, 113).withOpacity(0.2),
@@ -74,28 +72,26 @@ class MapObjects {
 
   Set<Circle> getCircless(Function(CircleData) onTap) {
     return Set.from([
-      if (visible)
-        Circle(
-          circleId: circle1.circleId,
-          center: circle1.center,
-          radius: circle1.radius,
-          fillColor: circle1.fillColor,
-          strokeColor: circle1.strokeColor,
-          strokeWidth: circle1.strokeWidth,
-          consumeTapEvents: true,
-          onTap: () => onTap(circle1),
-        ),
-      if (visible)
-        Circle(
-          circleId: circle2.circleId,
-          center: circle2.center,
-          radius: circle2.radius,
-          fillColor: circle2.fillColor,
-          strokeColor: circle2.strokeColor,
-          strokeWidth: circle2.strokeWidth,
-          consumeTapEvents: true,
-          onTap: () => onTap(circle2),
-        ),
+      Circle(
+        circleId: circle1.circleId,
+        center: circle1.center,
+        radius: circle1.radius,
+        fillColor: circle1.fillColor,
+        strokeColor: circle1.strokeColor,
+        strokeWidth: circle1.strokeWidth,
+        consumeTapEvents: true,
+        onTap: () => onTap(circle1),
+      ),
+      Circle(
+        circleId: circle2.circleId,
+        center: circle2.center,
+        radius: circle2.radius,
+        fillColor: circle2.fillColor,
+        strokeColor: circle2.strokeColor,
+        strokeWidth: circle2.strokeWidth,
+        consumeTapEvents: true,
+        onTap: () => onTap(circle2),
+      ),
       // Add other circles with onTap callback
     ]);
   }
@@ -150,7 +146,7 @@ class MapObjects {
     strokeWidth: 2,
   );
 
-  static const PolygonData polygon1 = PolygonData(
+  /*static const PolygonData polygon1 = PolygonData(
     id: PolygonId('polygon1'),
     points: [
       LatLng(49.119597, 9.277048),
@@ -162,8 +158,9 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 124, 113, 189),
     strokeWidth: 2,
   );
+  */
 
-  static const PolygonData polygon2 = PolygonData(
+  /*static const PolygonData polygon2 = PolygonData(
     id: PolygonId('polygon2'),
     points: [
       LatLng(49.123457, 9.263429),
@@ -175,8 +172,9 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 128, 189, 113),
     strokeWidth: 2,
   );
+  */
 
-  static const PolygonData polygon3 = PolygonData(
+  /*static const PolygonData polygon3 = PolygonData(
     id: PolygonId('Grillplatz'),
     points: [
       LatLng(49.127550, 9.266083),
@@ -188,8 +186,8 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 106, 156, 221),
     strokeWidth: 2,
   );
-
-  static const PolygonData polygon4 = PolygonData(
+*/
+  /* static const PolygonData polygon4 = PolygonData(
     id: PolygonId('Waldheide'),
     points: [
       LatLng(49.133342, 9.272091),
@@ -201,8 +199,9 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 128, 189, 113),
     strokeWidth: 2,
   );
+  */
 
-  static const PolygonData polygon5 = PolygonData(
+  /*static const PolygonData polygon5 = PolygonData(
     id: PolygonId('Grillplatzweg'),
     points: [
       LatLng(49.125444, 9.267543),
@@ -214,7 +213,8 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 252, 139, 34),
     strokeWidth: 2,
   );
-
+*/
+/*
   static const PolygonData polygon6 = PolygonData(
     id: PolygonId('Jägerhaus'),
     points: [
@@ -227,41 +227,32 @@ class MapObjects {
     strokeColor: Color.fromARGB(255, 252, 139, 34),
     strokeWidth: 2,
   );
+  */
 
   Set<Circle> getCircles() {
     return Set.from([
-      if (visible) circle1.toCircle(),
-      if (visible) circle2.toCircle(),
-      if (visible) circle3.toCircle(),
-      if (visible) circle4.toCircle(),
-      if (visible) circle5.toCircle(),
+      circle1.toCircle(),
+      circle2.toCircle(),
+      circle3.toCircle(),
+      circle4.toCircle(),
+      circle5.toCircle(),
     ]);
   }
 
   Set<Polygon> getPolygons() {
     return Set.from([
-      if (visible) polygon1.toPolygon(),
-      if (visible) polygon2.toPolygon(),
-      if (visible) polygon3.toPolygon(),
-      if (visible) polygon4.toPolygon(),
-      if (visible) polygon5.toPolygon(),
-      if (visible) polygon6.toPolygon(),
+      //polygon1.toPolygon(),
+      //polygon2.toPolygon(),
     ]);
   }
 
   Set<Overlay> getAllObjects() {
     return Set.from([
-      if (visible) circle1.toCircle(),
-      if (visible) circle2.toCircle(),
-      if (visible) circle3.toCircle(),
-      if (visible) circle4.toCircle(),
-      if (visible) circle5.toCircle(),
-      if (visible) polygon1.toPolygon(),
-      if (visible) polygon2.toPolygon(),
-      if (visible) polygon3.toPolygon(),
-      if (visible) polygon4.toPolygon(),
-      if (visible) polygon5.toPolygon(),
-      if (visible) polygon6.toPolygon(),
+      circle1.toCircle(),
+      circle2.toCircle(),
+      circle3.toCircle(),
+      circle4.toCircle(),
+      circle5.toCircle(),
     ]);
   }
 }

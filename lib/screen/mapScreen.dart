@@ -61,6 +61,111 @@ class _MapScreen extends State<MapScreen> {
   }
 
   void _handleCircleTap(CircleData circle) {
+    int batteryLevel = 7;
+
+    showBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        Timer(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+
+        return WillPopScope(
+          onWillPop: () async {
+            return true; // Allow back button to close the bottom sheet
+          },
+          child: GestureDetector(
+            onVerticalDragDown:
+                (_) {}, // Disable dragging gesture to prevent unintended behavior
+            child: SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        circle.circleId.value,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Row(
+                            children: List.generate(
+                              10,
+                              (index) => Container(
+                                width: 9,
+                                height: 15,
+                                margin: EdgeInsets.only(right: 4),
+                                decoration: BoxDecoration(
+                                  color: index < batteryLevel
+                                      ? Color.fromARGB(255, 47, 189, 52)
+                                          .withOpacity(0.4)
+                                      : Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: index < batteryLevel
+                                          ? Color.fromARGB(255, 47, 189, 52)
+                                              .withOpacity(0.4)
+                                          : Colors.transparent,
+                                      blurRadius: 4,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.battery_6_bar,
+                            color: Colors.grey[600],
+                            size: 16,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            batteryLevel.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'You tapped circle: ${circle.circleId.value}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _handlePolygonTap(CircleData circle) {
     showBottomSheet(
       context: context,
       builder: (BuildContext context) {

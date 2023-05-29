@@ -5,6 +5,8 @@ import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/widget/bottomNavBar.dart';
 import 'package:forestapp/widget/TopNavBarBasic.dart';
 import 'package:forestapp/dialog/problemsDialog.dart';
+import 'package:forestapp/provider/userProvider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final LoginService _loginService = LoginService();
+  String loggedInUsername = "";
 
   late Database _database;
 
@@ -34,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _initDatabase() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'MDMADatabase.db');
+    final path = join(databasesPath, 'MDMA.db');
 
     // Open the database
     _database = await openDatabase(
@@ -74,6 +77,10 @@ class _LoginPageState extends State<LoginPage> {
           await _loginService.performLogin(username, password, context);
 
       if (isLoggedIn) {
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setLoggedInUsername(username);
+        userProvider.fetchUserDetails();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => BottomTabBar()),
