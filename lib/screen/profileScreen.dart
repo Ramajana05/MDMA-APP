@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
 import 'package:forestapp/dialog/deleteProfileDialog.dart';
+import 'package:forestapp/screen/loginScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:forestapp/provider/userProvider.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final String? currentUsername;
+
+  ProfileScreen({
+    this.currentUsername,
+  });
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -22,6 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final loggedInUsername = userProvider.loggedInUsername;
+    final role = userProvider.role;
     final screenHeight = MediaQuery.of(context).size.height;
     final headerHeight = screenHeight * 0.18;
 
@@ -54,14 +66,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.grey[150], // Soft grey color
                 child: Column(
                   children: [
-                    buildProfileItem(Icons.person, 'Benutzername'),
+                    buildProfileItem(Icons.person, loggedInUsername ?? ''),
                     Divider(),
                     buildProfileItem(Icons.phone_android, 'Förster'),
                     Divider(),
                     buildProfileItem(
                         Icons.location_on, 'Heilbronn, Deutschland'),
-                    Divider(),
-                    buildProfileItem(Icons.event, '2007-08-31 16:47'),
                   ],
                 ),
               ),

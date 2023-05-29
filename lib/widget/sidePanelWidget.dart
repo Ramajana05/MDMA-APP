@@ -68,14 +68,19 @@ class SidePanel extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.person), // Add leading icon
+            leading: Icon(Icons.person),
             title: Text('Profil'),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ),
-              );
+              _getLoggedInUsername().then((currentUsername) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                      currentUsername: currentUsername ?? '',
+                    ),
+                  ),
+                );
+              });
             },
           ),
           ListTile(
