@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
-import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -17,11 +16,11 @@ class BottomTabBar extends StatefulWidget {
 class _BottomTabBarState extends State<BottomTabBar> {
   int _index = 0;
   final screens = [
-    DashboardScreen(),
+    const DashboardScreen(),
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    AlertScreen(),
+    const SensorListScreen(),
   ];
 
   @override
@@ -34,33 +33,34 @@ class _BottomTabBarState extends State<BottomTabBar> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _index,
           showUnselectedLabels: false,
-          selectedItemColor: Color.fromARGB(255, 28, 56, 45),
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Color.fromARGB(204, 12, 156, 77),
           onTap: (value) {
             setState(() {
               _index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 227, 227, 227),
+          backgroundColor: Color.fromARGB(255, 248, 245, 245),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
-              label: 'Dashboard',
+              label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.graphic_eq),
-              label: 'Statistics',
+              label: 'Statistik',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.pin_drop),
-              label: 'Maps',
+              label: 'Karte',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
-              label: 'Scanner',
+              label: 'QR Code',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.warning),
-              label: 'Alerts',
+              icon: Icon(Icons.sensors),
+              label: 'Sensoren',
             ),
           ],
           selectedLabelStyle: const TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -96,12 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SidePanel(),
       backgroundColor: Colors.white,
-      appBar: TopNavBar(
+      appBar: const TopNavBar(
         title: 'DASHBOARD',
-        onMenuPressed: () {
-          // Add your side panel logic here
-        },
       ),
       body: SingleChildScrollView(
           child: Column(children: [
