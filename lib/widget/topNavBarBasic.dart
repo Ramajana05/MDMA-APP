@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:forestapp/dialog/logoutDialog.dart';
 
 class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -35,6 +34,21 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
           height: 4.0,
         ),
       ),
+      leading: returnStatus
+          ? IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          : IconButton(
+              icon: Icon(Icons.menu),
+              onPressed:
+                  onMenuPressed, // Call the callback function when the menu button is pressed
+            ),
     );
   }
 }

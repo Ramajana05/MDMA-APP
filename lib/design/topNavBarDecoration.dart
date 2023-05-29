@@ -5,7 +5,7 @@ class topNavBarDecoration {
   static const Color endGradientColor = Color.fromARGB(255, 40, 233, 127);
 
   static BoxDecoration getBoxDecoration() {
-    return BoxDecoration(
+    return const BoxDecoration(
       gradient: LinearGradient(
         colors: [startGradientColor, endGradientColor],
         begin: Alignment.centerLeft,
@@ -21,7 +21,7 @@ class topNavBarDecoration {
   }
 
   static TextStyle getTitleTextStyle() {
-    return TextStyle(
+    return const TextStyle(
       color: Color.fromARGB(255, 40, 233, 127),
       fontSize: 24.0,
       fontWeight: FontWeight.w700,

@@ -59,11 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       drawer: SidePanel(),
       backgroundColor: Colors.white,
-      appBar: TopNavBar(
+      appBar: const TopNavBar(
         title: 'DASHBOARD',
-        onMenuPressed: () {
-          // Add your side panel logic here
-        },
       ),
       body: Column(children: [
         //Visitors
