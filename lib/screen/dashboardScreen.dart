@@ -103,11 +103,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Add your side panel logic here
         },
       ),
-      body: Column(children: [
-        // Overview Header
+      body: SingleChildScrollView(
+          child: Column(children: [
         Container(
-          height: 70,
-          alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -119,24 +117,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
-          // Overview Text
-          child: const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              "Übersicht",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              Text(
+                "Übersicht",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            ),
+            ],
           ),
         ),
         // Visitors
         Container(
           padding: const EdgeInsets.all(16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -146,11 +146,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 padding: const EdgeInsets.all(15),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '$visitors',
@@ -194,103 +191,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-        // Temperature
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(children: [
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFCEFFCD),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
+        // Temperature and Air Pressure
+        Container(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Temperature
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFCEFFCD),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              '$temperature°C',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  color: Colors.black),
-                            ),
-                          ],
+                        Text(
+                          '$temperature°C',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
                         ),
-                        Row(
-                          children: const [
-                            Text(
-                              'Temperatur',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: const [
-                            Icon(
-                              Icons.thermostat,
-                              size: 30,
-                            ),
-                          ],
-                        )
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Air Pressure
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(3, 255, 94, 0.25),
-                      borderRadius: BorderRadius.circular(20),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Temperatur',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
                     ),
-                    padding: const EdgeInsets.all(25),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "$airPressure hPa",
-                              style: const TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.thermostat,
+                          size: 30,
                         ),
-                        Row(
-                          children: const [
-                            Text(
-                              'Luftdruck',
-                              style: TextStyle(
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/4352492.png',
-                              width: 33,
-                              height: 33,
-                            ),
-                          ],
-                        )
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ]),
-          ],
+              const SizedBox(width: 20),
+              // Air Pressure
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(3, 255, 94, 0.25),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '$airPressure hPa',
+                          style: const TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Luftdruck',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/4352492.png',
+                          width: 33,
+                          height: 33,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         //Weather Forecast
         Container(
@@ -298,7 +289,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           alignment: Alignment.centerLeft,
           // Weather Text
           child: const Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.only(left: 20),
             child: Text(
               "Wettervorhersage",
               style: TextStyle(
@@ -309,15 +300,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 10),
         // Weather
-        Expanded(
+        Container(
+          margin: const EdgeInsets.all(8),
           child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: weatherForecast.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width >= 350
-                  ? 2
-                  : 1, // Display 2 items in a row if width >= 350, otherwise display 1 item
+              crossAxisCount: MediaQuery.of(context).size.width >= 350 ? 2 : 1,
               crossAxisSpacing: 10,
               childAspectRatio: 1,
             ),
@@ -327,7 +318,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
         ),
-      ]),
+        // ]),
+      ])),
     );
   }
 }
@@ -360,70 +352,68 @@ class WeatherItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Display the weekday
-            Text(
-              weatherData.weekday,
-              style: const TextStyle(
-                fontSize: 15,
-              ),
+      shadowColor: Colors.grey.withOpacity(1.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Display the weekday
+          Text(
+            weatherData.weekday,
+            style: const TextStyle(
+              fontSize: 15,
             ),
-            // Display the date
-            Text(
-              DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
-              style: const TextStyle(
-                fontSize: 14,
-              ),
+          ),
+          // Display the date
+          Text(
+            DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
+            style: const TextStyle(
+              fontSize: 14,
             ),
-            // Display the temperature
-            Text(
-              '${weatherData.temperature}°C',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+          ),
+          // Display the temperature
+          Text(
+            '${weatherData.temperature}°C',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-            // Display the weather icon
-            Image.network(
-              'https:${weatherData.weatherIcon}',
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-            // Display the rain percentage
+          ),
+          // Display the weather icon
+          Image.network(
+            'https:${weatherData.weatherIcon}',
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+          // Display the rain percentage
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons8-water-24.png',
-                  height: 17,
-                  width: 17,
-                  color: Colors.blue,
-                ),
-                Text(
-                  '${weatherData.rainPercentage}%',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-            // Display the wind speed
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.air, size: 24, color: Colors.grey),
-                Text(
-                  '${weatherData.windSpeed} km/h',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ],
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/icons8-water-24.png',
+                height: 17,
+                width: 17,
+                color: Colors.blue,
+              ),
+              Text(
+                '${weatherData.rainPercentage}%',
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          // Display the wind speed
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.air, size: 24, color: Colors.grey),
+              Text(
+                '${weatherData.windSpeed} km/h',
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
