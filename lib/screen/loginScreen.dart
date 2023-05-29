@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ungültige Benutzername oder Passwort.'),
+            content: Text('Ungültiger Benutzername oder Passwort.'),
           ),
         );
       }

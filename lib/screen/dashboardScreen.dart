@@ -385,16 +385,10 @@ class WeatherItemCard extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           // Display the rain percentage
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/icons8-water-24.png',
-                height: 17,
-                width: 17,
-                color: Colors.blue,
-              ),
+              const Icon(Icons.water_drop, size: 20, color: Colors.blue),
               Text(
                 '${weatherData.rainPercentage}%',
                 style: const TextStyle(fontSize: 16),
