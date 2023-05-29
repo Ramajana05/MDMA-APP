@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? _email;
+  String? _username;
   String? _password;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ungültige E-Mail oder Passwort.'),
+            content: Text('Ungültige Benutzername oder Passwort.'),
           ),
         );
       }
@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           return null;
                         },
-                        onSaved: (value) => _email = value?.trim(),
+                        onSaved: (value) => _username = value?.trim(),
                       ),
                     ),
                     SizedBox(height: 16.0),
