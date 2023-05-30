@@ -92,13 +92,20 @@ class _PasswordDialogState extends State<PasswordDialog> {
           child: Text(
             'Abbrechen',
             style: TextStyle(
-              color: Colors.red,
+              color: const Color.fromARGB(255, 92, 92, 92),
             ),
           ),
         ),
         TextButton(
           onPressed: widget.onConfirmPressed,
-          child: isLoading ? CircularProgressIndicator() : Text('Bestätigen'),
+          child: isLoading
+              ? CircularProgressIndicator()
+              : Text(
+                  'Bestätigen',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 92, 92, 92),
+                  ),
+                ),
         ),
       ],
     );
