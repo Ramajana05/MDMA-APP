@@ -40,42 +40,42 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     if (batteryLevel >= 90) {
       return Icon(
         Icons.battery_full,
-        color: Colors.black,
+        color: Color.fromARGB(255, 46, 202, 51),
       );
     } else if (batteryLevel >= 75) {
       return Icon(
         Icons.battery_5_bar,
-        color: Colors.black,
+        color: Color.fromARGB(255, 46, 202, 51),
       );
     } else if (batteryLevel >= 60) {
       return Icon(
         Icons.battery_4_bar,
-        color: Colors.black,
+        color: Colors.orange,
       );
     } else if (batteryLevel >= 45) {
       return Icon(
         Icons.battery_3_bar,
-        color: Colors.black,
+        color: Colors.orange,
       );
     } else if (batteryLevel >= 30) {
       return Icon(
         Icons.battery_3_bar,
-        color: Colors.black,
+        color: Colors.red,
       );
     } else if (batteryLevel >= 15) {
       return Icon(
         Icons.battery_2_bar,
-        color: Colors.black,
+        color: Colors.red,
       );
     } else if (batteryLevel >= 5) {
       return Icon(
         Icons.battery_1_bar,
-        color: Colors.black,
+        color: Colors.red,
       );
     } else {
       return Icon(
         Icons.battery_0_bar,
-        color: Colors.black,
+        color: Colors.red,
       );
     }
   }

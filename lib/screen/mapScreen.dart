@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:forestapp/dialog/informationDialog.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _MapScreen extends State<MapScreen> {
   late String _selectedTab;
   late Set<Circle> _circles;
   late Set<Polygon> _polygons;
-  final Completer<GoogleMapController> _controller = Completer(); // Added
+  final Completer<GoogleMapController> _controller = Completer();
 
   @override
   void initState() {
@@ -313,21 +314,21 @@ class _MapScreen extends State<MapScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      color: const Color.fromARGB(255, 255, 32, 17),
+                    Icon(
+                      Icons.battery_full,
+                      color: Color.fromARGB(255, 46, 202, 51),
+                      size: 20,
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Schwach',
+                      'Voll',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      color: Color.fromARGB(255, 255, 145, 0),
+                    Icon(
+                      Icons.battery_5_bar,
+                      color: Colors.orange,
+                      size: 20,
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -335,18 +336,82 @@ class _MapScreen extends State<MapScreen> {
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      color: const Color.fromARGB(255, 51, 224, 57),
+                    Icon(
+                      Icons.battery_2_bar,
+                      color: Colors.red,
+                      size: 20,
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Stark',
+                      'Niedrig',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 46, 202, 51),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      '+10',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 128, 197, 130),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      '5 - 10',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 170, 169, 169),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Unter 5',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 60,
+            right: 16,
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => InformationDialog(),
+                );
+              },
+              child: Icon(
+                Icons.info_outline,
+                size: 24,
+                color: const Color.fromARGB(255, 0, 112, 204),
               ),
             ),
           ),
