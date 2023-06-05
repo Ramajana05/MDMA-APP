@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
@@ -12,9 +10,8 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/damage.dart';
 import 'package:forestapp/widget/topNavBar.dart';
+import 'package:forestapp/service/loginService.dart';
 import 'DamageReport.dart';
-
-//import 'your_database_connection.dart'; // Import your database connection file
 
 class SensorListScreen extends StatefulWidget {
   const SensorListScreen({Key? key}) : super(key: key);
@@ -24,52 +21,7 @@ class SensorListScreen extends StatefulWidget {
 }
 
 class _SensorListScreenState extends State<SensorListScreen> {
-  List<Damage> damagesList = [
-    Damage(
-      sensorName: "Sensor 1",
-      latitude: 49.11,
-      longitude: 9.27,
-      status: "Offline",
-      createDate: "13-05-2023",
-      signalStrength: "Schwach",
-      chargerInfo: "100",
-      temperatur: 18.5,
-      airPressure: 1020,
-    ),
-    Damage(
-      sensorName: "Sensor 2",
-      latitude: 49.12,
-      longitude: 9.33,
-      status: "Online",
-      createDate: "11-01-2022",
-      signalStrength: "Hoch",
-      chargerInfo: "66",
-      temperatur: 16.7,
-      airPressure: 1000,
-    ),
-    Damage(
-      sensorName: "Sensor 3",
-      latitude: 49.09,
-      longitude: 9.22,
-      status: "Online",
-      createDate: "21-02-2022",
-      signalStrength: "Mittel",
-      chargerInfo: "35",
-      temperatur: 15,
-      airPressure: 988,
-    ),
-    Damage(
-      sensorName: "Sensor 4",
-      latitude: 49.09,
-      longitude: 9.21,
-      status: "Offline",
-      createDate: "04-04-2022",
-      signalStrength: "Niedrig",
-      chargerInfo: "10",
-      temperatur: 17,
-      airPressure: 1026,
-    ),
-  ];
+  List<Damage> damagesList = [];
 
   @override
   void initState() {
@@ -78,9 +30,12 @@ class _SensorListScreenState extends State<SensorListScreen> {
   }
 
   void _loadDamagesData() async {
-    // Fetch damages data from the database
-    //damagesList = await YourDatabaseConnection.fetchDamages();
-    setState(() {}); // Update the UI with the loaded data
+    LoginService loginService = LoginService();
+    final fetchedSensors = await loginService.fetchSensorsFromDatabase();
+
+    setState(() {
+      damagesList = fetchedSensors;
+    });
   }
 
   void _showDamageDetails(Damage damage) {

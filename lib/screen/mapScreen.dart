@@ -93,7 +93,7 @@ class _MapScreen extends State<MapScreen> {
   }
 
   void _handleCircleTap(CircleData circle) {
-    int batteryLevel = 7;
+    int batteryLevel = circle.battery;
 
     showBottomSheet(
       context: context,
@@ -136,40 +136,17 @@ class _MapScreen extends State<MapScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
                         children: [
-                          Row(
-                            children: List.generate(
-                              10,
-                              (index) => Container(
-                                width: 9,
-                                height: 15,
-                                margin: EdgeInsets.only(right: 4),
-                                decoration: BoxDecoration(
-                                  color: index < batteryLevel
-                                      ? Color.fromARGB(255, 47, 189, 52)
-                                          .withOpacity(0.4)
-                                      : Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: index < batteryLevel
-                                          ? Color.fromARGB(255, 47, 189, 52)
-                                              .withOpacity(0.4)
-                                          : Colors.transparent,
-                                      blurRadius: 4,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(
-                            Icons.battery_6_bar,
-                            color: Colors.grey[600],
-                            size: 16,
+                          Text(
+                            'Standort: ${circle.center.latitude}, ${circle.center.longitude}',
+                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(width: 4),
+                          Icon(
+                            Icons.battery_6_bar,
+                            color: Color.fromARGB(255, 19, 240, 30),
+                            size: 16,
+                          ),
+                          SizedBox(width: 2),
                           Text(
                             batteryLevel.toString(),
                             style: TextStyle(
@@ -182,10 +159,6 @@ class _MapScreen extends State<MapScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'You tapped circle: ${circle.circleId.value}',
-                        style: TextStyle(fontSize: 16),
-                      ),
                     ),
                   ],
                 ),
@@ -343,33 +316,33 @@ class _MapScreen extends State<MapScreen> {
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 255, 32, 17),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Red',
+                      'Schwach',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.orange,
+                      color: Color.fromARGB(255, 255, 145, 0),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Orange',
+                      'Mittel',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.green,
+                      color: const Color.fromARGB(255, 51, 224, 57),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Green',
+                      'Stark',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],

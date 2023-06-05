@@ -15,6 +15,7 @@ class CircleData {
   final Color fillColor;
   final Color strokeColor;
   final int strokeWidth;
+  final int battery;
 
   CircleData({
     required this.circleId,
@@ -23,6 +24,7 @@ class CircleData {
     required this.fillColor,
     required this.strokeColor,
     required this.strokeWidth,
+    required this.battery,
   });
 
   Circle toCircle() {
@@ -41,6 +43,7 @@ class CircleData {
       circleId: CircleId(map['Name']),
       center: LatLng(map['Latitude'], map['Longitude']),
       radius: 25,
+      battery: map['Battery'],
       fillColor: Color.fromARGB(255, 128, 189, 113).withOpacity(0.2),
       strokeColor: Color.fromARGB(255, 128, 189, 113),
       strokeWidth: 2,
