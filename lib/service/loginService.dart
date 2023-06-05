@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
+import 'package:forestapp/Model/sensorListItem.dart';
 
 class LoginService {
   Future<Database> _initDatabase() async {
@@ -73,6 +76,77 @@ class LoginService {
       // Handle any errors that occur during login
       print('Login failed: $e');
       rethrow;
+    }
+  }
+
+  Future<List<CircleData>> fetchCirclesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final circles = await database.query('Sensor');
+      await database.close();
+
+      print(
+          'Fetched circles: $circles'); // Print the fetched circles for debugging
+
+      return List.generate(circles.length, (index) {
+        return CircleData.fromMap(circles[index]);
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching circles from database: $e');
+      return []; // Return an empty list or null, depending on your preference
+    }
+  }
+
+  Future<List<PolygonData>> fetchPolygonsFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final maps = await database.query('Location');
+      await database.close();
+
+      print(
+          'Fetched polygons: $maps'); // Print the fetched polygons for debugging
+
+      return List.generate(maps.length, (index) {
+        return PolygonData.fromMap(maps[index]);
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching polygons from database: $e');
+      return []; // Return an empty list or null, depending on your preference
+    }
+  }
+
+  Future<List<Damage>> fetchSensorsFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final sensors = await database.query('Sensor');
+      await database.close();
+
+      print(
+          'Fetched Sensors: $sensors'); // Print the fetched sensors for debugging
+
+      return List.generate(sensors.length, (index) {
+        final sensor = sensors[index];
+        return Damage(
+          sensorName: sensor['Name'] as String,
+          latitude: (sensor['Latitude'] as num?)?.toDouble() ?? 0.0,
+          longitude: (sensor['Longitude'] as num?)?.toDouble() ?? 0.0,
+          status: sensor['Available'] as String,
+          createDate: sensor['CreateDate'] as String,
+          signalStrength: sensor['SignalStrength'] as String,
+          chargerInfo: sensor['Battery']?.toString() ?? '0',
+          temperatur: (sensor['Temperature'] as num?)?.toDouble() ?? 0.0,
+          airPressure: (sensor['AirPressure'] as int?) ?? 0,
+        );
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching sensors from database: $e');
+      return []; // Return an empty list or null, depending on your preference
     }
   }
 }

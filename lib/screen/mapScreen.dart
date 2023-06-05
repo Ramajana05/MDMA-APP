@@ -28,11 +28,21 @@ class _MapScreen extends State<MapScreen> {
   void initState() {
     super.initState();
     _selectedTab = 'alle';
-    _circles = MapObjects().getCircless(_handleCircleTap);
-    _polygons = MapObjects().getPolygons();
+    _circles = Set<Circle>();
+    _polygons = Set<Polygon>();
+    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+      setState(() {
+        _polygons = polygons;
+      });
+    });
+    MapObjects().getCircles(_handleCircleTap).then((circles) {
+      setState(() {
+        _circles = circles;
+      });
+    });
   }
 
-  void _updateSelectedTab(int index) {
+  void _updateSelectedTab(int index) async {
     setState(() {
       _selectedTab = index == 0
           ? 'alle'
@@ -41,27 +51,49 @@ class _MapScreen extends State<MapScreen> {
               : 'sensoren';
       switch (_selectedTab) {
         case 'alle':
-          _circles = MapObjects().getCircless(_handleCircleTap);
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+            });
+          });
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _polygons = polygons;
+            });
+          });
           break;
         case 'standorte':
-          _circles = Set<Circle>();
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _circles = Set<Circle>();
+              _polygons = polygons;
+            });
+          });
           break;
         case 'sensoren':
-          _circles = MapObjects().getCircless(_handleCircleTap);
-          _polygons = Set<Polygon>();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+              _polygons = Set<Polygon>();
+            });
+          });
           break;
         default:
-          _circles = Set<Circle>();
-          _polygons = Set<Polygon>();
+          setState(() {
+            _circles = Set<Circle>();
+            _polygons = Set<Polygon>();
+          });
           break;
       }
     });
   }
 
   void _handleCircleTap(CircleData circle) {
-    int batteryLevel = 7;
+    int batteryLevel = circle.battery;
 
     showBottomSheet(
       context: context,
@@ -104,40 +136,17 @@ class _MapScreen extends State<MapScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
                         children: [
-                          Row(
-                            children: List.generate(
-                              10,
-                              (index) => Container(
-                                width: 9,
-                                height: 15,
-                                margin: EdgeInsets.only(right: 4),
-                                decoration: BoxDecoration(
-                                  color: index < batteryLevel
-                                      ? Color.fromARGB(255, 47, 189, 52)
-                                          .withOpacity(0.4)
-                                      : Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: index < batteryLevel
-                                          ? Color.fromARGB(255, 47, 189, 52)
-                                              .withOpacity(0.4)
-                                          : Colors.transparent,
-                                      blurRadius: 4,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(
-                            Icons.battery_6_bar,
-                            color: Colors.grey[600],
-                            size: 16,
+                          Text(
+                            'Standort: ${circle.center.latitude}, ${circle.center.longitude}',
+                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(width: 4),
+                          Icon(
+                            Icons.battery_6_bar,
+                            color: Color.fromARGB(255, 19, 240, 30),
+                            size: 16,
+                          ),
+                          SizedBox(width: 2),
                           Text(
                             batteryLevel.toString(),
                             style: TextStyle(
@@ -150,10 +159,6 @@ class _MapScreen extends State<MapScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'You tapped circle: ${circle.circleId.value}',
-                        style: TextStyle(fontSize: 16),
-                      ),
                     ),
                   ],
                 ),
@@ -165,7 +170,7 @@ class _MapScreen extends State<MapScreen> {
     );
   }
 
-  void _handlePolygonTap(CircleData circle) {
+  void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -199,7 +204,7 @@ class _MapScreen extends State<MapScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          circle.circleId.value,
+                          polygon.polygonId.value,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -209,7 +214,7 @@ class _MapScreen extends State<MapScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'You tapped circle: ${circle.circleId.value}',
+                          'You tapped polygon: ${polygon.polygonId.value}',
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -311,33 +316,33 @@ class _MapScreen extends State<MapScreen> {
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 255, 32, 17),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Red',
+                      'Schwach',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.orange,
+                      color: Color.fromARGB(255, 255, 145, 0),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Orange',
+                      'Mittel',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 16),
                     Container(
                       width: 20,
                       height: 20,
-                      color: Colors.green,
+                      color: const Color.fromARGB(255, 51, 224, 57),
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Green',
+                      'Stark',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],
@@ -421,11 +426,19 @@ class MapSampleState extends State<MapSample> {
   );
 
   @override
-  void didUpdateWidget(covariant MapSample oldWidget) {
+  void didUpdateWidget(covariant MapSample oldWidget) async {
     super.didUpdateWidget(oldWidget);
-    setState(() {
-      circles = mapObjects.getCircles();
-      polygons = mapObjects.getPolygons();
+    setState(() async {
+      circles = await mapObjects.getCircles((circleData) {
+        // Define the onTap functionality for the circle here
+        print('You tapped circle: ${circleData.circleId.value}');
+      });
+      polygons = await mapObjects.getPolygons((polygonData) {
+        // Define the onTap functionality for the polygon here
+        print('You tapped polygon: ${polygonData.polygonId.value}');
+      });
+      print('Circles: $circles');
+      print('Polygons: $polygons');
     });
   }
 
