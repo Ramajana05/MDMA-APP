@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:forestapp/widget/mapObjects.dart';
 
 class LoginService {
   Future<Database> _initDatabase() async {
@@ -73,6 +74,46 @@ class LoginService {
       // Handle any errors that occur during login
       print('Login failed: $e');
       rethrow;
+    }
+  }
+
+  Future<List<CircleData>> fetchCirclesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final circles = await database.query('Sensor');
+      await database.close();
+
+      print(
+          'Fetched circles: $circles'); // Print the fetched circles for debugging
+
+      return List.generate(circles.length, (index) {
+        return CircleData.fromMap(circles[index]);
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching circles from database: $e');
+      return []; // Return an empty list or null, depending on your preference
+    }
+  }
+
+  Future<List<PolygonData>> fetchPolygonsFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final maps = await database.query('Location');
+      await database.close();
+
+      print(
+          'Fetched polygons: $maps'); // Print the fetched polygons for debugging
+
+      return List.generate(maps.length, (index) {
+        return PolygonData.fromMap(maps[index]);
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching polygons from database: $e');
+      return []; // Return an empty list or null, depending on your preference
     }
   }
 }

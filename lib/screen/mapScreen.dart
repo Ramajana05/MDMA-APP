@@ -28,11 +28,21 @@ class _MapScreen extends State<MapScreen> {
   void initState() {
     super.initState();
     _selectedTab = 'alle';
-    _circles = MapObjects().getCircless(_handleCircleTap);
-    _polygons = MapObjects().getPolygons();
+    _circles = Set<Circle>();
+    _polygons = Set<Polygon>();
+    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+      setState(() {
+        _polygons = polygons;
+      });
+    });
+    MapObjects().getCircles(_handleCircleTap).then((circles) {
+      setState(() {
+        _circles = circles;
+      });
+    });
   }
 
-  void _updateSelectedTab(int index) {
+  void _updateSelectedTab(int index) async {
     setState(() {
       _selectedTab = index == 0
           ? 'alle'
@@ -41,20 +51,42 @@ class _MapScreen extends State<MapScreen> {
               : 'sensoren';
       switch (_selectedTab) {
         case 'alle':
-          _circles = MapObjects().getCircless(_handleCircleTap);
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+            });
+          });
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _polygons = polygons;
+            });
+          });
           break;
         case 'standorte':
-          _circles = Set<Circle>();
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _circles = Set<Circle>();
+              _polygons = polygons;
+            });
+          });
           break;
         case 'sensoren':
-          _circles = MapObjects().getCircless(_handleCircleTap);
-          _polygons = Set<Polygon>();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+              _polygons = Set<Polygon>();
+            });
+          });
           break;
         default:
-          _circles = Set<Circle>();
-          _polygons = Set<Polygon>();
+          setState(() {
+            _circles = Set<Circle>();
+            _polygons = Set<Polygon>();
+          });
           break;
       }
     });
@@ -165,7 +197,7 @@ class _MapScreen extends State<MapScreen> {
     );
   }
 
-  void _handlePolygonTap(CircleData circle) {
+  void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -199,7 +231,7 @@ class _MapScreen extends State<MapScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          circle.circleId.value,
+                          polygon.polygonId.value,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -209,7 +241,7 @@ class _MapScreen extends State<MapScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'You tapped circle: ${circle.circleId.value}',
+                          'You tapped polygon: ${polygon.polygonId.value}',
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -421,11 +453,19 @@ class MapSampleState extends State<MapSample> {
   );
 
   @override
-  void didUpdateWidget(covariant MapSample oldWidget) {
+  void didUpdateWidget(covariant MapSample oldWidget) async {
     super.didUpdateWidget(oldWidget);
-    setState(() {
-      circles = mapObjects.getCircles();
-      polygons = mapObjects.getPolygons();
+    setState(() async {
+      circles = await mapObjects.getCircles((circleData) {
+        // Define the onTap functionality for the circle here
+        print('You tapped circle: ${circleData.circleId.value}');
+      });
+      polygons = await mapObjects.getPolygons((polygonData) {
+        // Define the onTap functionality for the polygon here
+        print('You tapped polygon: ${polygonData.polygonId.value}');
+      });
+      print('Circles: $circles');
+      print('Polygons: $polygons');
     });
   }
 
