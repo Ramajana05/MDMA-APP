@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -125,12 +126,27 @@ class _MapScreen extends State<MapScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        circle.circleId.value,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            circle.circleId.value,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pop(); // Close the bottom sheet
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 24,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Padding(
@@ -143,13 +159,13 @@ class _MapScreen extends State<MapScreen> {
                           ),
                           SizedBox(width: 4),
                           Icon(
-                            Icons.battery_6_bar,
-                            color: Color.fromARGB(255, 19, 240, 30),
+                            Icons.battery_0_bar,
+                            color: _getBatteryColor(batteryLevel),
                             size: 16,
                           ),
                           SizedBox(width: 2),
                           Text(
-                            batteryLevel.toString(),
+                            '${batteryLevel.toString()}%',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -169,6 +185,16 @@ class _MapScreen extends State<MapScreen> {
         );
       },
     );
+  }
+
+  Color _getBatteryColor(int batteryLevel) {
+    if (batteryLevel > 60) {
+      return Color.fromARGB(255, 19, 240, 30); // Green
+    } else if (batteryLevel > 30) {
+      return Colors.orange; // Orange
+    } else {
+      return Colors.red; // Red
+    }
   }
 
   void _handlePolygonTap(PolygonData polygon) {

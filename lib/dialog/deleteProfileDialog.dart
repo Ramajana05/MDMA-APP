@@ -29,7 +29,7 @@ class DeleteProfileDialog extends StatelessWidget {
           child: Text(
             'Bestätigen',
             style: TextStyle(
-              color: Color.fromARGB(255, 40, 233, 127),
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
           ),
         ),
