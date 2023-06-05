@@ -3,14 +3,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../dialog/logoutDialog.dart';
 import '../screen/profileScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:forestapp/provider/userProvider.dart';
 
 class SidePanel extends StatelessWidget {
-  Future<String?> _getLoggedInUsername() async {
-    // Add your logic to retrieve the logged-in username
-    // For example, you can use the session provider or any other authentication mechanism
+  Future<String?> _getLoggedInUsername(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context);
+    final loggedInUsername = userProvider.loggedInUsername;
 
-    // Return the username or null if not available
-    return 'MDMA'; // Replace with your actual logic
+    return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
   @override
@@ -42,7 +43,7 @@ class SidePanel extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   FutureBuilder<String?>(
-                    future: _getLoggedInUsername(),
+                    future: _getLoggedInUsername(context),
                     builder: (BuildContext context,
                         AsyncSnapshot<String?> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {

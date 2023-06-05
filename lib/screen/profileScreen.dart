@@ -5,6 +5,8 @@ import 'package:forestapp/dialog/deleteProfileDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String? currentUsername;
@@ -70,8 +72,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(),
                     buildProfileItem(Icons.phone_android, 'Förster'),
                     Divider(),
-                    buildProfileItem(
-                        Icons.location_on, 'Heilbronn, Deutschland'),
+                    FutureBuilder<String>(
+                      future: getLocationName(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildProfileItem(
+                            Icons.location_on,
+                            snapshot.data ?? '',
+                          );
+                        } else if (snapshot.hasError) {
+                          return buildProfileItem(Icons.location_on, 'Error');
+                        }
+                        return buildProfileItem(
+                            Icons.location_on, 'Loading...');
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -139,7 +154,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       },
-                      child: buildProfileItem(Icons.delete, 'Account Löschen'),
+                      child: buildProfileItem(Icons.delete, 'Account Löschen',
+                          iconColor: Colors.red, textColor: Colors.red),
                     ),
                   ],
                 ),
@@ -151,18 +167,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildProfileItem(IconData icon, String text) {
+  Future<String> getLocationName() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks.first;
+        String city = placemark.locality ?? '';
+        String country = placemark.country ?? '';
+        return '$city, $country';
+      }
+    } catch (e) {
+      print('Error retrieving location: $e');
+    }
+    return '';
+  }
+
+  Widget buildProfileItem(IconData iconData, String text,
+      {Color? iconColor, Color? textColor}) {
     return ListTile(
       leading: Icon(
-        icon,
-        color: const Color.fromARGB(255, 24, 23, 23),
+        iconData,
+        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
         size: 20.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 16.0,
-          color: const Color.fromARGB(255, 20, 20, 20),
+          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
         ),
       ),
     );
