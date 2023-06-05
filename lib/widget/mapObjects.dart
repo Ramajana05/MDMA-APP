@@ -39,13 +39,29 @@ class CircleData {
   }
 
   factory CircleData.fromMap(Map<String, dynamic> map) {
+    Color fillColor;
+    Color strokeColor;
+
+    final batteryLevel = map['Battery'];
+
+    if (batteryLevel > 60) {
+      fillColor = Color.fromARGB(255, 46, 202, 51).withOpacity(0.4);
+      strokeColor = Color.fromARGB(255, 46, 202, 51);
+    } else if (batteryLevel <= 60 && batteryLevel > 30) {
+      fillColor = Colors.orange.withOpacity(0.4);
+      strokeColor = Colors.orange;
+    } else {
+      fillColor = Colors.red.withOpacity(0.4);
+      strokeColor = Colors.red;
+    }
+
     return CircleData(
       circleId: CircleId(map['Name']),
       center: LatLng(map['Latitude'], map['Longitude']),
-      radius: 25,
-      battery: map['Battery'],
-      fillColor: Color.fromARGB(255, 128, 189, 113).withOpacity(0.2),
-      strokeColor: Color.fromARGB(255, 128, 189, 113),
+      radius: 27,
+      battery: batteryLevel,
+      fillColor: fillColor,
+      strokeColor: strokeColor,
       strokeWidth: 2,
     );
   }
@@ -57,6 +73,7 @@ class PolygonData {
   final Color fillColor;
   final Color strokeColor;
   final int strokeWidth;
+  final int visitors;
 
   const PolygonData({
     required this.polygonId,
@@ -64,9 +81,25 @@ class PolygonData {
     required this.fillColor,
     required this.strokeColor,
     required this.strokeWidth,
+    required this.visitors,
   });
 
   factory PolygonData.fromMap(Map<String, dynamic> map) {
+    Color fillColor;
+    Color strokeColor;
+    final visitors = map['Visitor'];
+
+    if (visitors < 5) {
+      fillColor = Color.fromARGB(255, 170, 169, 169);
+      strokeColor = Color.fromARGB(255, 170, 169, 169);
+    } else if (visitors >= 5 && visitors <= 10) {
+      fillColor = Color.fromARGB(255, 128, 197, 130);
+      strokeColor = Color.fromARGB(255, 128, 197, 130);
+    } else {
+      fillColor = Color.fromARGB(255, 46, 202, 51);
+      strokeColor = Color.fromARGB(255, 46, 202, 51);
+    }
+
     return PolygonData(
       polygonId: PolygonId(map['Name']),
       points: [
@@ -75,8 +108,9 @@ class PolygonData {
         LatLng(map['Latitude3'], map['Longitude3']),
         LatLng(map['Latitude4'], map['Longitude4']),
       ],
-      fillColor: Color.fromARGB(255, 158, 221, 106),
-      strokeColor: Color.fromARGB(255, 128, 189, 113),
+      visitors: visitors,
+      fillColor: fillColor.withOpacity(0.5),
+      strokeColor: strokeColor,
       strokeWidth: 2,
     );
   }
