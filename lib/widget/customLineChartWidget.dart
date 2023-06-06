@@ -13,11 +13,11 @@ class customLineChart extends StatelessWidget {
   ///lists include the data for the charts
   List<DataModel> chartDataDaily = [
     DataModel(date: 0, value: 2, category: DataCategory.persons),
-    DataModel(date: 1, value: 15, category: DataCategory.persons),
+    DataModel(date: 1, value: 250, category: DataCategory.persons),
     DataModel(date: 2, value: 8, category: DataCategory.persons),
     DataModel(date: 3, value: 17, category: DataCategory.persons),
     DataModel(date: 4, value: 2, category: DataCategory.persons),
-    DataModel(date: 5, value: 10, category: DataCategory.persons),
+    DataModel(date: 5, value: 300, category: DataCategory.persons),
     DataModel(date: 6, value: 5, category: DataCategory.persons),
     DataModel(date: 0, value: 12.5, category: DataCategory.temperature),
     DataModel(date: 1, value: 14.8, category: DataCategory.temperature),
@@ -29,19 +29,19 @@ class customLineChart extends StatelessWidget {
     DataModel(date: 0, value: 1, category: DataCategory.humidity),
     DataModel(date: 1, value: 89, category: DataCategory.humidity),
     DataModel(date: 2, value: 64, category: DataCategory.humidity),
-    DataModel(date: 3, value: 150, category: DataCategory.humidity),
+    DataModel(date: 3, value: 50, category: DataCategory.humidity),
     DataModel(date: 4, value: 92, category: DataCategory.humidity),
     DataModel(date: 5, value: 80, category: DataCategory.humidity),
     DataModel(date: 6, value: 66, category: DataCategory.humidity),
   ];
   List<DataModel> chartDataHourly = [
-    DataModel(date: 0, value: 2, category: DataCategory.persons),
+    DataModel(date: 0, value: 100, category: DataCategory.persons),
     DataModel(date: 1, value: 15, category: DataCategory.persons),
     DataModel(date: 2, value: 8, category: DataCategory.persons),
-    DataModel(date: 3, value: 17, category: DataCategory.persons),
+    DataModel(date: 3, value: 120, category: DataCategory.persons),
     DataModel(date: 4, value: 2, category: DataCategory.persons),
     DataModel(date: 5, value: 10, category: DataCategory.persons),
-    DataModel(date: 6, value: 5, category: DataCategory.persons),
+    DataModel(date: 6, value: 200, category: DataCategory.persons),
     DataModel(date: 7, value: 2, category: DataCategory.persons),
     DataModel(date: 8, value: 15, category: DataCategory.persons),
     DataModel(date: 9, value: 8, category: DataCategory.persons),
@@ -58,8 +58,8 @@ class customLineChart extends StatelessWidget {
     DataModel(date: 7, value: 14.8, category: DataCategory.temperature),
     DataModel(date: 8, value: 4.5, category: DataCategory.temperature),
     DataModel(date: 9, value: -18, category: DataCategory.temperature),
-    DataModel(date: 10, value: 3, category: DataCategory.temperature),
-    DataModel(date: 11, value: 6.8, category: DataCategory.temperature),
+    DataModel(date: 10, value: -19, category: DataCategory.temperature),
+    DataModel(date: 11, value: -20, category: DataCategory.temperature),
     DataModel(date: 12, value: 9, category: DataCategory.temperature),
     DataModel(date: 0, value: 1, category: DataCategory.humidity),
     DataModel(date: 1, value: 89, category: DataCategory.humidity),
@@ -91,13 +91,12 @@ class customLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       sampleData,
-      swapAnimationDuration: const Duration(milliseconds: 250),
     );
   }
 
   ///Data to be showed bei the LineChart
   LineChartData get sampleData => LineChartData(
-        lineTouchData: lineTouchData,
+        //lineTouchData: lineTouchData,
         gridData: gridData,
         titlesData: titlesData,
         borderData: borderData,
@@ -109,6 +108,7 @@ class customLineChart extends StatelessWidget {
   LineTouchData get lineTouchData => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
+          fitInsideVertically: true,
           tooltipBgColor: Colors.black87.withOpacity(0.9),
         ),
       );
@@ -166,11 +166,115 @@ class customLineChart extends StatelessWidget {
     }
   }
 
-  List<LineChartBarData> get lineBarsData => [
+  ///return only the charts been checked by the checkboxes
+  List<LineChartBarData> get lineBarsData {
+    if (CheckBoxValuesForCharts.isCheckedPersonsDaily && //daily persons checked
+        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+      return [
         personsLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedTemperatureDaily && //daily temperature checked
+        !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
+        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+      return [
+        temperatureLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedHumidityDaily && //daily humidity checked
+        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+        !CheckBoxValuesForCharts.isCheckedPersonsDaily) {
+      return [
+        humidityLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedPersonsHourly && //hourly persons checked
+        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+      return [
+        personsLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedTemperatureHourly && //hourly temperature checked
+        !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
+        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+      return [
+        temperatureLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedHumidityHourly && //hourly humidity checked
+        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+        !CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+      return [
+        humidityLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedPersonsDaily && //daily persons and temperature
+        CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+      return [
+        personsLineChartBarData,
+        temperatureLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedTemperatureDaily && //daily temperature and humidity
+        !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
+        CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+      return [
         temperatureLineChartBarData,
         humidityLineChartBarData,
       ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedHumidityDaily && //daily humidity and persons
+        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+        CheckBoxValuesForCharts.isCheckedPersonsDaily) {
+      return [
+        humidityLineChartBarData,
+        personsLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedPersonsHourly && //Hourly persons and temperature
+        CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+      return [
+        personsLineChartBarData,
+        temperatureLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedTemperatureHourly && //Hourly temperature and humidity
+        !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
+        CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+      return [
+        temperatureLineChartBarData,
+        humidityLineChartBarData,
+      ];
+    } else if (CheckBoxValuesForCharts
+            .isCheckedHumidityHourly && //Hourly humidity and persons
+        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+        CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+      return [
+        humidityLineChartBarData,
+        personsLineChartBarData,
+      ];
+    }
+    else if (CheckBoxValuesForCharts
+        .isCheckedHumidityHourly && //Hourly humidity and persons
+        CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+        CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+      return [
+        temperatureLineChartBarData,
+        humidityLineChartBarData,
+        personsLineChartBarData,
+      ];
+    } else {
+      return [
+        personsLineChartBarData,
+        temperatureLineChartBarData,
+        humidityLineChartBarData
+      ];
+    }
+  }
 
   ///returns the titles on the left Side
   Widget leftTitles(double value, TitleMeta meta) {
@@ -271,10 +375,20 @@ class customLineChart extends StatelessWidget {
     );
   }
 
+  double get sideTitelsInterval {
+    double interval = 20;
+    for (var data in categoryDataPersons) {
+      if ( data.value >= 100) {
+        interval = 50;
+      }
+    }
+    return interval;
+  }
+
   SideTitles get sideTitles => SideTitles(
       getTitlesWidget: leftTitles,
       reservedSize: 30,
-      interval: 20,
+      interval: sideTitelsInterval,
       showTitles: true);
 
   SideTitles get bottomTitles => SideTitles(
@@ -299,6 +413,7 @@ class customLineChart extends StatelessWidget {
   LineChartBarData get personsLineChartBarData {
     List<FlSpot> spots = [];
     for (var data in categoryDataPersons) {
+      //spots.add(FlSpot(data.date, data.value < 100 ? data.value : (data.value / 10)));
       spots.add(FlSpot(data.date, data.value));
     }
     return LineChartBarData(
@@ -310,7 +425,6 @@ class customLineChart extends StatelessWidget {
       barWidth: 2,
       isStrokeCapRound: true,
       dotData: FlDotData(show: true),
-      belowBarData: BarAreaData(show: false),
       spots: spots,
     );
   }
