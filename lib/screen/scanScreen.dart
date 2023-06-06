@@ -1,8 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:forestapp/widget/sidePanelWidget.dart';
 
 class ScanScreen extends StatefulWidget {
   ScanScreen({Key? key}) : super(key: key);
@@ -12,16 +12,35 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreen extends State<ScanScreen> {
-  MobileScannerController cameraController = MobileScannerController();
-  bool _screenOpened = false;
+  MobileScannerController cameraController = MobileScannerController(
+    detectionSpeed: DetectionSpeed.normal,
+  );
+  List<String> myList = [];
+  bool _canDetect = true;
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      setState(() {
+        _canDetect = true; // Allow detection after 1 second
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SidePanel(),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 232, 241, 232),
+        backgroundColor: const Color.fromARGB(255, 232, 241, 232),
         title: Text(
-          "CODE SCANNEN",
+          "Scan Code",
           style: topNavBarDecoration.getTitleTextStyle(),
         ),
         actions: [
@@ -30,7 +49,7 @@ class _ScanScreen extends State<ScanScreen> {
             icon: ValueListenableBuilder(
               valueListenable: cameraController.torchState,
               builder: (context, state, child) {
-                switch (state as TorchState) {
+                switch (state) {
                   case TorchState.off:
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
@@ -46,7 +65,7 @@ class _ScanScreen extends State<ScanScreen> {
             icon: ValueListenableBuilder(
               valueListenable: cameraController.cameraFacingState,
               builder: (context, state, child) {
-                switch (state as CameraFacing) {
+                switch (state) {
                   case CameraFacing.front:
                     return const Icon(Icons.camera_front);
                   case CameraFacing.back:
@@ -55,25 +74,80 @@ class _ScanScreen extends State<ScanScreen> {
               },
             ),
             iconSize: 32.0,
-            onPressed: () => {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('switched Camera'),
-              )),
-              cameraController.switchCamera()
+            onPressed: () {
+              cameraController.switchCamera();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Switched Camera'),
+                    content: const Text('Camera switched successfully.'),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
       ),
       body: MobileScanner(
-        // allowDuplicates: true,
         controller: cameraController,
         onDetect: (barcode) {
-          final String code = barcode.raw.toString();
-          //debugPrint('Barcode found! $code');
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //content: Text(code),
-            content: Text("QR wurde erfolgreich gescannt"),
-          ));
+          if (_canDetect) {
+            setState(() {
+              _canDetect = false; // Disable detection until 1 second elapses
+            });
+            final List<Barcode> barcodes = barcode.barcodes;
+            for (final barcode in barcodes) {
+              debugPrint('Barcode found! ${barcode.rawValue}');
+              final String? code = barcode.rawValue;
+              if (myList.contains(code)) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Code lesen'),
+                      content: const Text('Dieser Code existiert bereits'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                myList.add(code!);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Code lesen'),
+                      content: const Text('Neuer Code, erfolgreich hinzugefügt'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            }
+          }
         },
       ),
     );
