@@ -115,7 +115,7 @@ class InformationDialog extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'Unter 5',
+                '< 5',
                 style: TextStyle(fontSize: 16),
               ),
             ],
