@@ -99,6 +99,12 @@ class _MapScreen extends State<MapScreen> {
 
     showBottomSheet(
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
       builder: (BuildContext context) {
         Timer(Duration(seconds: 2), () {
           Navigator.of(context).pop();
@@ -121,61 +127,122 @@ class _MapScreen extends State<MapScreen> {
                     topRight: Radius.circular(16.0),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            circle.circleId.value,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
+                        ),
+                        Row(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Icon(
+                                    Icons.sensors,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 58, 216, 10),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pop(); // Close the bottom sheet
-                            },
-                            child: Icon(
-                              Icons.close,
-                              size: 24,
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    circle.circleId.value,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Standort: ',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${circle.center.latitude}, ',
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        '${circle.center.longitude}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        width: 24,
+                                        height: 24,
+                                        child: Icon(
+                                          Icons.battery_full,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 2),
+                                      Icon(
+                                        Icons.battery_6_bar_outlined,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        '$batteryLevel%',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Standort: ${circle.center.latitude}, ${circle.center.longitude}',
-                            style: TextStyle(fontSize: 16),
+                    Positioned(
+                      top: 7.0,
+                      right: 8.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(); // Close the bottom sheet
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
                           ),
-                          SizedBox(width: 4),
-                          Icon(
-                            Icons.battery_0_bar,
-                            color: _getBatteryColor(batteryLevel),
-                            size: 16,
+                          child: Icon(
+                            Icons.close,
+                            size: 24,
+                            color: Colors.grey,
                           ),
-                          SizedBox(width: 2),
-                          Text(
-                            '${batteryLevel.toString()}%',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
                     ),
                   ],
                 ),
@@ -416,7 +483,7 @@ class _MapScreen extends State<MapScreen> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Unter 5',
+                      '< 5',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],

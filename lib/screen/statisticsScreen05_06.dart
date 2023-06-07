@@ -68,13 +68,15 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Flexible(flex:6,child: customStatisticContainer(IntervalType.hourly)),
+                              Flexible(
+                                  flex: 6,
+                                  child: customStatisticContainer(
+                                      IntervalType.hourly)),
                               Flexible(
                                 flex: 3,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-
                                     children: [
                                       Flexible(
                                         flex: 1,
@@ -122,8 +124,8 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                                 CheckBoxValuesForCharts
                                                         .isCheckedTemperatureHourly =
                                                     newValue!;
-                                                print("temperature hourly: $newValue");
-
+                                                print(
+                                                    "temperature hourly: $newValue");
                                               });
                                             },
                                             controlAffinity: ListTileControlAffinity
@@ -151,7 +153,8 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                                 CheckBoxValuesForCharts
                                                         .isCheckedHumidityHourly =
                                                     newValue!;
-                                                print("humidity hourly: $newValue");
+                                                print(
+                                                    "humidity hourly: $newValue");
                                               });
                                             },
                                             controlAffinity: ListTileControlAffinity
@@ -168,7 +171,10 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Flexible(flex:6,child: customStatisticContainer(IntervalType.daily)),
+                              Flexible(
+                                  flex: 6,
+                                  child: customStatisticContainer(
+                                      IntervalType.daily)),
                               Flexible(
                                 flex: 3,
                                 child: Padding(
