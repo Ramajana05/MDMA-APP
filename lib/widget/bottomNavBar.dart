@@ -6,6 +6,7 @@ import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import '../screen/statisticsScreen05_06.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
