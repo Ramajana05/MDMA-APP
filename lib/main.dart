@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/screen/dashboardScreen.dart';
-import 'package:forestapp/screen/example.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:provider/provider.dart';
 
 import 'package:forestapp/screen/loginScreen.dart';
-import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/db/databaseInitializer.dart';
 import 'package:forestapp/provider/userProvider.dart';
 

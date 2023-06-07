@@ -120,146 +120,176 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Visitors
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Expanded(
-                    child: Stack(
-                      children: [
-                        SfCircularChart(
-                          series: <CircularSeries<_ChartData, String>>[
-                            RadialBarSeries<_ChartData, String>(
-                              maximumValue: maxVisitors,
-                              radius: '120%',
-                              gap: '80%',
-                              dataSource: [
-                                _ChartData(
-                                  'Value',
-                                  currentVisitors.toDouble(),
-                                  Color.fromARGB(255, 108, 127, 235),
-                                ),
-                              ],
-                              cornerStyle: CornerStyle.bothCurve,
-                              xValueMapper: (_ChartData data, _) => data.x,
-                              yValueMapper: (_ChartData data, _) => data.y,
-                              pointColorMapper: (_ChartData data, _) =>
-                                  data.color,
-                              trackColor: Color.fromARGB(255, 126, 83, 161),
-                            ),
-                          ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    height: MediaQuery.of(context).size.height / 5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.indigoAccent,
+                          spreadRadius: 3,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
                         ),
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 120,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
+                      ],
+                    ),
+                    child: Expanded(
+                      child: Stack(
+                        children: [
+                          SfCircularChart(
+                            series: <CircularSeries<_ChartData, String>>[
+                              RadialBarSeries<_ChartData, String>(
+                                maximumValue: maxVisitors,
+                                radius: '150%',
+                                gap: '80%',
+                                dataSource: [
+                                  _ChartData(
+                                    'Value',
+                                    currentVisitors.toDouble(),
+                                    Color.fromARGB(255, 108, 127, 235),
+                                  ),
+                                ],
+                                cornerStyle: CornerStyle.bothCurve,
+                                xValueMapper: (_ChartData data, _) => data.x,
+                                yValueMapper: (_ChartData data, _) => data.y,
+                                pointColorMapper: (_ChartData data, _) =>
+                                    data.color,
+                                trackColor: Color.fromARGB(255, 126, 83, 161),
                               ),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      currentVisitors.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                            ],
+                          ),
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 120,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        currentVisitors.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          Icons.person,
-                                          size: 26,
-                                        ),
-                                        Icon(
-                                          Icons.person,
-                                          size: 26,
-                                        ),
-                                        Icon(
-                                          Icons.person,
-                                          size: 26,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.person,
+                                            size: 26,
+                                          ),
+                                          Icon(
+                                            Icons.person,
+                                            size: 26,
+                                          ),
+                                          Icon(
+                                            Icons.person,
+                                            size: 26,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 //Sensor
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Expanded(
-                    child: Stack(
-                      children: [
-                        SfCircularChart(
-                          series: <CircularSeries<_ChartData, String>>[
-                            RadialBarSeries<_ChartData, String>(
-                              maximumValue: 10,
-                              radius: '120%',
-                              gap: '80%',
-                              dataSource: [
-                                _ChartData('Value', 9, Colors.teal),
-                              ],
-                              cornerStyle: CornerStyle.bothCurve,
-                              xValueMapper: (_ChartData data, _) => data.x,
-                              yValueMapper: (_ChartData data, _) => data.y,
-                              pointColorMapper: (_ChartData data, _) =>
-                                  data.color,
-                              trackColor: Colors.tealAccent,
-                            ),
-                          ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    height: MediaQuery.of(context).size.height / 5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.tealAccent,
+                          spreadRadius: 3,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
                         ),
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 120,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
+                      ],
+                    ),
+                    child: Expanded(
+                      child: Stack(
+                        children: [
+                          SfCircularChart(
+                            series: <CircularSeries<_ChartData, String>>[
+                              RadialBarSeries<_ChartData, String>(
+                                maximumValue: 10,
+                                radius: '150%',
+                                gap: '80%',
+                                dataSource: [
+                                  _ChartData('Value', 9, Colors.teal),
+                                ],
+                                cornerStyle: CornerStyle.bothCurve,
+                                xValueMapper: (_ChartData data, _) => data.x,
+                                yValueMapper: (_ChartData data, _) => data.y,
+                                pointColorMapper: (_ChartData data, _) =>
+                                    data.color,
+                                trackColor: Colors.tealAccent,
                               ),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      9.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          Icons.sensors,
-                                          size: 26,
+                            ],
+                          ),
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 120,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        9.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.sensors,
+                                            size: 26,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -270,134 +300,166 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Temperature
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Expanded(
-                    child: Stack(
-                      children: [
-                        SfCircularChart(
-                          series: <CircularSeries<_ChartData, String>>[
-                            RadialBarSeries<_ChartData, String>(
-                                maximumValue: 100,
-                                radius: '120%',
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    height: MediaQuery.of(context).size.height / 5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.redAccent,
+                          spreadRadius: 3,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Expanded(
+                      child: Stack(
+                        children: [
+                          SfCircularChart(
+                            series: <CircularSeries<_ChartData, String>>[
+                              RadialBarSeries<_ChartData, String>(
+                                  maximumValue: 100,
+                                  radius: '150%',
+                                  gap: '80%',
+                                  dataSource: [
+                                    _ChartData(
+                                        'Value', temperature, Colors.red),
+                                  ],
+                                  cornerStyle: CornerStyle.bothCurve,
+                                  xValueMapper: (_ChartData data, _) => data.x,
+                                  yValueMapper: (_ChartData data, _) => data.y,
+                                  pointColorMapper: (_ChartData data, _) =>
+                                      data.color,
+                                  trackColor:
+                                      Color.fromARGB(255, 252, 131, 123)),
+                            ],
+                          ),
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 120,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '$temperature°C',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.thermostat,
+                                            size: 26,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Air Pressure
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    height: MediaQuery.of(context).size.height / 5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.lightBlue,
+                          spreadRadius: 3,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Expanded(
+                      child: Stack(
+                        children: [
+                          SfCircularChart(
+                            series: <CircularSeries<_ChartData, String>>[
+                              RadialBarSeries<_ChartData, String>(
+                                maximumValue: 3000,
+                                radius: '150%',
                                 gap: '80%',
                                 dataSource: [
-                                  _ChartData('Value', temperature, Colors.red),
+                                  _ChartData('Value', airPressure, Colors.blue),
                                 ],
                                 cornerStyle: CornerStyle.bothCurve,
                                 xValueMapper: (_ChartData data, _) => data.x,
                                 yValueMapper: (_ChartData data, _) => data.y,
                                 pointColorMapper: (_ChartData data, _) =>
                                     data.color,
-                                trackColor: Color.fromARGB(255, 252, 131, 123)),
-                          ],
-                        ),
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 120,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
+                                trackColor: Colors.lightBlueAccent,
                               ),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '$temperature°C',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          Icons.thermostat,
-                                          size: 26,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Air Pressure
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Expanded(
-                    child: Stack(
-                      children: [
-                        SfCircularChart(
-                          series: <CircularSeries<_ChartData, String>>[
-                            RadialBarSeries<_ChartData, String>(
-                              maximumValue: 3000,
-                              radius: '120%',
-                              gap: '80%',
-                              dataSource: [
-                                _ChartData('Value', airPressure, Colors.blue),
-                              ],
-                              cornerStyle: CornerStyle.bothCurve,
-                              xValueMapper: (_ChartData data, _) => data.x,
-                              yValueMapper: (_ChartData data, _) => data.y,
-                              pointColorMapper: (_ChartData data, _) =>
-                                  data.color,
-                              trackColor: Colors.lightBlueAccent,
-                            ),
-                          ],
-                        ),
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 120,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '$airPressure hPa',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          'assets/4352492.png',
-                                          width: 25,
-                                          height: 25,
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 120,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '$airPressure hPa',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/4352492.png',
+                                            width: 25,
+                                            height: 25,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
