@@ -1,16 +1,8 @@
-import 'package:fl_chart/src/chart/bar_chart/bar_chart_data.dart';
 import 'package:flutter/material.dart';
-import 'package:forestapp/main.dart';
-import 'package:forestapp/widget/customBarChartWidget.dart';
-import 'package:forestapp/widget/customLineChartWidget.dart';
 import 'package:forestapp/widget/customStatisticContainerWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
-import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:intl/message_lookup_by_library.dart';
 import '../Model/IntervalTypeEnum.dart';
-import '../dialog/logoutDialog.dart';
 import '../widget/checkBoxValuesForCharts.dart';
-import 'dart:ui';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 
 class StatisticsScreen extends StatefulWidget {
@@ -283,11 +275,3 @@ class _StatisticsScreen extends State<StatisticsScreen> {
     );
   }
 }
-
-// DateTime now = DateTime.now();
-// int weekday = now.weekday;
-//
-// int weekday = now.weekday - 1;
-// if (weekday < 0) {
-// weekday = 6;
-// }

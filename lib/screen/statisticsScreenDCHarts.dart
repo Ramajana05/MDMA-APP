@@ -12,14 +12,6 @@ class StatisticsScreen1 extends StatefulWidget {
 }
 
 class _StatisticsScreen1 extends State<StatisticsScreen1> {
-  //TextEditingController dateController = TextEditingController();
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   dateController.text = "";
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +27,8 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
         children: <Widget>[
           Container(
             decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: Colors.grey, width: 0.5))),
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 15),
               child: Row(
@@ -44,12 +36,11 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                 children: const [
                   Text(
                     "Overview",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text("Heute",
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold))
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
                 ],
               ),
             ),
@@ -106,10 +97,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
-                                      top: 30,
-                                      bottom: 20),
+                                      left: 20, right: 20, top: 30, bottom: 20),
                                   width: 300,
                                   height: 300,
                                   decoration: const BoxDecoration(
@@ -135,8 +123,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                           right: BorderSide(
                                               color: Colors.grey, width: 0.5),
                                           left: BorderSide(
-                                              color: Colors.grey,
-                                              width: 0.5))),
+                                              color: Colors.grey, width: 0.5))),
                                   child: DChartBar(
                                     data: const [
                                       {
@@ -146,23 +133,11 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                             'domain': 'Donnerstag',
                                             'measure': 2
                                           },
-                                          {
-                                            'domain': 'Freitag',
-                                            'measure': 18
-                                          },
-                                          {
-                                            'domain': 'Samstag',
-                                            'measure': 10
-                                          },
-                                          {
-                                            'domain': 'Sonntag',
-                                            'measure': 20
-                                          },
+                                          {'domain': 'Freitag', 'measure': 18},
+                                          {'domain': 'Samstag', 'measure': 10},
+                                          {'domain': 'Sonntag', 'measure': 20},
                                           {'domain': 'Montag', 'measure': 3},
-                                          {
-                                            'domain': 'Dienstag',
-                                            'measure': 12
-                                          },
+                                          {'domain': 'Dienstag', 'measure': 12},
                                           {'domain': 'Heute', 'measure': 8},
                                         ],
                                       },
@@ -193,10 +168,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
-                                      top: 30,
-                                      bottom: 10),
+                                      left: 20, right: 20, top: 30, bottom: 10),
                                   width: 300,
                                   height: 300,
                                   decoration: const BoxDecoration(
@@ -222,8 +194,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                           right: BorderSide(
                                               color: Colors.grey, width: 0.5),
                                           left: BorderSide(
-                                              color: Colors.grey,
-                                              width: 0.5))),
+                                              color: Colors.grey, width: 0.5))),
                                   child: DChartBar(
                                     data: const [
                                       {
@@ -245,10 +216,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                             'domain': 'NSG Köpfertal',
                                             'measure': 20
                                           },
-                                          {
-                                            'domain': 'Sportpfad',
-                                            'measure': 3
-                                          },
+                                          {'domain': 'Sportpfad', 'measure': 3},
                                           {
                                             'domain': 'MTB-Downhillstrecke',
                                             'measure': 6
@@ -289,8 +257,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                               child: Text(
                                 "Sensoren Feldstärke am Standort",
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -345,8 +312,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                 axisLinePointWidth: 10,
                                 axisLineColor: Colors.green,
                                 measureLabelPaddingToAxisLine: 16,
-                                barColor: (barData, index, id) =>
-                                    Colors.green,
+                                barColor: (barData, index, id) => Colors.green,
                                 showBarValue: true,
                               ),
                             ),
@@ -361,8 +327,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                             child: Text(
                               "Temapartuen der letzten Woche",
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Container(
@@ -418,8 +383,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                               axisLineColor: Colors.green,
                               domainLabelFontSize: 10,
                               measureLabelPaddingToAxisLine: 16,
-                              barColor: (barData, index, id) =>
-                                  Colors.green,
+                              barColor: (barData, index, id) => Colors.green,
                               showBarValue: true,
                             ),
                           ),
@@ -434,8 +398,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                               child: Text(
                                 "Luftfeuchtigkeit der letzten Woche",
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -491,8 +454,7 @@ class _StatisticsScreen1 extends State<StatisticsScreen1> {
                                 axisLinePointWidth: 10,
                                 axisLineColor: Colors.green,
                                 measureLabelPaddingToAxisLine: 16,
-                                barColor: (barData, index, id) =>
-                                    Colors.green,
+                                barColor: (barData, index, id) => Colors.green,
                                 showBarValue: true,
                               ),
                             ),
