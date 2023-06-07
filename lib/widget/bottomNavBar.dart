@@ -51,7 +51,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              icon: Icon(Icons.pin_drop_outlined),
               label: 'Karte',
             ),
             BottomNavigationBarItem(

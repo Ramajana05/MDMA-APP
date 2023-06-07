@@ -523,7 +523,11 @@ class WeatherItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      shadowColor: Colors.grey.withOpacity(1.0),
+      shadowColor: Color.fromARGB(255, 255, 170, 73).withOpacity(1.0),
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(10), // Adjust the border radius as needed
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

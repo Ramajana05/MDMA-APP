@@ -13,8 +13,12 @@ class WarningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = isWarnung ? Colors.orange : Colors.blue;
-    Color textColor = Colors.white;
+    Color backgroundColor = Color.fromARGB(255, 248, 250, 253);
+    Color shadowColor = isWarnung
+        ? Colors.orange.withOpacity(0.3)
+        : Colors.blue.withOpacity(0.3);
+    Color textColor = const Color.fromARGB(255, 0, 0, 0);
+    Color titleColor = isWarnung ? Colors.orange : Colors.blue;
 
     IconData iconData =
         isWarnung ? Icons.warning : Icons.notifications_active_outlined;
@@ -25,10 +29,9 @@ class WarningWidget extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 16.0),
-        color: Colors.red,
         child: Icon(
-          Icons.delete,
-          color: Colors.white,
+          Icons.delete_outline,
+          color: Colors.red,
           size: 32.0,
         ),
       ),
@@ -46,10 +49,10 @@ class WarningWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                color: shadowColor,
+                spreadRadius: 3,
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -71,13 +74,14 @@ class WarningWidget extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
-                        color: textColor,
+                        color: titleColor,
                       ),
                     ),
                     SizedBox(height: 8.0),
                     Text(
                       message,
                       style: TextStyle(
+                        fontWeight: FontWeight.w400,
                         fontSize: 16.0,
                         color: textColor,
                       ),
