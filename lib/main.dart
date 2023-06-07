@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       create: (context) => UserProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: DashboardScreen(),
+        home: LoginPage(),
       ),
     );
   }
