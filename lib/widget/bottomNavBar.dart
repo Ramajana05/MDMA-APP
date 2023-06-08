@@ -4,6 +4,7 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import '../screen/chart.dart';
 import '../screen/statisticsScreen05_06.dart';
 
 class BottomTabBar extends StatefulWidget {
