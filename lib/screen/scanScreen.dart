@@ -77,7 +77,7 @@ class _ScanScreen extends State<ScanScreen> {
 
   void _showAlertDialog(String code) {
     bool codeExists = myList.contains(code);
-    String qrCodeValue = code ?? '';
+    String qrCodeValue = code;
 
     showDialog(
       context: context,

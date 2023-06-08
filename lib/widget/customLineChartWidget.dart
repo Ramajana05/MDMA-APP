@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../Model/DataCategoryEnum.dart';
 import '../Model/IntervalTypeEnum.dart';
-import '../screen/statisticsScreen.dart';
 import 'checkBoxValuesForCharts.dart';
 import '../Model/DataModel.dart';
 
@@ -257,9 +256,8 @@ class customLineChart extends StatelessWidget {
         humidityLineChartBarData,
         personsLineChartBarData,
       ];
-    }
-    else if (CheckBoxValuesForCharts
-        .isCheckedHumidityHourly && //Hourly humidity and persons
+    } else if (CheckBoxValuesForCharts
+            .isCheckedHumidityHourly && //Hourly humidity and persons
         CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
         CheckBoxValuesForCharts.isCheckedPersonsHourly) {
       return [
@@ -378,7 +376,7 @@ class customLineChart extends StatelessWidget {
   double get sideTitelsInterval {
     double interval = 20;
     for (var data in categoryDataPersons) {
-      if ( data.value >= 100) {
+      if (data.value >= 100) {
         interval = 50;
       }
     }

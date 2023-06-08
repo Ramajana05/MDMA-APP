@@ -37,7 +37,14 @@ class WarningWidget extends StatelessWidget {
       ),
       onDismissed: (direction) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Neuigkeit gelöscht")),
+          SnackBar(
+            backgroundColor: Colors.white, // Set the background color to white
+            content: Text(
+              'Neuigkeit gelöscht',
+              style:
+                  TextStyle(color: Colors.black), // Set the text color to black
+            ),
+          ),
         );
       },
       child: Padding(

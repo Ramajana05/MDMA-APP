@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatisticsScreen extends StatefulWidget {
-  StatisticsScreen({Key? key}) : super(key: key);
+  const StatisticsScreen({Key? key}) : super(key: key);
 
   @override
   State<StatisticsScreen> createState() => _StatisticsScreenState();
@@ -13,7 +13,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bar Chart'),
+        title: const Text('Bar Chart'),
       ),
       body: SfCartesianChart(
         primaryXAxis: CategoryAxis(),
@@ -22,9 +22,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             dataSource: getWeekDayData(),
             xValueMapper: (WeekDayData data, _) => data.day,
             yValueMapper: (WeekDayData data, _) => data.value,
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
-                Colors.lightGreen,
+                Color.fromARGB(255, 59, 61, 56),
                 Colors.green,
               ],
               begin: Alignment.topCenter,

@@ -34,45 +34,13 @@ class SidePanel extends StatelessWidget {
             child: DrawerHeader(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    backgroundImage: NetworkImage(
-                        'https://cdn-icons-png.flaticon.com/512/1158/1158504.png'),
-                  ),
-                  const SizedBox(height: 8),
-                  FutureBuilder<String?>(
-                    future: _getLoggedInUsername(context),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<String?> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // While waiting for the future to complete, show a loading indicator
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        // If an error occurred, display an error message
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        // If the future completed successfully, display the username
-                        final String? username = snapshot.data;
-                        return Text(
-                          username ?? 'Unknown',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
               ),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.person), // Add leading icon
             title: const Text('Profile'),
+            iconColor: Color.fromARGB(255, 40, 233, 127),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -80,21 +48,29 @@ class SidePanel extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.public), // Add leading icon
-            title: const Text('Website'),
+            title: const Text('Startseite'),
+            iconColor: Colors.blue,
             onTap: () async {
               const url =
                   'https://www.hs-heilbronn.de/de'; // Replace with your desired URL
               if (await canLaunch(url)) {
                 await launch(url);
               } else {
-                throw 'Could not launch $url';
+                throw 'Konnte diese Website nicht laden $url';
               }
             },
+          ),
+          ListTile(
+            leading:
+                const Icon(Icons.help_outline_outlined), // Add leading icon
+            title: const Text('Hilfe'),
+            onTap: () async {},
           ),
           const Spacer(),
           ListTile(
             leading: const Icon(Icons.logout), // Add leading icon
-            title: const Text('Logout'),
+            title: const Text('Ausloggen'),
+            iconColor: Colors.red,
             onTap: () {
               showDialog(
                 context: context,

@@ -52,7 +52,7 @@ dependencies:
   geocoding: ^2.0.0
   camera: ^0.9.4
   syncfusion_flutter_charts: ^20.4.44
-
+  flutter_vector_icons: ^2.0.0
 
 dev_dependencies:
   flutter_test:

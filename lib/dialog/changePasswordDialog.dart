@@ -20,26 +20,34 @@ class PasswordDialog extends StatefulWidget {
 }
 
 class _PasswordDialogState extends State<PasswordDialog> {
+  String currentPassword = '';
+  String newPassword = '';
+  String confirmPassword = '';
   bool isLoading = false;
-  String errorMessage = '';
+  String errorMessage = ''; // Add the errorMessage variable
 
-  void _handleConfirmPressed() {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+  String getCurrentPasswordValue() {
+    return currentPassword;
+  }
 
-    // Simulate an asynchronous operation
-    Future.delayed(Duration(seconds: 2), () {
-      // Perform your password change logic here
-      // Replace this with actual password change code
+  String getNewPasswordValue() {
+    return newPassword;
+  }
 
-      // Simulate a success response
+  String getConfirmPasswordValue() {
+    return confirmPassword;
+  }
+
+  void validatePasswords() {
+    if (newPassword != confirmPassword) {
       setState(() {
-        isLoading = false;
+        errorMessage = 'Die Passwörter stimmen nicht überein.';
       });
-      Navigator.of(context).pop();
-    });
+    } else {
+      setState(() {
+        errorMessage = '';
+      });
+    }
   }
 
   @override
@@ -52,34 +60,131 @@ class _PasswordDialogState extends State<PasswordDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Aktuelles Passwort',
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Aktuelles Passwort',
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 40, 233, 127),
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    focusColor: Color.fromARGB(255, 40, 233, 127),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 16.0,
+                    ),
+                  ),
+                  obscureText: true,
+                  onChanged: (value) {
+                    setState(() {
+                      currentPassword = value;
+                    });
+                    widget.onCurrentPasswordChanged(value);
+                  },
                 ),
-                obscureText: true,
-                onChanged: widget.onCurrentPasswordChanged,
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Neues Passwort',
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Neues Passwort',
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 40, 233, 127),
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    focusColor: Color.fromARGB(255, 40, 233, 127),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 16.0,
+                    ),
+                  ),
+                  obscureText: true,
+                  onChanged: (value) {
+                    setState(() {
+                      newPassword = value;
+                    });
+                    widget.onNewPasswordChanged(value);
+                  },
                 ),
-                obscureText: true,
-                onChanged: widget.onNewPasswordChanged,
               ),
+
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Neues Passwort bestätigen',
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 40, 233, 127),
+                      width: 2.0,
+                    ),
+                  ),
+                  labelStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  focusColor: Color.fromARGB(255, 40, 233, 127),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
                 ),
                 obscureText: true,
-                onChanged: widget.onConfirmPasswordChanged,
+                onChanged: (value) {
+                  setState(() {
+                    confirmPassword = value;
+                  });
+                  widget.onConfirmPasswordChanged(value);
+                },
               ),
               if (isLoading)
-                CircularProgressIndicator()
-              else if (errorMessage.isNotEmpty)
-                Text(
-                  errorMessage,
-                  style: TextStyle(
-                    color: Colors.red,
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ), // Show CircularProgressIndicator when isLoading is true
+              if (errorMessage.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    errorMessage,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
                   ),
                 ),
             ],
@@ -87,25 +192,71 @@ class _PasswordDialogState extends State<PasswordDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: widget.onCancelPressed,
-          child: Text(
-            'Abbrechen',
-            style: TextStyle(
-              color: const Color.fromARGB(255, 92, 92, 92),
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: widget.onConfirmPressed,
-          child: isLoading
-              ? CircularProgressIndicator()
-              : Text(
-                  'Bestätigen',
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 92, 92, 92),
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: widget.onCancelPressed,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 20.0),
+                    ),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                      Colors.grey,
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 255, 255, 255),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Abbrechen',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: widget.onConfirmPressed,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 20.0),
+                    ),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 255, 255, 255),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromARGB(255, 40, 233, 127),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  child: isLoading
+                      ? CircularProgressIndicator()
+                      : const Text(
+                          'Bestätigen',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
