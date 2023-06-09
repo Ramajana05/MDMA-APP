@@ -9,8 +9,20 @@ import 'package:sqflite/sqflite.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
+import 'package:forestapp/provider/userProvider.dart';
+import 'package:provider/provider.dart';
 
 class LoginService {
+  void main() async {
+    final userProvider = UserProvider(); // Create an instance of UserProvider
+    final loggedInUsername = userProvider.loggedInUsername;
+    final loginService = LoginService();
+    final password =
+        await loginService.fetchPasswordFromDatabase(loggedInUsername!);
+
+    print('Password: $password'); // Print the fetched password
+  }
+
   Future<Database> _initDatabase() async {
     try {
       final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -83,19 +95,19 @@ class LoginService {
     try {
       final database = await _initDatabase();
 
-      final circles = await database.query('Sensor');
+      final circles = await database.query('Sensor',
+          where:
+              'Name IS NOT NULL'); // Add the condition to filter null values for the "Name" column
       await database.close();
 
-      print(
-          'Fetched circles: $circles'); // Print the fetched circles for debugging
+      print('Fetched circles: $circles');
 
       return List.generate(circles.length, (index) {
         return CircleData.fromMap(circles[index]);
       });
     } catch (e) {
-      // Handle the exception here
       print('Error fetching circles from database: $e');
-      return []; // Return an empty list or null, depending on your preference
+      return [];
     }
   }
 
@@ -123,11 +135,12 @@ class LoginService {
     try {
       final database = await _initDatabase();
 
-      final sensors = await database.query('Sensor');
+      final sensors = await database.query('Sensor',
+          where:
+              'Name IS NOT NULL'); // Add the condition to filter null values for the "Name" column
       await database.close();
 
-      print(
-          'Fetched Sensors: $sensors'); // Print the fetched sensors for debugging
+      print('Fetched Sensors: $sensors');
 
       return List.generate(sensors.length, (index) {
         final sensor = sensors[index];
@@ -136,17 +149,62 @@ class LoginService {
           latitude: (sensor['Latitude'] as num?)?.toDouble() ?? 0.0,
           longitude: (sensor['Longitude'] as num?)?.toDouble() ?? 0.0,
           status: sensor['Available'] as String,
-          createDate: sensor['CreateDate'] as String,
+          createDate: sensor['CreationDate'] as String,
           signalStrength: sensor['SignalStrength'] as String,
           chargerInfo: sensor['Battery']?.toString() ?? '0',
           temperatur: (sensor['Temperature'] as num?)?.toDouble() ?? 0.0,
-          airPressure: (sensor['AirPressure'] as int?) ?? 0,
+          airPressure: (sensor['Humidity'] as int?) ?? 0,
         );
       });
     } catch (e) {
-      // Handle the exception here
       print('Error fetching sensors from database: $e');
-      return []; // Return an empty list or null, depending on your preference
+      return [];
+    }
+  }
+
+  Future<String?> fetchPasswordFromDatabase(String loggedInUsername) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT Password FROM User WHERE Username = ?',
+        [loggedInUsername],
+      );
+
+      await database.close();
+
+      if (result.isNotEmpty) {
+        final currentPassword = result.first['Password'] as String?;
+        print(
+            'Fetched password: $currentPassword'); // Print the fetched password for testing
+        return currentPassword;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching password from database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> changePasswordInDatabase(
+      String loggedInUsername, String newPassword) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.update(
+        'User',
+        {'Password': newPassword},
+        where: 'Username = ?',
+        whereArgs: [loggedInUsername],
+      );
+
+      await database.close();
+
+      print('Password changed successfully');
+    } catch (e) {
+      print('Error updating password in database: $e');
+      rethrow;
     }
   }
 }

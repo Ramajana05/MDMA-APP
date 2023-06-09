@@ -85,7 +85,11 @@ class _TabBarWidgetState extends State<TabBarWidget>
                 _tabController.index = index;
               },
               child: Tab(
-                text: widget.tabTexts[index],
+                child: Text(
+                  widget.tabTexts[index],
+                  style: TextStyle(
+                      fontSize: 19), // Increase the font size as desired
+                ),
               ),
             ),
           ),

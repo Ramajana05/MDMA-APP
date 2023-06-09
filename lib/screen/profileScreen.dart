@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:forestapp/service/LoginService.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String? currentUsername;
@@ -29,6 +30,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Validate the input and perform the necessary actions
     // For demonstration purposes, let's print the new password
     print('New Password: $newPassword');
+  }
+
+  String getCurrentPasswordValue() {
+    return currentPassword;
+  }
+
+  String getNewPasswordValue() {
+    return newPassword;
+  }
+
+  String getConfirmPasswordValue() {
+    return confirmPassword;
   }
 
   @override
@@ -116,17 +129,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context) {
                             return PasswordDialog(
                               onCurrentPasswordChanged: (value) {
-                                // Handle current password change
+                                currentPassword = value;
                               },
                               onNewPasswordChanged: (value) {
-                                // Handle new password change
+                                newPassword = value;
                               },
                               onConfirmPasswordChanged: (value) {
-                                // Handle confirm new password change
+                                confirmPassword = value;
                               },
-                              onConfirmPressed: () {
-                                // Handle confirm button press
-                                Navigator.of(context).pop();
+                              onConfirmPressed: () async {
+                                final userProvider = Provider.of<UserProvider>(
+                                    context,
+                                    listen: false);
+                                final loggedInUsername =
+                                    userProvider.loggedInUsername;
+
+                                final loginService = LoginService();
+                                final currentPassword = await loginService
+                                    .fetchPasswordFromDatabase(
+                                        loggedInUsername!);
+
+                                // Retrieve the entered values for current password, new password, and confirm password
+                                final enteredCurrentPassword =
+                                    getCurrentPasswordValue();
+                                final enteredNewPassword =
+                                    getNewPasswordValue();
+                                final enteredConfirmPassword =
+                                    getConfirmPasswordValue();
+
+                                // Compare the entered values with the current password and each other
+                                if (enteredCurrentPassword == currentPassword &&
+                                    enteredNewPassword ==
+                                        enteredConfirmPassword) {
+                                  // Passwords match, perform the password change in the database
+                                  await loginService.changePasswordInDatabase(
+                                      loggedInUsername, enteredNewPassword);
+                                  print('Password changed successfully');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Password changed successfully'),
+                                    ),
+                                  );
+
+                                  Navigator.of(context).pop();
+                                } else {
+                                  // Passwords do not match or current password is incorrect
+                                  print('Password change failed');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Passwort konnte nicht geändert werden.'),
+                                    ),
+                                  );
+                                }
                               },
                               onCancelPressed: () {
                                 // Handle cancel button press
