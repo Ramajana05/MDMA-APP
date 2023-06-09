@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0),
+              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Informationen',
                 style: TextStyle(
@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 1.0,
                 color: Colors.grey[150], // Soft grey color
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             snapshot.data ?? '',
                           );
                         } else if (snapshot.hasError) {
-                          return buildProfileItem(Icons.location_on, 'Error');
+                          return buildProfileItem(Icons.location_off, 'Error');
                         }
                         return buildProfileItem(
                             Icons.location_on, 'Loading...');
@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0),
+              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Aktionen',
                 style: TextStyle(
@@ -115,13 +115,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 2.0,
                 color:
                     const Color.fromARGB(255, 255, 255, 255), // Soft grey color
                 child: Column(
                   children: [
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Daten Aktualisierung'),
+                              content: Text('Do you want to update the data?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Add your update logic here
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Update'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: buildProfileItem(
+                        Icons.timelapse_outlined,
+                        'Daten Aktualisierung',
+                        iconColor: Color.fromARGB(255, 0, 0, 0),
+                        textColor: Colors.black,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         showDialog(
@@ -139,15 +173,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               onConfirmPressed: () async {
                                 final userProvider = Provider.of<UserProvider>(
-                                    context,
-                                    listen: false);
+                                  context,
+                                  listen: false,
+                                );
                                 final loggedInUsername =
                                     userProvider.loggedInUsername;
 
                                 final loginService = LoginService();
                                 final currentPassword = await loginService
                                     .fetchPasswordFromDatabase(
-                                        loggedInUsername!);
+                                  loggedInUsername!,
+                                );
 
                                 // Retrieve the entered values for current password, new password, and confirm password
                                 final enteredCurrentPassword =
@@ -163,7 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         enteredConfirmPassword) {
                                   // Passwords match, perform the password change in the database
                                   await loginService.changePasswordInDatabase(
-                                      loggedInUsername, enteredNewPassword);
+                                    loggedInUsername,
+                                    enteredNewPassword,
+                                  );
                                   print('Password changed successfully');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -244,18 +282,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return '';
   }
 
-  Widget buildProfileItem(IconData iconData, String text,
-      {Color? iconColor, Color? textColor}) {
+  Widget buildProfileItem(
+    IconData iconData,
+    String text, {
+    Color? iconColor,
+    Color? textColor,
+  }) {
     return ListTile(
       leading: Icon(
         iconData,
         color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
-        size: 20.0,
+        size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
-          fontSize: 16.0,
+          fontSize: 19.0,
           color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
         ),
       ),

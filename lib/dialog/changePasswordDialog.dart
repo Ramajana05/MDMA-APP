@@ -24,7 +24,9 @@ class _PasswordDialogState extends State<PasswordDialog> {
   String newPassword = '';
   String confirmPassword = '';
   bool isLoading = false;
-  String errorMessage = ''; // Add the errorMessage variable
+  String errorMessage = '';
+  bool _obscurecurrentPassword = true;
+  bool _obscurenewPassword = true;
 
   String getCurrentPasswordValue() {
     return currentPassword;
@@ -88,8 +90,22 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       vertical: 12.0,
                       horizontal: 16.0,
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurecurrentPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Color.fromARGB(
+                            255, 173, 173, 173), // Set the color of the icon
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurecurrentPassword = !_obscurecurrentPassword;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscurecurrentPassword,
                   onChanged: (value) {
                     setState(() {
                       currentPassword = value;
@@ -126,8 +142,22 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       vertical: 12.0,
                       horizontal: 16.0,
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurenewPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Color.fromARGB(
+                            255, 173, 173, 173), // Set the color of the icon
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurenewPassword = !_obscurenewPassword;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscurenewPassword,
                   onChanged: (value) {
                     setState(() {
                       newPassword = value;
@@ -163,8 +193,22 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     vertical: 12.0,
                     horizontal: 16.0,
                   ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurenewPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Color.fromARGB(
+                          255, 173, 173, 173), // Set the color of the icon
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurenewPassword = !_obscurenewPassword;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: _obscurenewPassword,
                 onChanged: (value) {
                   setState(() {
                     confirmPassword = value;
@@ -172,6 +216,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   widget.onConfirmPasswordChanged(value);
                 },
               ),
+
               if (isLoading)
                 Padding(
                   padding: EdgeInsets.all(16.0),

@@ -5,6 +5,7 @@ import '../dialog/logoutDialog.dart';
 import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
+import 'package:forestapp/screen/helpScreen.dart';
 
 class SidePanel extends StatelessWidget {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
@@ -39,7 +40,7 @@ class SidePanel extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person), // Add leading icon
-            title: const Text('Profile'),
+            title: const Text('Profil'),
             iconColor: Color.fromARGB(255, 40, 233, 127),
             onTap: () => Navigator.push(
               context,
@@ -64,7 +65,10 @@ class SidePanel extends StatelessWidget {
             leading:
                 const Icon(Icons.help_outline_outlined), // Add leading icon
             title: const Text('Hilfe'),
-            onTap: () async {},
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
           ),
           const Spacer(),
           ListTile(
