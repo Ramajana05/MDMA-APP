@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/screen/chart.dart';
+import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:provider/provider.dart';
 
@@ -33,11 +33,9 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home:
-            //ChartExample()
-            LoginPage(),
-      ),
+          debugShowCheckedModeBanner: false, home: StatisticsScreen()
+          //LoginPage(),
+          ),
     );
   }
 }
