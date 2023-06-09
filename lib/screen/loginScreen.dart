@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final LoginService _loginService = LoginService();
   String loggedInUsername = "";
+  bool _obscurePassword = true;
 
   late Database _database;
 
@@ -220,15 +221,36 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.grey,
                           ),
                           focusColor: Color.fromARGB(255, 40, 233, 127),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Color.fromARGB(255, 154, 155,
+                                  154), // Set the color of the icon
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText: _obscurePassword,
+                        onChanged: (value) {
+                          setState(() {
+                            _password = value?.trim();
+                          });
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Bitte geben Sie ihr Passwort ein';
                           }
                           return null;
                         },
-                        onSaved: (value) => _password = value?.trim(),
+                        onSaved: (value) {
+                          _password = value?.trim();
+                        },
                       ),
                     ),
                     SizedBox(height: 16.0),
