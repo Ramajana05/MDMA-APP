@@ -20,25 +20,36 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   var radius = const Radius.circular(20);
 
-  late List<_ChartData> visitorChartDaily;
-  late List<_ChartData> tempChartDaily;
-  late List<_ChartData> airChartDaily;
+  late List<ChartData> visitorChartDaily;
+  late List<ChartData> visitorChartWeekly;
+  late List<ChartData> visitorChartMonthly;
+  late List<ChartData> visitorChartYearly;
 
-  late List<_ChartData> visitorChartWeekly;
-  late List<_ChartData> tempChartWeekly;
-  late List<_ChartData> airChartWeekly;
+  late List<ChartData> tempChartDaily;
+  late List<ChartData> tempChartWeekly;
+  late List<ChartData> tempChartMonthly;
+  late List<ChartData> tempChartYearly;
 
-  late List<_ChartData> visitorChartMonthly;
-  late List<_ChartData> tempChartMonthly;
-  late List<_ChartData> airChartMonthly;
+  late List<ChartData> airHumidityChartDaily;
+  late List<ChartData> airHumidityChartWeekly;
+  late List<ChartData> airHumidityMonthly;
+  late List<ChartData> airChartYearly;
 
-  late List<_ChartData> visitorChartYearly;
-  late List<_ChartData> tempChartYearly;
-  late List<_ChartData> airChartYearly;
+  late List<ChartData> rainPercentChartDaily;
+  late List<ChartData> rainPercentChartWeekly;
+  late List<ChartData> weatherDataMonthly;
+  late List<ChartData> rainPercentChartYearly;
 
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
+  bool rainLineChart = true;
+
+  void handleToggle(bool value) {
+    setState(() {
+      rainLineChart = value;
+    });
+  }
 
   var visitorGradient = const [
     Color(0xFF7EA15D), // Medium Green
@@ -146,186 +157,251 @@ class _StatisticsScreen extends State<StatisticsScreen>
     return getWeekday[day];
   }
 
+  var labelStyle = const TextStyle(fontSize: 15, color: Colors.black);
+  var axisLine = const AxisLine(color: Colors.black, width: 1.5);
+  var majorTickLines =
+      const MajorTickLines(size: 6, width: 2, color: Colors.black);
+  var axisTitleStyle = const TextStyle(fontWeight: FontWeight.w700);
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
     visitorChartDaily = [
-      _ChartData(getHours(5), 5),
-      _ChartData(getHours(6), 4),
-      _ChartData(getHours(7), 6),
-      _ChartData(getHours(8), 7),
-      _ChartData(getHours(9), 9),
-      _ChartData(getHours(10), 12),
-      _ChartData(getHours(11), 10),
-      _ChartData(getHours(12), 17),
-      _ChartData(getHours(13), 14),
-      _ChartData(getHours(14), 21),
-      _ChartData(getHours(15), 19),
-      _ChartData(getHours(16), 19),
-      _ChartData(getHours(17), 11),
-      _ChartData(getHours(18), 14),
-      _ChartData(getHours(19), 10),
-      _ChartData(getHours(20), 10),
-      _ChartData(getHours(21), 1),
-      _ChartData(getHours(22), 8),
-      _ChartData(getHours(23), 10),
-      _ChartData(getHours(0), 1),
-      _ChartData(getHours(1), 2),
-      _ChartData(getHours(2), 2),
-      _ChartData(getHours(3), 5),
-      _ChartData(getHours(4), 3),
+      ChartData(getHours(5), 120),
+      ChartData(getHours(6), 135),
+      ChartData(getHours(7), 150),
+      ChartData(getHours(8), 165),
+      ChartData(getHours(9), 180),
+      ChartData(getHours(10), 195),
+      ChartData(getHours(11), 210),
+      ChartData(getHours(12), 225),
+      ChartData(getHours(13), 240),
+      ChartData(getHours(14), 225),
+      ChartData(getHours(15), 210),
+      ChartData(getHours(16), 195),
+      ChartData(getHours(17), 180),
+      ChartData(getHours(18), 165),
+      ChartData(getHours(19), 150),
+      ChartData(getHours(20), 135),
+      ChartData(getHours(21), 120),
+      ChartData(getHours(22), 105),
+      ChartData(getHours(23), 90),
+      ChartData(getHours(0), 75),
+      ChartData(getHours(1), 60),
+      ChartData(getHours(2), 45),
+      ChartData(getHours(3), 30),
+      ChartData(getHours(4), 15),
     ];
 
     visitorChartWeekly = [
-      _ChartData(getWeekday(1), 100),
-      _ChartData(getWeekday(2), 80),
-      _ChartData(getWeekday(3), 120),
-      _ChartData(getWeekday(4), 90),
-      _ChartData(getWeekday(5), 150),
-      _ChartData(getWeekday(6), 200),
-      _ChartData(getWeekday(7), 180),
+      ChartData(getWeekday(1), 1000),
+      ChartData(getWeekday(2), 950),
+      ChartData(getWeekday(3), 900),
+      ChartData(getWeekday(4), 850),
+      ChartData(getWeekday(5), 800),
+      ChartData(getWeekday(6), 750),
+      ChartData(getWeekday(7), 700),
     ];
 
     visitorChartMonthly = [
-      _ChartData(getWeekOfPreviousMonth(1), 152),
-      _ChartData(getWeekOfPreviousMonth(2), 258),
-      _ChartData(getWeekOfPreviousMonth(3), 120),
-      _ChartData(getWeekOfPreviousMonth(4), 230),
+      ChartData(getWeekOfPreviousMonth(1), 4000),
+      ChartData(getWeekOfPreviousMonth(2), 4100),
+      ChartData(getWeekOfPreviousMonth(3), 4200),
+      ChartData(getWeekOfPreviousMonth(4), 4300),
     ];
 
     visitorChartYearly = [
-      _ChartData(getMonthName(1), 50),
-      _ChartData(getMonthName(2), 70),
-      _ChartData(getMonthName(3), 40),
-      _ChartData(getMonthName(4), 60),
-      _ChartData(getMonthName(5), 80),
-      _ChartData(getMonthName(6), 65),
-      _ChartData(getMonthName(7), 75),
-      _ChartData(getMonthName(8), 55),
-      _ChartData(getMonthName(9), 45),
-      _ChartData(getMonthName(10), 70),
-      _ChartData(getMonthName(11), 90),
-      _ChartData(getMonthName(12), 60),
+      ChartData(getMonthName(1), 4500),
+      ChartData(getMonthName(2), 4600),
+      ChartData(getMonthName(3), 4700),
+      ChartData(getMonthName(4), 4800),
+      ChartData(getMonthName(5), 4900),
+      ChartData(getMonthName(6), 5000),
+      ChartData(getMonthName(7), 5100),
+      ChartData(getMonthName(8), 5200),
+      ChartData(getMonthName(9), 5300),
+      ChartData(getMonthName(10), 5400),
+      ChartData(getMonthName(11), 5500),
+      ChartData(getMonthName(12), 5600),
     ];
 
     tempChartDaily = [
-      _ChartData(getHours(5), -5),
-      _ChartData(getHours(6), 4),
-      _ChartData(getHours(7), -6),
-      _ChartData(getHours(8), 7),
-      _ChartData(getHours(9), -9),
-      _ChartData(getHours(10), 12),
-      _ChartData(getHours(11), 10),
-      _ChartData(getHours(12), 17),
-      _ChartData(getHours(13), 14),
-      _ChartData(getHours(14), 21),
-      _ChartData(getHours(15), 19),
-      _ChartData(getHours(16), 19),
-      _ChartData(getHours(17), 11),
-      _ChartData(getHours(18), 14),
-      _ChartData(getHours(19), 10),
-      _ChartData(getHours(20), -10),
-      _ChartData(getHours(21), 1),
-      _ChartData(getHours(22), 8),
-      _ChartData(getHours(23), 10),
-      _ChartData(getHours(0), 1),
-      _ChartData(getHours(1), -2),
-      _ChartData(getHours(2), 2),
-      _ChartData(getHours(3), -5),
-      _ChartData(getHours(4), 3),
+      ChartData(getHours(5), 10),
+      ChartData(getHours(6), 12),
+      ChartData(getHours(7), 15),
+      ChartData(getHours(8), 18),
+      ChartData(getHours(9), 20),
+      ChartData(getHours(10), 22),
+      ChartData(getHours(11), 24),
+      ChartData(getHours(12), 26),
+      ChartData(getHours(13), 24),
+      ChartData(getHours(14), 22),
+      ChartData(getHours(15), 20),
+      ChartData(getHours(16), 18),
+      ChartData(getHours(17), 15),
+      ChartData(getHours(18), 12),
+      ChartData(getHours(19), 10),
+      ChartData(getHours(20), 8),
+      ChartData(getHours(21), 6),
+      ChartData(getHours(22), 4),
+      ChartData(getHours(23), 2),
+      ChartData(getHours(0), 5),
+      ChartData(getHours(1), 2),
+      ChartData(getHours(2), 4),
+      ChartData(getHours(3), 6),
+      ChartData(getHours(4), 8),
     ];
 
     tempChartWeekly = [
-      _ChartData(getWeekday(1), -8),
-      _ChartData(getWeekday(2), -2),
-      _ChartData(getWeekday(3), 10),
-      _ChartData(getWeekday(4), 19),
-      _ChartData(getWeekday(5), 5),
-      _ChartData(getWeekday(6), 28),
-      _ChartData(getWeekday(7), 2),
+      ChartData(getWeekday(1), 15),
+      ChartData(getWeekday(2), 16),
+      ChartData(getWeekday(3), 18),
+      ChartData(getWeekday(4), 20),
+      ChartData(getWeekday(5), 22),
+      ChartData(getWeekday(6), 24),
+      ChartData(getWeekday(7), 16),
     ];
 
     tempChartMonthly = [
-      _ChartData(getWeekOfPreviousMonth(1), 20),
-      _ChartData(getWeekOfPreviousMonth(2), -8),
-      _ChartData(getWeekOfPreviousMonth(3), 12),
-      _ChartData(getWeekOfPreviousMonth(4), -6),
+      ChartData(getWeekOfPreviousMonth(1), 15),
+      ChartData(getWeekOfPreviousMonth(2), 13),
+      ChartData(getWeekOfPreviousMonth(3), 11),
+      ChartData(getWeekOfPreviousMonth(4), 12),
     ];
 
     tempChartYearly = [
-      _ChartData(getMonthName(1), 15),
-      _ChartData(getMonthName(2), -5),
-      _ChartData(getMonthName(3), -18),
-      _ChartData(getMonthName(4), 22),
-      _ChartData(getMonthName(5), 10),
-      _ChartData(getMonthName(6), 28),
-      _ChartData(getMonthName(7), 30),
-      _ChartData(getMonthName(8), 25),
-      _ChartData(getMonthName(9), 20),
-      _ChartData(getMonthName(10), 8),
-      _ChartData(getMonthName(11), -2),
-      _ChartData(getMonthName(12), 12),
+      ChartData(getMonthName(1), -3),
+      ChartData(getMonthName(2), -2),
+      ChartData(getMonthName(3), 8),
+      ChartData(getMonthName(4), 10),
+      ChartData(getMonthName(5), 14),
+      ChartData(getMonthName(6), 18),
+      ChartData(getMonthName(7), 22),
+      ChartData(getMonthName(8), 30),
+      ChartData(getMonthName(9), 22),
+      ChartData(getMonthName(10), 14),
+      ChartData(getMonthName(11), 10),
+      ChartData(getMonthName(12), 12),
     ];
 
-    airChartDaily = [
-      _ChartData(getHours(5), 20),
-      _ChartData(getHours(6), 31),
-      _ChartData(getHours(7), 35),
-      _ChartData(getHours(8), 19),
-      _ChartData(getHours(9), 28),
-      _ChartData(getHours(10), 34),
-      _ChartData(getHours(11), 10),
-      _ChartData(getHours(12), 17),
-      _ChartData(getHours(13), 14),
-      _ChartData(getHours(14), 21),
-      _ChartData(getHours(15), 19),
-      _ChartData(getHours(16), 19),
-      _ChartData(getHours(17), 11),
-      _ChartData(getHours(18), 14),
-      _ChartData(getHours(19), 10),
-      _ChartData(getHours(20), 10),
-      _ChartData(getHours(21), 25),
-      _ChartData(getHours(22), 26),
-      _ChartData(getHours(23), 10),
-      _ChartData(getHours(0), 26),
-      _ChartData(getHours(1), 17),
-      _ChartData(getHours(2), 15),
-      _ChartData(getHours(3), 30),
-      _ChartData(getHours(4), 24),
+    airHumidityChartDaily = [
+      ChartData(getHours(5), 60),
+      ChartData(getHours(6), 65),
+      ChartData(getHours(7), 70),
+      ChartData(getHours(8), 75),
+      ChartData(getHours(9), 80),
+      ChartData(getHours(10), 85),
+      ChartData(getHours(11), 90),
+      ChartData(getHours(12), 95),
+      ChartData(getHours(13), 100),
+      ChartData(getHours(14), 95),
+      ChartData(getHours(15), 90),
+      ChartData(getHours(16), 85),
+      ChartData(getHours(17), 80),
+      ChartData(getHours(18), 75),
+      ChartData(getHours(19), 70),
+      ChartData(getHours(20), 65),
+      ChartData(getHours(21), 60),
+      ChartData(getHours(22), 55),
+      ChartData(getHours(23), 50),
+      ChartData(getHours(0), 45),
+      ChartData(getHours(1), 40),
+      ChartData(getHours(2), 35),
+      ChartData(getHours(3), 30),
+      ChartData(getHours(4), 25),
     ];
 
-    airChartWeekly = [
-      _ChartData(getWeekday(1), 40),
-      _ChartData(getWeekday(2), 42),
-      _ChartData(getWeekday(3), 60),
-      _ChartData(getWeekday(4), 40),
-      _ChartData(getWeekday(5), 70),
-      _ChartData(getWeekday(6), 42),
-      _ChartData(getWeekday(7), 71),
+    airHumidityChartWeekly = [
+      ChartData(getWeekday(1), 30),
+      ChartData(getWeekday(2), 28),
+      ChartData(getWeekday(3), 26),
+      ChartData(getWeekday(4), 24),
+      ChartData(getWeekday(5), 22),
+      ChartData(getWeekday(6), 20),
+      ChartData(getWeekday(7), 18),
     ];
 
-    airChartMonthly = [
-      _ChartData(getWeekOfPreviousMonth(1), 70),
-      _ChartData(getWeekOfPreviousMonth(2), 40),
-      _ChartData(getWeekOfPreviousMonth(3), 42),
-      _ChartData(getWeekOfPreviousMonth(4), 85),
+    airHumidityMonthly = [
+      ChartData(getWeekOfPreviousMonth(1), 25),
+      ChartData(getWeekOfPreviousMonth(2), 30),
+      ChartData(getWeekOfPreviousMonth(3), 21),
+      ChartData(getWeekOfPreviousMonth(4), 50),
     ];
 
     airChartYearly = [
-      _ChartData(getMonthName(1), 40),
-      _ChartData(getMonthName(2), 60),
-      _ChartData(getMonthName(3), 42),
-      _ChartData(getMonthName(4), 55),
-      _ChartData(getMonthName(5), 60),
-      _ChartData(getMonthName(6), 70),
-      _ChartData(getMonthName(7), 70),
-      _ChartData(getMonthName(8), 42),
-      _ChartData(getMonthName(9), 40),
-      _ChartData(getMonthName(10), 70),
-      _ChartData(getMonthName(11), 42),
-      _ChartData(getMonthName(12), 60),
+      ChartData(getMonthName(1), 55),
+      ChartData(getMonthName(2), 50),
+      ChartData(getMonthName(3), 45),
+      ChartData(getMonthName(4), 60),
+      ChartData(getMonthName(5), 65),
+      ChartData(getMonthName(6), 70),
+      ChartData(getMonthName(7), 75),
+      ChartData(getMonthName(8), 70),
+      ChartData(getMonthName(9), 65),
+      ChartData(getMonthName(10), 60),
+      ChartData(getMonthName(11), 50),
+      ChartData(getMonthName(12), 45),
+    ];
+
+    rainPercentChartDaily = [
+      ChartData(getHours(5), 15),
+      ChartData(getHours(6), 16),
+      ChartData(getHours(7), 17),
+      ChartData(getHours(8), 20),
+      ChartData(getHours(9), 22),
+      ChartData(getHours(10), 24),
+      ChartData(getHours(11), 26),
+      ChartData(getHours(12), 28),
+      ChartData(getHours(13), 30),
+      ChartData(getHours(14), 31),
+      ChartData(getHours(15), 30),
+      ChartData(getHours(16), 28),
+      ChartData(getHours(17), 26),
+      ChartData(getHours(18), 24),
+      ChartData(getHours(19), 22),
+      ChartData(getHours(20), 20),
+      ChartData(getHours(21), 19),
+      ChartData(getHours(22), 18),
+      ChartData(getHours(23), 16),
+      ChartData(getHours(0), 14),
+      ChartData(getHours(1), 13),
+      ChartData(getHours(2), 12),
+      ChartData(getHours(3), 11),
+      ChartData(getHours(4), 10),
+    ];
+
+    rainPercentChartWeekly = [
+      ChartData(getWeekday(1), 22),
+      ChartData(getWeekday(2), 23),
+      ChartData(getWeekday(3), 25),
+      ChartData(getWeekday(4), 26),
+      ChartData(getWeekday(5), 27),
+      ChartData(getWeekday(6), 26),
+      ChartData(getWeekday(7), 25),
+    ];
+
+    weatherDataMonthly = [
+      ChartData(getWeekOfPreviousMonth(1), 10),
+      ChartData(getWeekOfPreviousMonth(2), 15),
+      ChartData(getWeekOfPreviousMonth(3), 20),
+      ChartData(getWeekOfPreviousMonth(4), 18),
+    ];
+
+    rainPercentChartYearly = [
+      ChartData(getMonthName(1), 10),
+      ChartData(getMonthName(2), 15),
+      ChartData(getMonthName(3), 20),
+      ChartData(getMonthName(4), 18),
+      ChartData(getMonthName(5), 25),
+      ChartData(getMonthName(6), 28),
+      ChartData(getMonthName(7), 30),
+      ChartData(getMonthName(8), 32),
+      ChartData(getMonthName(9), 27),
+      ChartData(getMonthName(10), 22),
+      ChartData(getMonthName(11), 16),
+      ChartData(getMonthName(12), 12),
     ];
   }
 
@@ -426,6 +502,30 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+        //Button
+        Visibility(
+          visible: visitorVisible,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SwitchListTile(
+              activeColor:
+                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
+              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
+              title: Text(
+                rainLineChart
+                    ? 'Temperatur ausblenden'
+                    : 'Temperatur einblenden',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              value: rainLineChart,
+              onChanged: handleToggle,
+            ),
+          ),
+        ),
+        //Chart
         Visibility(
           visible: visitorVisible,
           child: Padding(
@@ -436,38 +536,28 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 enableAxisAnimation: true,
                 primaryXAxis: CategoryAxis(
                   desiredIntervals: 12,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  title: AxisTitle(
-                      text: 'Uhrzeit',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
-                  labelIntersectAction: AxisLabelIntersectAction.wrap,
-                  visibleMaximum: 8,
+                  axisLine: axisLine,
+                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
+                  labelStyle: labelStyle,
+                  visibleMaximum: 6,
                   isVisible: true,
                 ),
                 primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Anzahl',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
+                //Scroll enabling
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ChartSeries>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: visitorChartDaily,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
@@ -477,14 +567,29 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
+                  if (rainLineChart)
+                    LineSeries<ChartData, String>(
+                      dataSource: rainPercentChartDaily,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
+                      markerSettings: const MarkerSettings(
+                        height: 5,
+                        width: 5,
+                        isVisible: true,
+                        borderColor: Colors.deepOrange,
+                        color: Colors.deepOrange,
+                        shape: DataMarkerType.circle,
+                      ),
+                      color: const Color.fromARGB(255, 42, 223, 123),
+                    ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -505,6 +610,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Temperature
         GestureDetector(
           onTap: () {
@@ -552,51 +658,43 @@ class _StatisticsScreen extends State<StatisticsScreen>
               child: SfCartesianChart(
                 enableAxisAnimation: true,
                 primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: 'Uhrzeit',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
                   desiredIntervals: 12,
                   crossesAt: 0,
                   placeLabelsNearAxisLine: false,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                   visibleMaximum: 8,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}°C',
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: tempChartDaily,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.circular(radius.x),
                     gradient: LinearGradient(
                       colors: temperatureGradient,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -617,6 +715,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Air Humidity
         GestureDetector(
           onTap: () {
@@ -665,36 +764,28 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 enableAxisAnimation: true,
                 primaryXAxis: CategoryAxis(
                   desiredIntervals: 12,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  title: AxisTitle(
-                      text: 'Uhrzeit',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
-                  labelIntersectAction: AxisLabelIntersectAction.wrap,
+                  axisLine: axisLine,
+                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
+                  labelStyle: labelStyle,
+                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
                   visibleMaximum: 8,
                   isVisible: true,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}%',
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
-                    dataSource: airChartDaily,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
+                    dataSource: airHumidityChartDaily,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
@@ -704,14 +795,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                     enable: true,
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
-                      final _ChartData chartData = data as _ChartData;
+                      final ChartData chartData = data as ChartData;
                       return Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -785,6 +876,30 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+        //Button
+        Visibility(
+          visible: visitorVisible,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SwitchListTile(
+              activeColor:
+                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
+              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
+              title: Text(
+                rainLineChart
+                    ? 'Temperatur ausblenden'
+                    : 'Temperatur einblenden',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              value: rainLineChart,
+              onChanged: handleToggle,
+            ),
+          ),
+        ),
+        //Visitor
         Visibility(
           visible: visitorVisible,
           child: Padding(
@@ -793,28 +908,21 @@ class _StatisticsScreen extends State<StatisticsScreen>
               height: chartHeight,
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Anzahl',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 1.5, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ChartSeries>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: visitorChartWeekly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
@@ -824,14 +932,29 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
+                  if (rainLineChart)
+                    LineSeries<ChartData, String>(
+                      dataSource: rainPercentChartWeekly,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
+                      markerSettings: const MarkerSettings(
+                        height: 5,
+                        width: 5,
+                        isVisible: true,
+                        borderColor: Colors.deepOrange,
+                        color: Colors.deepOrange,
+                        shape: DataMarkerType.circle,
+                      ),
+                      color: const Color.fromARGB(255, 42, 223, 123),
+                    ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -852,6 +975,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Temperature
         GestureDetector(
           onTap: () {
@@ -900,40 +1024,35 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 primaryXAxis: CategoryAxis(
                   crossesAt: 0,
                   placeLabelsNearAxisLine: false,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
+                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}°C',
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: tempChartWeekly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.circular(radius.x),
                     gradient: LinearGradient(
                       colors: temperatureGradient,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -954,6 +1073,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Air Humidity
         GestureDetector(
           onTap: () {
@@ -1000,46 +1120,38 @@ class _StatisticsScreen extends State<StatisticsScreen>
               height: chartHeight,
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  axisLine: axisLine,
+                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                  labelStyle: labelStyle,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}%',
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
-                    dataSource: airChartWeekly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
+                    dataSource: airHumidityChartWeekly,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
                     ),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromRGBO(72, 132, 238, 1),
-                        Color.fromRGBO(6, 188, 251, 1),
-                      ],
+                    gradient: LinearGradient(
+                      colors: airHumidityGradient,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                     enable: true,
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
-                      final _ChartData chartData = data as _ChartData;
+                      final ChartData chartData = data as ChartData;
                       return Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -1110,6 +1222,30 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
             ),
           ),
+          //Button
+          Visibility(
+            visible: visitorVisible,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: SwitchListTile(
+                activeColor: const Color.fromRGBO(
+                    38, 158, 38, 0.2), // Lighter green tone
+                activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
+                title: Text(
+                  rainLineChart
+                      ? 'Temperatur ausblenden'
+                      : 'Temperatur einblenden',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                value: rainLineChart,
+                onChanged: handleToggle,
+              ),
+            ),
+          ),
+          //Chart
           Visibility(
             visible: visitorVisible,
             child: Padding(
@@ -1119,12 +1255,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 child: SfCartesianChart(
                   primaryXAxis: CategoryAxis(
                     labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                    axisLine: const AxisLine(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
+                    axisLine: axisLine,
+                    labelStyle: labelStyle,
                   ),
                   primaryYAxis: NumericAxis(
                     title: AxisTitle(
@@ -1137,13 +1269,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     labelStyle:
                         const TextStyle(fontSize: 14, color: Colors.black),
                   ),
-                  series: <ColumnSeries<_ChartData, String>>[
-                    ColumnSeries<_ChartData, String>(
-                      dataLabelSettings:
-                          const DataLabelSettings(isVisible: true),
+                  series: <ChartSeries>[
+                    ColumnSeries<ChartData, String>(
                       dataSource: visitorChartMonthly,
-                      xValueMapper: (_ChartData data, _) => data.x,
-                      yValueMapper: (_ChartData data, _) => data.y,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
                       borderRadius: BorderRadius.only(
                         topLeft: radius,
                         topRight: radius,
@@ -1153,13 +1283,29 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
+                      dataLabelMapper: (ChartData data, _) => '${data.y}',
                     ),
+                    if (rainLineChart)
+                      LineSeries<ChartData, String>(
+                        dataSource: weatherDataMonthly,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y,
+                        markerSettings: const MarkerSettings(
+                          height: 5,
+                          width: 5,
+                          isVisible: true,
+                          borderColor: Colors.deepOrange,
+                          color: Colors.deepOrange,
+                          shape: DataMarkerType.circle,
+                        ),
+                        color: const Color.fromARGB(255, 42, 223, 123),
+                      ),
                   ],
                   tooltipBehavior: TooltipBehavior(
                     enable: true,
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
-                      final _ChartData chartData = data as _ChartData;
+                      final ChartData chartData = data as ChartData;
                       return Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -1180,6 +1326,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
             ),
           ),
+
           //Temperature
           GestureDetector(
             onTap: () {
@@ -1226,46 +1373,38 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 height: chartHeight,
                 child: SfCartesianChart(
                   primaryXAxis: CategoryAxis(
-                    axisLine: const AxisLine(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
+                    axisLine: axisLine,
+                    labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                    labelStyle: labelStyle,
                     labelRotation: -10,
                     crossesAt: 0,
                     placeLabelsNearAxisLine: false,
                   ),
                   primaryYAxis: NumericAxis(
                     labelFormat: '{value}°C',
-                    majorTickLines: const MajorTickLines(
-                        size: 6, width: 2, color: Colors.black),
-                    axisLine: const AxisLine(color: Colors.black, width: 1),
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
+                    majorTickLines: majorTickLines,
+                    axisLine: axisLine,
+                    labelStyle: labelStyle,
                   ),
-                  series: <ColumnSeries<_ChartData, String>>[
-                    ColumnSeries<_ChartData, String>(
+                  series: <ColumnSeries<ChartData, String>>[
+                    ColumnSeries<ChartData, String>(
                       dataSource: tempChartMonthly,
-                      xValueMapper: (_ChartData data, _) => data.x,
-                      yValueMapper: (_ChartData data, _) => data.y,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
                       borderRadius: BorderRadius.circular(radius.x),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Colors.blue,
-                          Colors.red,
-                        ],
+                      gradient: LinearGradient(
+                        colors: temperatureGradient,
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
-                      dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                      dataLabelMapper: (ChartData data, _) => '${data.y}',
                     ),
                   ],
                   tooltipBehavior: TooltipBehavior(
                     enable: true,
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
-                      final _ChartData chartData = data as _ChartData;
+                      final ChartData chartData = data as ChartData;
                       return Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -1286,6 +1425,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
             ),
           ),
+
           //Air Humidity
           GestureDetector(
             onTap: () {
@@ -1327,54 +1467,45 @@ class _StatisticsScreen extends State<StatisticsScreen>
           Visibility(
             visible: airVisible,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 height: chartHeight,
+                width: MediaQuery.of(context).size.width / 1.15,
                 child: SfCartesianChart(
                   primaryXAxis: CategoryAxis(
-                    axisLine: const AxisLine(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
-                    labelRotation: -10,
+                    axisLine: axisLine,
                     labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
+                    labelStyle: labelStyle,
                   ),
                   primaryYAxis: NumericAxis(
                     labelFormat: '{value}%',
-                    majorTickLines: const MajorTickLines(
-                        size: 6, width: 2, color: Colors.black),
-                    axisLine: const AxisLine(color: Colors.black, width: 1),
+                    majorTickLines: majorTickLines,
+                    axisLine: axisLine,
                     labelRotation: -90,
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
+                    labelStyle: labelStyle,
                   ),
-                  series: <ColumnSeries<_ChartData, String>>[
-                    ColumnSeries<_ChartData, String>(
-                      dataSource: airChartMonthly,
-                      xValueMapper: (_ChartData data, _) => data.x,
-                      yValueMapper: (_ChartData data, _) => data.y,
+                  series: <ColumnSeries<ChartData, String>>[
+                    ColumnSeries<ChartData, String>(
+                      dataSource: airHumidityMonthly,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
                       borderRadius: BorderRadius.only(
                         topLeft: radius,
                         topRight: radius,
                       ),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color.fromRGBO(72, 132, 238, 1),
-                          Color.fromRGBO(6, 188, 251, 1),
-                        ],
+                      gradient: LinearGradient(
+                        colors: airHumidityGradient,
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
-                      dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                      dataLabelMapper: (ChartData data, _) => '${data.y}',
                     ),
                   ],
                   tooltipBehavior: TooltipBehavior(
                       enable: true,
                       builder: (dynamic data, dynamic point, dynamic series,
                           int pointIndex, int seriesIndex) {
-                        final _ChartData chartData = data as _ChartData;
+                        final ChartData chartData = data as ChartData;
                         return Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -1444,6 +1575,30 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+        //Button
+        Visibility(
+          visible: visitorVisible,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SwitchListTile(
+              activeColor:
+                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
+              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
+              title: Text(
+                rainLineChart
+                    ? 'Temperatur ausblenden'
+                    : 'Temperatur einblenden',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              value: rainLineChart,
+              onChanged: handleToggle,
+            ),
+          ),
+        ),
+        //Chart
         Visibility(
           visible: visitorVisible,
           child: Padding(
@@ -1454,35 +1609,27 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 enableAxisAnimation: true,
                 primaryXAxis: CategoryAxis(
                   desiredIntervals: 12,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                   labelIntersectAction: AxisLabelIntersectAction.wrap,
-                  visibleMaximum: 8,
+                  visibleMaximum: 6,
                   isVisible: true,
                 ),
                 primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Anzahl',
-                      textStyle: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ChartSeries>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: visitorChartYearly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
@@ -1492,14 +1639,29 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
+                  if (rainLineChart)
+                    LineSeries<ChartData, String>(
+                      dataSource: rainPercentChartYearly,
+                      xValueMapper: (ChartData data, _) => data.x,
+                      yValueMapper: (ChartData data, _) => data.y,
+                      markerSettings: const MarkerSettings(
+                        height: 5,
+                        width: 5,
+                        isVisible: true,
+                        borderColor: Colors.deepOrange,
+                        color: Colors.deepOrange,
+                        shape: DataMarkerType.circle,
+                      ),
+                      color: const Color.fromARGB(255, 42, 223, 123),
+                    ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -1520,6 +1682,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Temperature
         GestureDetector(
           onTap: () {
@@ -1570,45 +1733,39 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   desiredIntervals: 12,
                   crossesAt: 0,
                   placeLabelsNearAxisLine: false,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
-                  visibleMaximum: 8,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
+                  visibleMaximum: 6,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}°C',
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: tempChartYearly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.circular(radius.x),
                     gradient: LinearGradient(
                       colors: temperatureGradient,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                   enable: true,
                   builder: (dynamic data, dynamic point, dynamic series,
                       int pointIndex, int seriesIndex) {
-                    final _ChartData chartData = data as _ChartData;
+                    final ChartData chartData = data as ChartData;
                     return Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -1629,6 +1786,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
         ),
+
         //Air Humidity
         GestureDetector(
           onTap: () {
@@ -1677,33 +1835,27 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 enableAxisAnimation: true,
                 primaryXAxis: CategoryAxis(
                   desiredIntervals: 12,
-                  axisLine: const AxisLine(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                   labelIntersectAction: AxisLabelIntersectAction.wrap,
-                  visibleMaximum: 8,
+                  visibleMaximum: 6,
                   isVisible: true,
                 ),
                 primaryYAxis: NumericAxis(
                   labelFormat: '{value}%',
                   anchorRangeToVisiblePoints: false,
-                  majorTickLines: const MajorTickLines(
-                      size: 6, width: 2, color: Colors.black),
-                  axisLine: const AxisLine(color: Colors.black, width: 1),
-                  labelStyle:
-                      const TextStyle(fontSize: 14, color: Colors.black),
+                  majorTickLines: majorTickLines,
+                  axisLine: axisLine,
+                  labelStyle: labelStyle,
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                   enablePanning: true,
                 ),
-                series: <ColumnSeries<_ChartData, String>>[
-                  ColumnSeries<_ChartData, String>(
+                series: <ColumnSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
                     dataSource: airChartYearly,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
                       topLeft: radius,
                       topRight: radius,
@@ -1713,14 +1865,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    dataLabelMapper: (_ChartData data, _) => '${data.y}',
+                    dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
                 ],
                 tooltipBehavior: TooltipBehavior(
                     enable: true,
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
-                      final _ChartData chartData = data as _ChartData;
+                      final ChartData chartData = data as ChartData;
                       return Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -1745,9 +1897,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 }
 
-class _ChartData {
+class ChartData {
   final String x;
   final double y;
 
-  _ChartData(this.x, this.y);
+  ChartData(this.x, this.y);
 }

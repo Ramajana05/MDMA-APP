@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: _obscurePassword,
                         onChanged: (value) {
                           setState(() {
-                            _password = value?.trim();
+                            _password = value.trim();
                           });
                         },
                         validator: (value) {
