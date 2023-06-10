@@ -102,7 +102,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   String getHours(int hour) {
     final getHour = [
-      '',
       '05',
       '06',
       '07',
