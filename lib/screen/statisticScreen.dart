@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -18,6 +20,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var temperature = "Temperatur";
   var airHumidity = "Luftfeuchtigkeit";
 
+  var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
+  var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
+
   var radius = const Radius.circular(20);
 
   late List<ChartData> visitorChartDaily;
@@ -32,22 +37,29 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   late List<ChartData> airHumidityChartDaily;
   late List<ChartData> airHumidityChartWeekly;
-  late List<ChartData> airHumidityMonthly;
-  late List<ChartData> airChartYearly;
+  late List<ChartData> airHumidityChartMonthly;
+  late List<ChartData> airHumidityChartYearly;
 
   late List<ChartData> rainPercentChartDaily;
   late List<ChartData> rainPercentChartWeekly;
-  late List<ChartData> weatherDataMonthly;
+  late List<ChartData> rainPercentChartMonthly;
   late List<ChartData> rainPercentChartYearly;
 
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
   bool rainLineChart = true;
+  bool rainLineChart2 = false;
 
   void handleToggle(bool value) {
     setState(() {
       rainLineChart = value;
+    });
+  }
+
+  void handleToggle2(bool value2) {
+    setState(() {
+      rainLineChart2 = value2;
     });
   }
 
@@ -73,16 +85,30 @@ class _StatisticsScreen extends State<StatisticsScreen>
     Color(0xFF6A5ACD), // Slate Blue
   ];
 
+  var labelStyle = const TextStyle(fontSize: 15, color: Colors.black);
+  var axisLine = const AxisLine(color: Colors.black, width: 1.5);
+  var majorTickLines =
+      const MajorTickLines(size: 6, width: 2, color: Colors.black);
+  var axisTitleStyle = const TextStyle(fontWeight: FontWeight.w700);
+
   TabController? _tabController;
+  int _selectedTabIndex = 0;
 
   String getWeekOfPreviousMonth(int weekNumber) {
     final now = DateTime.now();
     final firstDayOfPreviousMonth = DateTime(now.year, now.month - 1, 1);
+    final lastDayOfPreviousMonth = DateTime(now.year, now.month, 0);
 
     final weekStartDate = firstDayOfPreviousMonth
         .subtract(Duration(days: firstDayOfPreviousMonth.weekday - 1))
         .add(Duration(days: (weekNumber - 1) * 7));
-    final weekEndDate = weekStartDate.add(const Duration(days: 6));
+
+    DateTime weekEndDate;
+    if (weekNumber == 4) {
+      weekEndDate = lastDayOfPreviousMonth;
+    } else {
+      weekEndDate = weekStartDate.add(Duration(days: 6));
+    }
 
     final weekStartDay = weekStartDate.day.toString().padLeft(2, '0');
     final weekEndDay = weekEndDate.day.toString().padLeft(2, '0');
@@ -112,297 +138,134 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 
   String getHours(int hour) {
-    final getHour = [
-      '05',
-      '06',
-      '07',
-      '08',
-      '09',
-      '10',
-      '11',
-      '12',
-      '13',
-      '14',
-      '15',
-      '16',
-      '17',
-      '18',
-      '19',
-      '20',
-      '21',
-      '22',
-      '23',
-      '00',
-      '01',
-      '02',
-      '03',
-      '04',
-    ];
-
-    return getHour[hour];
+    return hour.toString().padLeft(2, '0');
   }
 
   String getWeekday(int day) {
-    final getWeekday = [
-      '',
-      'Mo',
-      'Di',
-      'Mi',
-      'Do',
-      'Fr',
-      'Sa',
-      'So',
-    ];
-
-    return getWeekday[day];
+    switch (day) {
+      case 1:
+        return 'Mo';
+      case 2:
+        return 'Di';
+      case 3:
+        return 'Mi';
+      case 4:
+        return 'Do';
+      case 5:
+        return 'Fr';
+      case 6:
+        return 'Sa';
+      case 7:
+        return 'So';
+      default:
+        throw Exception('Invalid day: $day');
+    }
   }
-
-  var labelStyle = const TextStyle(fontSize: 15, color: Colors.black);
-  var axisLine = const AxisLine(color: Colors.black, width: 1.5);
-  var majorTickLines =
-      const MajorTickLines(size: 6, width: 2, color: Colors.black);
-  var axisTitleStyle = const TextStyle(fontWeight: FontWeight.w700);
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    visitorChartDaily = [
-      ChartData(getHours(5), 120),
-      ChartData(getHours(6), 135),
-      ChartData(getHours(7), 150),
-      ChartData(getHours(8), 165),
-      ChartData(getHours(9), 180),
-      ChartData(getHours(10), 195),
-      ChartData(getHours(11), 210),
-      ChartData(getHours(12), 225),
-      ChartData(getHours(13), 240),
-      ChartData(getHours(14), 225),
-      ChartData(getHours(15), 210),
-      ChartData(getHours(16), 195),
-      ChartData(getHours(17), 180),
-      ChartData(getHours(18), 165),
-      ChartData(getHours(19), 150),
-      ChartData(getHours(20), 135),
-      ChartData(getHours(21), 120),
-      ChartData(getHours(22), 105),
-      ChartData(getHours(23), 90),
-      ChartData(getHours(0), 75),
-      ChartData(getHours(1), 60),
-      ChartData(getHours(2), 45),
-      ChartData(getHours(3), 30),
-      ChartData(getHours(4), 15),
-    ];
+    visitorChartDaily = List.generate(24, (hour) {
+      String hourString = getHours(hour);
+      double visitors = Random().nextInt(100) +
+          100; // Generate a random value between 100 and 199
+      return ChartData(hourString, visitors);
+    });
 
-    visitorChartWeekly = [
-      ChartData(getWeekday(1), 1000),
-      ChartData(getWeekday(2), 950),
-      ChartData(getWeekday(3), 900),
-      ChartData(getWeekday(4), 850),
-      ChartData(getWeekday(5), 800),
-      ChartData(getWeekday(6), 750),
-      ChartData(getWeekday(7), 700),
-    ];
+    visitorChartWeekly = List.generate(7, (index) {
+      String weekday = getWeekday(index + 1);
+      double visitors = Random().nextInt(1000) +
+          700; // Generate a random value between 700 and 1699
+      return ChartData(weekday, visitors);
+    });
 
-    visitorChartMonthly = [
-      ChartData(getWeekOfPreviousMonth(1), 4000),
-      ChartData(getWeekOfPreviousMonth(2), 4100),
-      ChartData(getWeekOfPreviousMonth(3), 4200),
-      ChartData(getWeekOfPreviousMonth(4), 4300),
-    ];
+    visitorChartMonthly = List.generate(4, (index) {
+      String weekOfPreviousMonth = getWeekOfPreviousMonth(index + 1);
+      double visitors = Random().nextInt(1000) +
+          4000; // Generate a random value between 4000 and 4999
+      return ChartData(weekOfPreviousMonth, visitors);
+    });
 
-    visitorChartYearly = [
-      ChartData(getMonthName(1), 4500),
-      ChartData(getMonthName(2), 4600),
-      ChartData(getMonthName(3), 4700),
-      ChartData(getMonthName(4), 4800),
-      ChartData(getMonthName(5), 4900),
-      ChartData(getMonthName(6), 5000),
-      ChartData(getMonthName(7), 5100),
-      ChartData(getMonthName(8), 5200),
-      ChartData(getMonthName(9), 5300),
-      ChartData(getMonthName(10), 5400),
-      ChartData(getMonthName(11), 5500),
-      ChartData(getMonthName(12), 5600),
-    ];
+    visitorChartYearly = List.generate(12, (index) {
+      String monthName = getMonthName(index + 1);
+      double visitors = Random().nextInt(1000) +
+          5000; // Generate a random value between 5000 and 5999
+      return ChartData(monthName, visitors);
+    });
 
-    tempChartDaily = [
-      ChartData(getHours(5), 10),
-      ChartData(getHours(6), 12),
-      ChartData(getHours(7), 15),
-      ChartData(getHours(8), 18),
-      ChartData(getHours(9), 20),
-      ChartData(getHours(10), 22),
-      ChartData(getHours(11), 24),
-      ChartData(getHours(12), 26),
-      ChartData(getHours(13), 24),
-      ChartData(getHours(14), 22),
-      ChartData(getHours(15), 20),
-      ChartData(getHours(16), 18),
-      ChartData(getHours(17), 15),
-      ChartData(getHours(18), 12),
-      ChartData(getHours(19), 10),
-      ChartData(getHours(20), 8),
-      ChartData(getHours(21), 6),
-      ChartData(getHours(22), 4),
-      ChartData(getHours(23), 2),
-      ChartData(getHours(0), 5),
-      ChartData(getHours(1), 2),
-      ChartData(getHours(2), 4),
-      ChartData(getHours(3), 6),
-      ChartData(getHours(4), 8),
-    ];
+    tempChartDaily = List.generate(24, (hour) {
+      double temperature = Random().nextDouble() * 15 -
+          5; // Generate a random value between -10 and 5 degrees Celsius
+      return ChartData(getHours(hour), temperature);
+    });
 
-    tempChartWeekly = [
-      ChartData(getWeekday(1), 15),
-      ChartData(getWeekday(2), 16),
-      ChartData(getWeekday(3), 18),
-      ChartData(getWeekday(4), 20),
-      ChartData(getWeekday(5), 22),
-      ChartData(getWeekday(6), 24),
-      ChartData(getWeekday(7), 16),
-    ];
+    tempChartWeekly = List.generate(7, (day) {
+      double temperature = Random().nextDouble() * 10 +
+          15; // Generate a random value between 15 and 25 degrees Celsius
+      return ChartData(getWeekday(day + 1), temperature);
+    });
 
-    tempChartMonthly = [
-      ChartData(getWeekOfPreviousMonth(1), 15),
-      ChartData(getWeekOfPreviousMonth(2), 13),
-      ChartData(getWeekOfPreviousMonth(3), 11),
-      ChartData(getWeekOfPreviousMonth(4), 12),
-    ];
+    tempChartMonthly = List.generate(4, (week) {
+      double temperature = Random().nextDouble() * 10 +
+          10; // Generate a random value between 10 and 20 degrees Celsius
+      return ChartData(getWeekOfPreviousMonth(week + 1), temperature);
+    });
 
-    tempChartYearly = [
-      ChartData(getMonthName(1), -3),
-      ChartData(getMonthName(2), -2),
-      ChartData(getMonthName(3), 8),
-      ChartData(getMonthName(4), 10),
-      ChartData(getMonthName(5), 14),
-      ChartData(getMonthName(6), 18),
-      ChartData(getMonthName(7), 22),
-      ChartData(getMonthName(8), 30),
-      ChartData(getMonthName(9), 22),
-      ChartData(getMonthName(10), 14),
-      ChartData(getMonthName(11), 10),
-      ChartData(getMonthName(12), 12),
-    ];
+    tempChartYearly = List.generate(12, (month) {
+      double temperature = Random().nextDouble() * 20 -
+          5; // Generate a random value between -5 and 15 degrees Celsius
+      return ChartData(getMonthName(month + 1), temperature);
+    });
 
-    airHumidityChartDaily = [
-      ChartData(getHours(5), 60),
-      ChartData(getHours(6), 65),
-      ChartData(getHours(7), 70),
-      ChartData(getHours(8), 75),
-      ChartData(getHours(9), 80),
-      ChartData(getHours(10), 85),
-      ChartData(getHours(11), 90),
-      ChartData(getHours(12), 95),
-      ChartData(getHours(13), 100),
-      ChartData(getHours(14), 95),
-      ChartData(getHours(15), 90),
-      ChartData(getHours(16), 85),
-      ChartData(getHours(17), 80),
-      ChartData(getHours(18), 75),
-      ChartData(getHours(19), 70),
-      ChartData(getHours(20), 65),
-      ChartData(getHours(21), 60),
-      ChartData(getHours(22), 55),
-      ChartData(getHours(23), 50),
-      ChartData(getHours(0), 45),
-      ChartData(getHours(1), 40),
-      ChartData(getHours(2), 35),
-      ChartData(getHours(3), 30),
-      ChartData(getHours(4), 25),
-    ];
+    airHumidityChartDaily = List.generate(24, (hour) {
+      double humidity = Random().nextInt(51) +
+          50; // Generate a random value between 50 and 100 percent
+      return ChartData(getHours(hour), humidity);
+    });
 
-    airHumidityChartWeekly = [
-      ChartData(getWeekday(1), 30),
-      ChartData(getWeekday(2), 28),
-      ChartData(getWeekday(3), 26),
-      ChartData(getWeekday(4), 24),
-      ChartData(getWeekday(5), 22),
-      ChartData(getWeekday(6), 20),
-      ChartData(getWeekday(7), 18),
-    ];
+    airHumidityChartWeekly = List.generate(7, (index) {
+      double humidity = Random().nextInt(11) +
+          18; // Generate a random value between 18 and 28 percent
+      return ChartData(getWeekday(index + 1), humidity);
+    });
 
-    airHumidityMonthly = [
-      ChartData(getWeekOfPreviousMonth(1), 25),
-      ChartData(getWeekOfPreviousMonth(2), 30),
-      ChartData(getWeekOfPreviousMonth(3), 21),
-      ChartData(getWeekOfPreviousMonth(4), 50),
-    ];
+    airHumidityChartMonthly = List.generate(4, (index) {
+      double humidity = Random().nextInt(31) +
+          20; // Generate a random value between 20 and 50 percent
+      return ChartData(getWeekOfPreviousMonth(index + 1), humidity);
+    });
 
-    airChartYearly = [
-      ChartData(getMonthName(1), 55),
-      ChartData(getMonthName(2), 50),
-      ChartData(getMonthName(3), 45),
-      ChartData(getMonthName(4), 60),
-      ChartData(getMonthName(5), 65),
-      ChartData(getMonthName(6), 70),
-      ChartData(getMonthName(7), 75),
-      ChartData(getMonthName(8), 70),
-      ChartData(getMonthName(9), 65),
-      ChartData(getMonthName(10), 60),
-      ChartData(getMonthName(11), 50),
-      ChartData(getMonthName(12), 45),
-    ];
+    airHumidityChartYearly = List.generate(12, (index) {
+      double humidity = Random().nextInt(16) +
+          45; // Generate a random value between 45 and 60 percent
+      return ChartData(getMonthName(index + 1), humidity);
+    });
 
-    rainPercentChartDaily = [
-      ChartData(getHours(5), 15),
-      ChartData(getHours(6), 16),
-      ChartData(getHours(7), 17),
-      ChartData(getHours(8), 20),
-      ChartData(getHours(9), 22),
-      ChartData(getHours(10), 24),
-      ChartData(getHours(11), 26),
-      ChartData(getHours(12), 28),
-      ChartData(getHours(13), 30),
-      ChartData(getHours(14), 31),
-      ChartData(getHours(15), 30),
-      ChartData(getHours(16), 28),
-      ChartData(getHours(17), 26),
-      ChartData(getHours(18), 24),
-      ChartData(getHours(19), 22),
-      ChartData(getHours(20), 20),
-      ChartData(getHours(21), 19),
-      ChartData(getHours(22), 18),
-      ChartData(getHours(23), 16),
-      ChartData(getHours(0), 14),
-      ChartData(getHours(1), 13),
-      ChartData(getHours(2), 12),
-      ChartData(getHours(3), 11),
-      ChartData(getHours(4), 10),
-    ];
+    rainPercentChartDaily = List.generate(24, (hour) {
+      double rainPercentage = Random().nextInt(16) +
+          10; // Generate a random value between 10 and 25 percent
+      return ChartData(getHours(hour), rainPercentage);
+    });
 
-    rainPercentChartWeekly = [
-      ChartData(getWeekday(1), 22),
-      ChartData(getWeekday(2), 23),
-      ChartData(getWeekday(3), 25),
-      ChartData(getWeekday(4), 26),
-      ChartData(getWeekday(5), 27),
-      ChartData(getWeekday(6), 26),
-      ChartData(getWeekday(7), 25),
-    ];
+    rainPercentChartWeekly = List.generate(7, (index) {
+      double rainPercentage = Random().nextInt(6) +
+          22; // Generate a random value between 22 and 27 percent
+      return ChartData(getWeekday(index + 1), rainPercentage);
+    });
 
-    weatherDataMonthly = [
-      ChartData(getWeekOfPreviousMonth(1), 10),
-      ChartData(getWeekOfPreviousMonth(2), 15),
-      ChartData(getWeekOfPreviousMonth(3), 20),
-      ChartData(getWeekOfPreviousMonth(4), 18),
-    ];
+    rainPercentChartMonthly = List.generate(4, (index) {
+      double rainPercentage = Random().nextInt(11) +
+          10; // Generate a random value between 10 and 20 percent
+      return ChartData(getWeekOfPreviousMonth(index + 1), rainPercentage);
+    });
 
-    rainPercentChartYearly = [
-      ChartData(getMonthName(1), 10),
-      ChartData(getMonthName(2), 15),
-      ChartData(getMonthName(3), 20),
-      ChartData(getMonthName(4), 18),
-      ChartData(getMonthName(5), 25),
-      ChartData(getMonthName(6), 28),
-      ChartData(getMonthName(7), 30),
-      ChartData(getMonthName(8), 32),
-      ChartData(getMonthName(9), 27),
-      ChartData(getMonthName(10), 22),
-      ChartData(getMonthName(11), 16),
-      ChartData(getMonthName(12), 12),
-    ];
+    rainPercentChartYearly = List.generate(12, (index) {
+      double rainPercentage = Random().nextInt(21) +
+          10; // Generate a random value between 10 and 30 percent
+      return ChartData(getMonthName(index + 1), rainPercentage);
+    });
   }
 
   @override
@@ -410,8 +273,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
     _tabController?.dispose();
     super.dispose();
   }
-
-  int _selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -506,15 +367,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
         Visibility(
           visible: visitorVisible,
           child: Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 8),
             child: SwitchListTile(
               activeColor:
                   const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
               activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
               title: Text(
-                rainLineChart
-                    ? 'Temperatur ausblenden'
-                    : 'Temperatur einblenden',
+                rainLineChart ? rainTextVisible : rainTextHidden,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -880,22 +739,20 @@ class _StatisticsScreen extends State<StatisticsScreen>
         Visibility(
           visible: visitorVisible,
           child: Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 8),
             child: SwitchListTile(
               activeColor:
                   const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
               activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
               title: Text(
-                rainLineChart
-                    ? 'Temperatur ausblenden'
-                    : 'Temperatur einblenden',
+                rainLineChart ? rainTextVisible : rainTextHidden,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                 ),
               ),
-              value: rainLineChart,
-              onChanged: handleToggle,
+              value: rainLineChart2,
+              onChanged: handleToggle2,
             ),
           ),
         ),
@@ -934,7 +791,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                     dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
-                  if (rainLineChart)
+                  if (rainLineChart2)
                     LineSeries<ChartData, String>(
                       dataSource: rainPercentChartWeekly,
                       xValueMapper: (ChartData data, _) => data.x,
@@ -1226,22 +1083,20 @@ class _StatisticsScreen extends State<StatisticsScreen>
           Visibility(
             visible: visitorVisible,
             child: Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 8),
               child: SwitchListTile(
                 activeColor: const Color.fromRGBO(
                     38, 158, 38, 0.2), // Lighter green tone
                 activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
                 title: Text(
-                  rainLineChart
-                      ? 'Temperatur ausblenden'
-                      : 'Temperatur einblenden',
+                  rainLineChart ? rainTextVisible : rainTextHidden,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                   ),
                 ),
-                value: rainLineChart,
-                onChanged: handleToggle,
+                value: rainLineChart2,
+                onChanged: handleToggle2,
               ),
             ),
           ),
@@ -1285,9 +1140,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       ),
                       dataLabelMapper: (ChartData data, _) => '${data.y}',
                     ),
-                    if (rainLineChart)
+                    if (rainLineChart2)
                       LineSeries<ChartData, String>(
-                        dataSource: weatherDataMonthly,
+                        dataSource: rainPercentChartMonthly,
                         xValueMapper: (ChartData data, _) => data.x,
                         yValueMapper: (ChartData data, _) => data.y,
                         markerSettings: const MarkerSettings(
@@ -1486,7 +1341,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   ),
                   series: <ColumnSeries<ChartData, String>>[
                     ColumnSeries<ChartData, String>(
-                      dataSource: airHumidityMonthly,
+                      dataSource: airHumidityChartMonthly,
                       xValueMapper: (ChartData data, _) => data.x,
                       yValueMapper: (ChartData data, _) => data.y,
                       borderRadius: BorderRadius.only(
@@ -1579,22 +1434,20 @@ class _StatisticsScreen extends State<StatisticsScreen>
         Visibility(
           visible: visitorVisible,
           child: Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 8),
             child: SwitchListTile(
               activeColor:
                   const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
               activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
               title: Text(
-                rainLineChart
-                    ? 'Temperatur ausblenden'
-                    : 'Temperatur einblenden',
+                rainLineChart ? rainTextVisible : rainTextHidden,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                 ),
               ),
-              value: rainLineChart,
-              onChanged: handleToggle,
+              value: rainLineChart2,
+              onChanged: handleToggle2,
             ),
           ),
         ),
@@ -1641,7 +1494,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                     dataLabelMapper: (ChartData data, _) => '${data.y}',
                   ),
-                  if (rainLineChart)
+                  if (rainLineChart2)
                     LineSeries<ChartData, String>(
                       dataSource: rainPercentChartYearly,
                       xValueMapper: (ChartData data, _) => data.x,
@@ -1853,7 +1706,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 ),
                 series: <ColumnSeries<ChartData, String>>[
                   ColumnSeries<ChartData, String>(
-                    dataSource: airChartYearly,
+                    dataSource: airHumidityChartYearly,
                     xValueMapper: (ChartData data, _) => data.x,
                     yValueMapper: (ChartData data, _) => data.y,
                     borderRadius: BorderRadius.only(
@@ -1899,7 +1752,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
 class ChartData {
   final String x;
-  final double y;
+  double y;
 
   ChartData(this.x, this.y);
 }

@@ -33,9 +33,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
       child: MaterialApp(
-          debugShowCheckedModeBanner: false, home: StatisticsScreen()
-          //LoginPage(),
-          ),
+        debugShowCheckedModeBanner: false,
+        home:
+            //StatisticsScreen()
+            LoginPage(),
+      ),
     );
   }
 }

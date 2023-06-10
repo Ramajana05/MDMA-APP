@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -19,8 +20,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var currentVisitors = 4856;
-  var maxVisitors = 5000;
+  var currentVisitors = 0;
+  var maxVisitors = 1000;
 
   var currentSensors = 9;
   var maxSensors = 10;
@@ -120,6 +121,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+    Random random = Random();
+    currentVisitors = random.nextInt(maxVisitors +
+        1); // Generates a random number between 0 and maxVisitors (inclusive)
   }
 
   @override
