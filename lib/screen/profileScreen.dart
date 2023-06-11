@@ -64,8 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Informationen',
                 style: TextStyle(
@@ -82,9 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     buildProfileItem(Icons.person, loggedInUsername ?? ''),
-                    Divider(),
+                    const Divider(),
                     buildProfileItem(Icons.phone_android, 'Förster'),
-                    Divider(),
+                    const Divider(),
                     FutureBuilder<String>(
                       future: getLocationName(),
                       builder: (context, snapshot) {
@@ -104,8 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Aktionen',
                 style: TextStyle(
@@ -128,21 +128,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text('Daten Aktualisierung'),
-                              content: Text('Do you want to update the data?'),
+                              title: const Text('Daten Aktualisierung'),
+                              content: const Text(
+                                  'Möchtest du deine Daten aktualisieren?'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     // Add your update logic here
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Update'),
+                                  child: const Text('Abbrechen'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Cancel'),
+                                  child: const Text('Aktualisieren'),
                                 ),
                               ],
                             );
@@ -152,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: buildProfileItem(
                         Icons.timelapse_outlined,
                         'Daten Aktualisierung',
-                        iconColor: Color.fromARGB(255, 0, 0, 0),
+                        iconColor: const Color.fromARGB(255, 0, 0, 0),
                         textColor: Colors.black,
                       ),
                     ),
@@ -204,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                   print('Password changed successfully');
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content:
                                           Text('Password changed successfully'),
                                     ),
@@ -215,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   // Passwords do not match or current password is incorrect
                                   print('Password change failed');
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
                                           'Passwort konnte nicht geändert werden.'),
                                     ),
@@ -232,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       child: buildProfileItem(Icons.lock, 'Passwort Ändern'),
                     ),
-                    Divider(),
+                    const Divider(),
                     GestureDetector(
                       onTap: () {
                         showDialog(
