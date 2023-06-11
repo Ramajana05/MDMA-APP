@@ -17,13 +17,24 @@ class StatisticsScreen extends StatefulWidget {
 class _StatisticsScreen extends State<StatisticsScreen>
     with SingleTickerProviderStateMixin {
   var visitor = "Besucher";
+
   var temperature = "Temperatur";
   var airHumidity = "Luftfeuchtigkeit";
+
+  var monthly = "Monatliche";
+  var daily = "Tägliche";
+  var weekly = "Wöchentliche";
+  var yearly = "Monatliche";
 
   var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
   var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
 
-  var radius = const Radius.circular(20);
+  double dailyMax = 5;
+  double weeklyMax = 6;
+  double monthlyMax = 3;
+  double yearlyMax = 5;
+  Radius bottom20 = const Radius.circular(20);
+  Radius bottomZero = Radius.zero;
 
   late List<ChartData> visitorChartDaily;
   late List<ChartData> visitorChartWeekly;
@@ -85,11 +96,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
     Color(0xFF6A5ACD), // Slate Blue
   ];
 
-  var labelStyle = const TextStyle(fontSize: 15, color: Colors.black);
-  var axisLine = const AxisLine(color: Colors.black, width: 1.5);
-  var majorTickLines =
-      const MajorTickLines(size: 6, width: 2, color: Colors.black);
-  var axisTitleStyle = const TextStyle(fontWeight: FontWeight.w700);
+  final visitorChartShadow = buildChartBoxDecoration(const Color(0xFF7EA15D));
+  final temperatureChartShadow =
+      buildChartBoxDecoration(const Color(0xFF6495ED));
+  final airHumidityChartShadow =
+      buildChartBoxDecoration(const Color(0xFF6A5ACD));
 
   TabController? _tabController;
   int _selectedTabIndex = 0;
@@ -107,7 +118,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     if (weekNumber == 4) {
       weekEndDate = lastDayOfPreviousMonth;
     } else {
-      weekEndDate = weekStartDate.add(Duration(days: 6));
+      weekEndDate = weekStartDate.add(const Duration(days: 6));
     }
 
     final weekStartDay = weekStartDate.day.toString().padLeft(2, '0');
@@ -138,7 +149,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 
   String getHours(int hour) {
-    return hour.toString().padLeft(2, '0');
+    String hourString = hour.toString().padLeft(2, '0');
+    return '$hourString:00';
   }
 
   String getWeekday(int day) {
@@ -165,113 +177,120 @@ class _StatisticsScreen extends State<StatisticsScreen>
   @override
   void initState() {
     super.initState();
+    generateData();
     _tabController = TabController(length: 3, vsync: this);
+  }
 
-    visitorChartDaily = List.generate(24, (hour) {
+  void generateData() {
+    visitorChartDaily = generateChartData(24, (hour) {
       String hourString = getHours(hour);
-      double visitors = Random().nextInt(100) +
-          100; // Generate a random value between 100 and 199
+      double visitors = Random().nextInt(100) + 100;
       return ChartData(hourString, visitors);
     });
 
-    visitorChartWeekly = List.generate(7, (index) {
+    visitorChartWeekly = generateChartData(7, (index) {
       String weekday = getWeekday(index + 1);
-      double visitors = Random().nextInt(1000) +
-          700; // Generate a random value between 700 and 1699
+      double visitors = Random().nextInt(1000) + 700;
       return ChartData(weekday, visitors);
     });
 
-    visitorChartMonthly = List.generate(4, (index) {
+    visitorChartMonthly = generateChartData(4, (index) {
       String weekOfPreviousMonth = getWeekOfPreviousMonth(index + 1);
-      double visitors = Random().nextInt(1000) +
-          4000; // Generate a random value between 4000 and 4999
+      double visitors = Random().nextInt(1000) + 4000;
       return ChartData(weekOfPreviousMonth, visitors);
     });
 
-    visitorChartYearly = List.generate(12, (index) {
+    visitorChartYearly = generateChartData(12, (index) {
       String monthName = getMonthName(index + 1);
-      double visitors = Random().nextInt(1000) +
-          5000; // Generate a random value between 5000 and 5999
+      double visitors = Random().nextInt(1000) + 5000;
       return ChartData(monthName, visitors);
     });
 
-    tempChartDaily = List.generate(24, (hour) {
-      double temperature = Random().nextDouble() * 15 -
-          5; // Generate a random value between -10 and 5 degrees Celsius
+    tempChartDaily = generateChartData(24, (hour) {
+      double temperature = Random().nextInt(21) - 5;
       return ChartData(getHours(hour), temperature);
     });
 
-    tempChartWeekly = List.generate(7, (day) {
-      double temperature = Random().nextDouble() * 10 +
-          15; // Generate a random value between 15 and 25 degrees Celsius
+    tempChartWeekly = generateChartData(7, (day) {
+      double temperature = Random().nextInt(11) + 15;
       return ChartData(getWeekday(day + 1), temperature);
     });
 
-    tempChartMonthly = List.generate(4, (week) {
-      double temperature = Random().nextDouble() * 10 +
-          10; // Generate a random value between 10 and 20 degrees Celsius
+    tempChartMonthly = generateChartData(4, (week) {
+      double temperature = Random().nextInt(26) + 10;
       return ChartData(getWeekOfPreviousMonth(week + 1), temperature);
     });
 
-    tempChartYearly = List.generate(12, (month) {
-      double temperature = Random().nextDouble() * 20 -
-          5; // Generate a random value between -5 and 15 degrees Celsius
+    tempChartYearly = generateChartData(12, (month) {
+      double temperature = Random().nextInt(26) + 10;
       return ChartData(getMonthName(month + 1), temperature);
     });
 
-    airHumidityChartDaily = List.generate(24, (hour) {
-      double humidity = Random().nextInt(51) +
-          50; // Generate a random value between 50 and 100 percent
+    airHumidityChartDaily = generateChartData(24, (hour) {
+      double humidity = Random().nextInt(51) + 50;
       return ChartData(getHours(hour), humidity);
     });
 
-    airHumidityChartWeekly = List.generate(7, (index) {
-      double humidity = Random().nextInt(11) +
-          18; // Generate a random value between 18 and 28 percent
+    airHumidityChartWeekly = generateChartData(7, (index) {
+      double humidity = Random().nextInt(11) + 18;
       return ChartData(getWeekday(index + 1), humidity);
     });
 
-    airHumidityChartMonthly = List.generate(4, (index) {
-      double humidity = Random().nextInt(31) +
-          20; // Generate a random value between 20 and 50 percent
+    airHumidityChartMonthly = generateChartData(4, (index) {
+      double humidity = Random().nextInt(31) + 20;
       return ChartData(getWeekOfPreviousMonth(index + 1), humidity);
     });
 
-    airHumidityChartYearly = List.generate(12, (index) {
-      double humidity = Random().nextInt(16) +
-          45; // Generate a random value between 45 and 60 percent
+    airHumidityChartYearly = generateChartData(12, (index) {
+      double humidity = Random().nextInt(16) + 45;
       return ChartData(getMonthName(index + 1), humidity);
     });
 
-    rainPercentChartDaily = List.generate(24, (hour) {
-      double rainPercentage = Random().nextInt(16) +
-          10; // Generate a random value between 10 and 25 percent
+    rainPercentChartDaily = generateChartData(24, (hour) {
+      double rainPercentage = Random().nextInt(16) + 10;
       return ChartData(getHours(hour), rainPercentage);
     });
 
-    rainPercentChartWeekly = List.generate(7, (index) {
-      double rainPercentage = Random().nextInt(6) +
-          22; // Generate a random value between 22 and 27 percent
+    rainPercentChartWeekly = generateChartData(7, (index) {
+      double rainPercentage = Random().nextInt(6) + 22;
       return ChartData(getWeekday(index + 1), rainPercentage);
     });
 
-    rainPercentChartMonthly = List.generate(4, (index) {
-      double rainPercentage = Random().nextInt(11) +
-          10; // Generate a random value between 10 and 20 percent
+    rainPercentChartMonthly = generateChartData(4, (index) {
+      double rainPercentage = Random().nextInt(11) + 10;
       return ChartData(getWeekOfPreviousMonth(index + 1), rainPercentage);
     });
 
-    rainPercentChartYearly = List.generate(12, (index) {
-      double rainPercentage = Random().nextInt(21) +
-          10; // Generate a random value between 10 and 30 percent
+    rainPercentChartYearly = generateChartData(12, (index) {
+      double rainPercentage = Random().nextInt(21) + 10;
       return ChartData(getMonthName(index + 1), rainPercentage);
     });
+  }
+
+  List<ChartData> generateChartData(
+      int count, ChartData Function(int) generator) {
+    return List.generate(count, generator);
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
     super.dispose();
+  }
+
+  static buildChartBoxDecoration(Color boxShadowColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.0),
+      boxShadow: [
+        BoxShadow(
+          color: boxShadowColor,
+          spreadRadius: 3,
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    );
   }
 
   @override
@@ -318,1065 +337,790 @@ class _StatisticsScreen extends State<StatisticsScreen>
     );
   }
 
+  Widget buildChartWidget(
+    List<ChartData> chartData,
+    List<Color> gradientColors,
+    bool showLineSeries,
+    List<ChartData>? lineSeriesData,
+    List<Color>? lineSeriesColors,
+    double visibleMaximum,
+    String chartName,
+  ) {
+    bool isDailyTemperatureChart = chartData == tempChartDaily;
+    bool isWeeklyTemperatureChart = chartData == tempChartWeekly;
+
+    String xAxisTitle = '';
+    if (chartData == visitorChartDaily ||
+        chartData == tempChartDaily ||
+        chartData == airHumidityChartDaily) {
+      xAxisTitle = 'Uhrzeit';
+    }
+
+    String yAxisTitle = '';
+    if (chartData == visitorChartDaily ||
+        chartData == visitorChartMonthly ||
+        chartData == visitorChartYearly ||
+        chartData == visitorChartWeekly) {
+      yAxisTitle = 'Anzahl';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height / 2,
+        child: SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+            axisLine: const AxisLine(color: Colors.black, width: 1.5),
+            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            crossesAt: (isDailyTemperatureChart || isWeeklyTemperatureChart)
+                ? 0
+                : null,
+            placeLabelsNearAxisLine: false,
+            visibleMaximum: visibleMaximum,
+            desiredIntervals: 12,
+            title: AxisTitle(
+              text: xAxisTitle,
+              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          primaryYAxis: NumericAxis(
+            labelFormat: (chartData == airHumidityChartDaily ||
+                    chartData == airHumidityChartWeekly ||
+                    chartData == airHumidityChartMonthly ||
+                    chartData == airHumidityChartYearly)
+                ? '{value}%'
+                : (chartData == tempChartDaily ||
+                        chartData == tempChartWeekly ||
+                        chartData == tempChartMonthly ||
+                        chartData == tempChartYearly)
+                    ? '{value}°C'
+                    : '',
+            title: AxisTitle(
+              text: yAxisTitle,
+              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+            majorTickLines:
+                const MajorTickLines(size: 6, width: 2, color: Colors.black),
+            axisLine: const AxisLine(color: Colors.black, width: 1.5),
+            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          ), //Scroll enabling
+          zoomPanBehavior: ZoomPanBehavior(
+            enablePanning: true,
+          ),
+          series: <ChartSeries>[
+            ColumnSeries<ChartData, String>(
+              dataSource: chartData,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              borderRadius:
+                  (chartData == tempChartDaily || chartData == tempChartWeekly)
+                      ? BorderRadius.circular(20)
+                      : const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+              gradient: LinearGradient(
+                colors: gradientColors,
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+            if (showLineSeries && lineSeriesData != null)
+              LineSeries<ChartData, String>(
+                dataSource: lineSeriesData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                markerSettings: const MarkerSettings(
+                  height: 5,
+                  width: 5,
+                  isVisible: true,
+                  borderColor: Colors.deepOrange,
+                  color: Colors.deepOrange,
+                  shape: DataMarkerType.circle,
+                ),
+                color: const Color.fromARGB(255, 42, 223, 123),
+              ),
+            if (showLineSeries && lineSeriesData != null)
+              LineSeries<ChartData, String>(
+                dataSource: lineSeriesData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                markerSettings: const MarkerSettings(
+                  isVisible: true,
+                  borderColor: Color(0xFF800080),
+                  color: Colors.deepOrange,
+                  shape: DataMarkerType.circle,
+                ),
+                color: const Color(0xFF00BFFF),
+              ),
+          ],
+          tooltipBehavior: TooltipBehavior(enable: true, header: chartName),
+        ),
+      ),
+    );
+  }
+
   Widget buildDailyTab() {
-    final double chartHeight = MediaQuery.of(context).size.height / 2;
-
-    return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        //Visitor
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              visitorVisible = !visitorVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    visitor,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    visitorVisible
-                        ? Icons.arrow_drop_up
-                        : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      visitorVisible = !visitorVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        //Button
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: SwitchListTile(
-              activeColor:
-                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
-              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
-              title: Text(
-                rainLineChart ? rainTextVisible : rainTextHidden,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                ),
-              ),
-              value: rainLineChart,
-              onChanged: handleToggle,
-            ),
-          ),
-        ),
-        //Chart
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  desiredIntervals: 12,
-                  axisLine: axisLine,
-                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
-                  labelStyle: labelStyle,
-                  visibleMaximum: 6,
-                  isVisible: true,
-                ),
-                primaryYAxis: NumericAxis(
-                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                //Scroll enabling
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ChartSeries>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: visitorChartDaily,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: visitorGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                  if (rainLineChart)
-                    LineSeries<ChartData, String>(
-                      dataSource: rainPercentChartDaily,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      markerSettings: const MarkerSettings(
-                        height: 5,
-                        width: 5,
-                        isVisible: true,
-                        borderColor: Colors.deepOrange,
-                        color: Colors.deepOrange,
-                        shape: DataMarkerType.circle,
-                      ),
-                      color: const Color.fromARGB(255, 42, 223, 123),
-                    ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        //Temperature
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              tempVisible = !tempVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    temperature,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    tempVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      tempVisible = !tempVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: tempVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
-                  desiredIntervals: 12,
-                  crossesAt: 0,
-                  placeLabelsNearAxisLine: false,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                  visibleMaximum: 8,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}°C',
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: tempChartDaily,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.circular(radius.x),
-                    gradient: LinearGradient(
-                      colors: temperatureGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        //Air Humidity
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              airVisible = !airVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    airHumidity,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    airVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      airVisible = !airVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: airVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  desiredIntervals: 12,
-                  axisLine: axisLine,
-                  title: AxisTitle(text: 'Uhrzeit', textStyle: axisTitleStyle),
-                  labelStyle: labelStyle,
-                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                  visibleMaximum: 8,
-                  isVisible: true,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}%',
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: airHumidityChartDaily,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: airHumidityGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                    enable: true,
-                    builder: (dynamic data, dynamic point, dynamic series,
-                        int pointIndex, int seriesIndex) {
-                      final ChartData chartData = data as ChartData;
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 90, 90),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${chartData.y}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget buildWeeklyTab() {
-    final double chartHeight = MediaQuery.of(context).size.height / 2;
-
-    return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        //Visitor
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              visitorVisible = !visitorVisible;
-            });
-          },
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 5),
-                    child: Text(
-                      visitor,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      visitorVisible
-                          ? Icons.arrow_drop_up
-                          : Icons.arrow_drop_down,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        visitorVisible = !visitorVisible;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        //Button
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: SwitchListTile(
-              activeColor:
-                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
-              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
-              title: Text(
-                rainLineChart ? rainTextVisible : rainTextHidden,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                ),
-              ),
-              value: rainLineChart2,
-              onChanged: handleToggle2,
-            ),
-          ),
-        ),
-        //Visitor
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                primaryYAxis: NumericAxis(
-                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                series: <ChartSeries>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: visitorChartWeekly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: visitorGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                  if (rainLineChart2)
-                    LineSeries<ChartData, String>(
-                      dataSource: rainPercentChartWeekly,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      markerSettings: const MarkerSettings(
-                        height: 5,
-                        width: 5,
-                        isVisible: true,
-                        borderColor: Colors.deepOrange,
-                        color: Colors.deepOrange,
-                        shape: DataMarkerType.circle,
-                      ),
-                      color: const Color.fromARGB(255, 42, 223, 123),
-                    ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        //Temperature
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              tempVisible = !tempVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    temperature,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    tempVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      tempVisible = !tempVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: tempVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                  crossesAt: 0,
-                  placeLabelsNearAxisLine: false,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}°C',
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: tempChartWeekly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.circular(radius.x),
-                    gradient: LinearGradient(
-                      colors: temperatureGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        //Air Humidity
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              airVisible = !airVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    airHumidity,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    airVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      airVisible = !airVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: airVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                  axisLine: axisLine,
-                  labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                  labelStyle: labelStyle,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}%',
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: airHumidityChartWeekly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: airHumidityGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                    enable: true,
-                    builder: (dynamic data, dynamic point, dynamic series,
-                        int pointIndex, int seriesIndex) {
-                      final ChartData chartData = data as ChartData;
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 90, 90),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${chartData.y}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget buildMonthlyTab() {
-    final double chartHeight = MediaQuery.of(context).size.height / 2;
-
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          //Visitor
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                visitorVisible = !visitorVisible;
-              });
-            },
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              decoration: visitorChartShadow,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 5),
-                    child: Text(
-                      visitor,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      visitorVisible
-                          ? Icons.arrow_drop_up
-                          : Icons.arrow_drop_down,
-                    ),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
                         visitorVisible = !visitorVisible;
                       });
                     },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(
+                            38, 158, 38, 0.2), // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          rainLineChart ? rainTextVisible : rainTextHidden,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: rainLineChart,
+                        onChanged: handleToggle,
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Visitor
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Container(
+                      child: buildChartWidget(
+                        visitorChartDaily,
+                        visitorGradient,
+                        rainLineChart,
+                        rainPercentChartDaily,
+                        temperatureGradient,
+                        dailyMax,
+                        '$daily $visitor',
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          //Button
-          Visibility(
-            visible: visitorVisible,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: SwitchListTile(
-                activeColor: const Color.fromRGBO(
-                    38, 158, 38, 0.2), // Lighter green tone
-                activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
-                title: Text(
-                  rainLineChart ? rainTextVisible : rainTextHidden,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                ),
-                value: rainLineChart2,
-                onChanged: handleToggle2,
-              ),
-            ),
-          ),
-          //Chart
-          Visibility(
-            visible: visitorVisible,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                height: chartHeight,
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(
-                    labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                    axisLine: axisLine,
-                    labelStyle: labelStyle,
-                  ),
-                  primaryYAxis: NumericAxis(
-                    title: AxisTitle(
-                        text: 'Anzahl',
-                        textStyle:
-                            const TextStyle(fontWeight: FontWeight.w700)),
-                    majorTickLines: const MajorTickLines(
-                        size: 6, width: 1.5, color: Colors.black),
-                    axisLine: const AxisLine(color: Colors.black, width: 1),
-                    labelStyle:
-                        const TextStyle(fontSize: 14, color: Colors.black),
-                  ),
-                  series: <ChartSeries>[
-                    ColumnSeries<ChartData, String>(
-                      dataSource: visitorChartMonthly,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      borderRadius: BorderRadius.only(
-                        topLeft: radius,
-                        topRight: radius,
-                      ),
-                      gradient: LinearGradient(
-                        colors: visitorGradient,
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                      dataLabelMapper: (ChartData data, _) => '${data.y}',
-                    ),
-                    if (rainLineChart2)
-                      LineSeries<ChartData, String>(
-                        dataSource: rainPercentChartMonthly,
-                        xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y,
-                        markerSettings: const MarkerSettings(
-                          height: 5,
-                          width: 5,
-                          isVisible: true,
-                          borderColor: Colors.deepOrange,
-                          color: Colors.deepOrange,
-                          shape: DataMarkerType.circle,
-                        ),
-                        color: const Color.fromARGB(255, 42, 223, 123),
-                      ),
-                  ],
-                  tooltipBehavior: TooltipBehavior(
-                    enable: true,
-                    builder: (dynamic data, dynamic point, dynamic series,
-                        int pointIndex, int seriesIndex) {
-                      final ChartData chartData = data as ChartData;
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 90, 90),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${chartData.y}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
 
-          //Temperature
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                tempVisible = !tempVisible;
-              });
-            },
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              decoration: temperatureChartShadow,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 5),
-                    child: Text(
-                      temperature,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      tempVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                    ),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
                         tempVisible = !tempVisible;
                       });
                     },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                      tempChartDaily,
+                      temperatureGradient,
+                      false,
+                      null,
+                      null,
+                      dailyMax,
+                      '$daily $temperature',
+                    ),
                   ),
                 ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: tempVisible,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: SizedBox(
-                height: chartHeight,
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(
-                    axisLine: axisLine,
-                    labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                    labelStyle: labelStyle,
-                    labelRotation: -10,
-                    crossesAt: 0,
-                    placeLabelsNearAxisLine: false,
-                  ),
-                  primaryYAxis: NumericAxis(
-                    labelFormat: '{value}°C',
-                    majorTickLines: majorTickLines,
-                    axisLine: axisLine,
-                    labelStyle: labelStyle,
-                  ),
-                  series: <ColumnSeries<ChartData, String>>[
-                    ColumnSeries<ChartData, String>(
-                      dataSource: tempChartMonthly,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      borderRadius: BorderRadius.circular(radius.x),
-                      gradient: LinearGradient(
-                        colors: temperatureGradient,
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                      dataLabelMapper: (ChartData data, _) => '${data.y}',
-                    ),
-                  ],
-                  tooltipBehavior: TooltipBehavior(
-                    enable: true,
-                    builder: (dynamic data, dynamic point, dynamic series,
-                        int pointIndex, int seriesIndex) {
-                      final ChartData chartData = data as ChartData;
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 90, 90),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${chartData.y}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
               ),
             ),
           ),
 
-          //Air Humidity
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                airVisible = !airVisible;
-              });
-            },
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              decoration: airHumidityChartShadow,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 5),
-                    child: Text(
-                      airHumidity,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      airVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                    ),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
                         airVisible = !airVisible;
                       });
                     },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                      airHumidityChartDaily,
+                      airHumidityGradient,
+                      false,
+                      null,
+                      null,
+                      dailyMax,
+                      '$daily $airHumidity',
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          Visibility(
-            visible: airVisible,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: chartHeight,
-                width: MediaQuery.of(context).size.width / 1.15,
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(
-                    axisLine: axisLine,
-                    labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-                    labelStyle: labelStyle,
-                  ),
-                  primaryYAxis: NumericAxis(
-                    labelFormat: '{value}%',
-                    majorTickLines: majorTickLines,
-                    axisLine: axisLine,
-                    labelRotation: -90,
-                    labelStyle: labelStyle,
-                  ),
-                  series: <ColumnSeries<ChartData, String>>[
-                    ColumnSeries<ChartData, String>(
-                      dataSource: airHumidityChartMonthly,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      borderRadius: BorderRadius.only(
-                        topLeft: radius,
-                        topRight: radius,
-                      ),
-                      gradient: LinearGradient(
-                        colors: airHumidityGradient,
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                      dataLabelMapper: (ChartData data, _) => '${data.y}',
-                    ),
-                  ],
-                  tooltipBehavior: TooltipBehavior(
-                      enable: true,
-                      builder: (dynamic data, dynamic point, dynamic series,
-                          int pointIndex, int seriesIndex) {
-                        final ChartData chartData = data as ChartData;
-                        return Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 90, 90, 90),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            '${chartData.y}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+        ],
+      ),
+    );
+  }
+
+  Widget buildWeeklyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        );
-                      }),
-                ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(
+                            38, 158, 38, 0.2), // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          rainLineChart2 ? rainTextVisible : rainTextHidden,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: rainLineChart2,
+                        onChanged: handleToggle2,
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Visitor
+                  Visibility(
+                    visible: visitorVisible,
+                    child: buildChartWidget(
+                        visitorChartWeekly,
+                        visitorGradient,
+                        rainLineChart2,
+                        rainPercentChartWeekly,
+                        temperatureGradient,
+                        weeklyMax,
+                        '$weekly $visitor'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                        tempChartWeekly,
+                        temperatureGradient,
+                        false,
+                        null,
+                        null,
+                        weeklyMax,
+                        '$weekly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Air Humidity
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                        airHumidityChartWeekly,
+                        airHumidityGradient,
+                        false,
+                        null,
+                        null,
+                        weeklyMax,
+                        '$weekly $airHumidity'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMonthlyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(
+                            38, 158, 38, 0.2), // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          rainLineChart2 ? rainTextVisible : rainTextHidden,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: rainLineChart2,
+                        onChanged: handleToggle2,
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Visitor
+                  Visibility(
+                      visible: visitorVisible,
+                      child: buildChartWidget(
+                          visitorChartMonthly,
+                          visitorGradient,
+                          rainLineChart2,
+                          rainPercentChartMonthly,
+                          temperatureGradient,
+                          monthlyMax,
+                          '$monthly $visitor')),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                        tempChartMonthly,
+                        temperatureGradient,
+                        false,
+                        null,
+                        null,
+                        monthlyMax,
+                        '$monthly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                        airHumidityChartMonthly,
+                        airHumidityGradient,
+                        false,
+                        null,
+                        null,
+                        monthlyMax,
+                        '$monthly $airHumidity'),
+                  ),
+                ],
               ),
             ),
           ),
@@ -1386,366 +1130,223 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 
   Widget buildYearlyTab() {
-    final double chartHeight = MediaQuery.of(context).size.height / 2;
-
     return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        //Visitor
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              visitorVisible = !visitorVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    visitor,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor Header
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    visitorVisible
-                        ? Icons.arrow_drop_up
-                        : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      visitorVisible = !visitorVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        //Button
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: SwitchListTile(
-              activeColor:
-                  const Color.fromRGBO(38, 158, 38, 0.2), // Lighter green tone
-              activeTrackColor: const Color.fromARGB(255, 40, 160, 40),
-              title: Text(
-                rainLineChart ? rainTextVisible : rainTextHidden,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                ),
-              ),
-              value: rainLineChart2,
-              onChanged: handleToggle2,
-            ),
-          ),
-        ),
-        //Chart
-        Visibility(
-          visible: visitorVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  desiredIntervals: 12,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                  labelIntersectAction: AxisLabelIntersectAction.wrap,
-                  visibleMaximum: 6,
-                  isVisible: true,
-                ),
-                primaryYAxis: NumericAxis(
-                  title: AxisTitle(text: 'Anzahl', textStyle: axisTitleStyle),
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ChartSeries>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: visitorChartYearly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: visitorGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                  if (rainLineChart2)
-                    LineSeries<ChartData, String>(
-                      dataSource: rainPercentChartYearly,
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y,
-                      markerSettings: const MarkerSettings(
-                        height: 5,
-                        width: 5,
-                        isVisible: true,
-                        borderColor: Colors.deepOrange,
-                        color: Colors.deepOrange,
-                        shape: DataMarkerType.circle,
-                      ),
-                      color: const Color.fromARGB(255, 42, 223, 123),
-                    ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
 
-        //Temperature
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              tempVisible = !tempVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    temperature,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    tempVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      tempVisible = !tempVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: tempVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  desiredIntervals: 12,
-                  crossesAt: 0,
-                  placeLabelsNearAxisLine: false,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                  visibleMaximum: 6,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}°C',
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: tempChartYearly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.circular(radius.x),
-                    gradient: LinearGradient(
-                      colors: temperatureGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  builder: (dynamic data, dynamic point, dynamic series,
-                      int pointIndex, int seriesIndex) {
-                    final ChartData chartData = data as ChartData;
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 90, 90, 90),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${chartData.y}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        //Air Humidity
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              airVisible = !airVisible;
-            });
-          },
-          child: Container(
-            height: 70,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    airHumidity,
-                    style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    airVisible ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      airVisible = !airVisible;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: airVisible,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: chartHeight,
-              child: SfCartesianChart(
-                enableAxisAnimation: true,
-                primaryXAxis: CategoryAxis(
-                  desiredIntervals: 12,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                  labelIntersectAction: AxisLabelIntersectAction.wrap,
-                  visibleMaximum: 6,
-                  isVisible: true,
-                ),
-                primaryYAxis: NumericAxis(
-                  labelFormat: '{value}%',
-                  anchorRangeToVisiblePoints: false,
-                  majorTickLines: majorTickLines,
-                  axisLine: axisLine,
-                  labelStyle: labelStyle,
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                ),
-                series: <ColumnSeries<ChartData, String>>[
-                  ColumnSeries<ChartData, String>(
-                    dataSource: airHumidityChartYearly,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    borderRadius: BorderRadius.only(
-                      topLeft: radius,
-                      topRight: radius,
-                    ),
-                    gradient: LinearGradient(
-                      colors: airHumidityGradient,
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                    dataLabelMapper: (ChartData data, _) => '${data.y}',
-                  ),
-                ],
-                tooltipBehavior: TooltipBehavior(
-                    enable: true,
-                    builder: (dynamic data, dynamic point, dynamic series,
-                        int pointIndex, int seriesIndex) {
-                      final ChartData chartData = data as ChartData;
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 90, 90),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${chartData.y}',
+                  // Button Rain
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(
+                            38, 158, 38, 0.2), // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          rainLineChart2 ? rainTextVisible : rainTextHidden,
                           style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 17,
                           ),
                         ),
-                      );
-                    }),
+                        value: rainLineChart2,
+                        onChanged: handleToggle2,
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Visitor
+                  Visibility(
+                    visible: visitorVisible,
+                    child: buildChartWidget(
+                        visitorChartYearly,
+                        visitorGradient,
+                        rainLineChart2,
+                        rainPercentChartYearly,
+                        temperatureGradient,
+                        yearlyMax,
+                        '$yearly $visitor'),
+                  ),
+                ],
               ),
             ),
           ),
-        ),
-      ]),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                        tempChartYearly,
+                        temperatureGradient,
+                        false,
+                        null,
+                        null,
+                        yearlyMax,
+                        '$yearly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                        airHumidityChartYearly,
+                        airHumidityGradient,
+                        false,
+                        null,
+                        null,
+                        yearlyMax,
+                        '$yearly $airHumidity'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

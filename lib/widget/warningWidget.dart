@@ -13,10 +13,10 @@ class WarningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = Color.fromARGB(255, 248, 250, 253);
+    Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
     Color shadowColor = isWarnung
-        ? Colors.orange.withOpacity(0.3)
-        : Colors.blue.withOpacity(0.3);
+        ? Colors.orange.withOpacity(0.5)
+        : Colors.blue.withOpacity(0.5);
     Color textColor = const Color.fromARGB(255, 0, 0, 0);
     Color titleColor = isWarnung ? Colors.orange : Colors.blue;
 
@@ -28,8 +28,8 @@ class WarningWidget extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 16.0),
-        child: Icon(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: const Icon(
           Icons.delete_outline,
           color: Colors.red,
           size: 32.0,
@@ -37,7 +37,7 @@ class WarningWidget extends StatelessWidget {
       ),
       onDismissed: (direction) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.white, // Set the background color to white
             content: Text(
               'Neuigkeit gelöscht',
@@ -50,7 +50,7 @@ class WarningWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
         child: Container(
-          padding: EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(16.0),
@@ -59,7 +59,7 @@ class WarningWidget extends StatelessWidget {
                 color: shadowColor,
                 spreadRadius: 3,
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -70,7 +70,7 @@ class WarningWidget extends StatelessWidget {
                 color: iconColor,
                 size: 32.0,
               ),
-              SizedBox(width: 16.0),
+              const SizedBox(width: 16.0),
               Expanded(
                 // Wrap the message text in an Expanded widget
                 child: Column(
@@ -84,7 +84,7 @@ class WarningWidget extends StatelessWidget {
                         color: titleColor,
                       ),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Text(
                       message,
                       style: TextStyle(

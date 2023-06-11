@@ -380,7 +380,7 @@ class _MapScreen extends State<MapScreen> {
           Column(
             children: [
               TabBarWidget(
-                tabTexts: ['Alle', 'Standorte', 'Sensoren'],
+                tabTexts: const ['Alle', 'Standorte', 'Sensoren'],
                 onTabSelected: _updateSelectedTab,
               ),
               Expanded(
@@ -406,7 +406,7 @@ class _MapScreen extends State<MapScreen> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Icon(
                       Icons.battery_full,
                       color: Color.fromARGB(255, 46, 202, 51),
@@ -453,7 +453,7 @@ class _MapScreen extends State<MapScreen> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Icon(
                       Icons.person,
                       color: Color.fromARGB(255, 46, 202, 51),

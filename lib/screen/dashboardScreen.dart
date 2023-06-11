@@ -122,8 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     fetchWeatherData();
     Random random = Random();
-    currentVisitors = random.nextInt(maxVisitors +
-        1); // Generates a random number between 0 and maxVisitors (inclusive)
+    currentVisitors = random.nextInt(maxVisitors + 1);
   }
 
   @override
@@ -189,8 +188,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             padding: const EdgeInsets.all(8),
                             child: _buildCircularChart(
                               context,
-                              const Color.fromARGB(
-                                  255, 255, 199, 238), //box shadow color
+                              Color.fromARGB(
+                                  255, 245, 186, 227), //box shadow color
                               const Color.fromARGB(
                                   255, 255, 228, 251), // color for max value
                               const Color.fromARGB(
@@ -219,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: _buildCircularChart(
                               context,
                               const Color.fromARGB(
-                                  255, 159, 255, 226), //box shadow color
+                                  255, 154, 240, 214), //box shadow color
                               const Color.fromARGB(
                                   255, 194, 255, 241), // color for max value
                               const Color.fromARGB(
@@ -244,7 +243,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: _buildCircularChart(
                               context,
-                              Colors.red.withOpacity(0.3), //box shadow color
+                              Colors.red.withOpacity(0.5), //box shadow color
                               const Color.fromARGB(
                                   255, 255, 199, 199), // color for max value
                               Colors.red, //color for current value
@@ -264,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: _buildCircularChart(
                               context,
                               Colors.lightBlue
-                                  .withOpacity(0.3), //box shadow color
+                                  .withOpacity(0.5), //box shadow color
                               const Color.fromARGB(
                                   255, 196, 236, 255), // color for max value
                               Colors.blue, //color for current value
@@ -452,7 +451,7 @@ class WeatherItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.orange.withOpacity(0.3),
+              color: Colors.orange.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 4,
               offset: const Offset(0, 2),
