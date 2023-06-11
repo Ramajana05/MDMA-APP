@@ -17,6 +17,39 @@ class InstructionsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Row(
+              children: [
+                Icon(Icons.graphic_eq),
+                SizedBox(width: 8.0),
+                Text(
+                  'Statistik',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Icon(Icons.dashboard_outlined),
+                SizedBox(width: 8.0),
+                Text(
+                  'Karte',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Hier sehen Sie alle Daten ein.',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            SizedBox(height: 32.0),
             Text(
               'Willkommen zur Anleitung und den ersten Schritten!',
               style: TextStyle(
