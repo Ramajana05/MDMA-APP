@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import 'package:forestapp/screen/splashScreen.dart';
 import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:provider/provider.dart';
@@ -35,9 +36,8 @@ class MyApp extends StatelessWidget {
       create: (context) => UserProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home:
-            //StatisticsScreen()
-            LoginPage(),
+        home: SplashScreen(),
+        // LoginPage(),
       ),
     );
   }
