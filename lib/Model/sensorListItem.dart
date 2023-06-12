@@ -190,7 +190,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'Aktueller Luftdruck: ${widget.airPressure}hPa',
+                      'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
                       style: TextStyle(
                         fontSize: 16,
                       ),

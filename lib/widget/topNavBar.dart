@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
+import 'package:forestapp/dialog/loadingDialog.dart';
 
 class TopNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -31,57 +32,13 @@ class _TopNavBarState extends State<TopNavBar>
     )..repeat();
   }
 
-  void _handleRefresh() {
+  void _showDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RotationTransition(
-                turns: _animationController,
-                child: const Icon(
-                  Icons.refresh,
-                  color: Color.fromARGB(
-                      255, 40, 233, 127), // Set the color to green
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                'Loading...',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (BuildContext context) {
+        return LoadingDialog();
+      },
     );
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate a loading process
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pop(context); // Close the loading dialog
-      setState(() {
-        _isLoading = false;
-      });
-      // TODO: Add code to handle the refreshed data or perform additional actions
-    });
   }
 
   @override
@@ -122,10 +79,10 @@ class _TopNavBarState extends State<TopNavBar>
             Icons.refresh,
             color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
           ),
-          onPressed: _isLoading
-              ? null
-              : _handleRefresh, // Show the loading dialog on refresh
-        ),
+          onPressed: () {
+            _showDialog(context); // Call the function to show the dialog
+          },
+        ), // Show the loading dialog on refresh
       ],
       iconTheme: IconThemeData(
         color: Color.fromARGB(
