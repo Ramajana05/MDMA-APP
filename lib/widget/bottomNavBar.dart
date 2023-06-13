@@ -4,8 +4,7 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
-import '../screen/chart.dart';
-import '../screen/statisticsScreen05_06.dart';
+import '../screen/statisticScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -35,7 +34,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
           currentIndex: _index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
+
           selectedItemColor: Color.fromARGB(204, 0, 165, 22),
+
           onTap: (value) {
             setState(() {
               _index = value;

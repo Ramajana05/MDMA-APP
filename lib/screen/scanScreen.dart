@@ -89,7 +89,10 @@ class _ScanScreen extends State<ScanScreen> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Sensor hinzufügen'),
+                  const Text(
+                    'Sensor hinzufügen',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Theme(
                     data: Theme.of(context).copyWith(
                       tooltipTheme: TooltipThemeData(
@@ -125,9 +128,11 @@ class _ScanScreen extends State<ScanScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        'UUID: $code',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Text(
+                          'UUID: $code',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       if (codeExists)
@@ -184,7 +189,7 @@ class _ScanScreen extends State<ScanScreen> {
                     children: [
                       Text(
                         'Latitude:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
                         latitude ?? 'Laden...',
@@ -198,7 +203,7 @@ class _ScanScreen extends State<ScanScreen> {
                     children: [
                       Text(
                         'Longitude:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
                         longitude ?? 'Laden...',
