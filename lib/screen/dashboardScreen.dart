@@ -185,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Text(
                                         'Besucher',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -205,8 +205,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color.fromARGB(
-                                              255, 33, 182, 167)
+                                      color: Color.fromARGB(255, 65, 199, 48)
                                           .withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
@@ -221,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       context,
                                       Colors.transparent,
                                       const Color.fromARGB(255, 194, 255, 241),
-                                      const Color.fromARGB(255, 33, 182, 167),
+                                      Color.fromARGB(255, 65, 199, 48),
                                       maxSensors.toDouble(),
                                       currentSensors.toInt(),
                                       [
@@ -236,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Text(
                                         'Sensoren',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -290,7 +289,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Text(
                                         'Temperatur',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -327,7 +326,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       Colors.blue,
                                       avgAirHumidity,
                                       airHumidity.toInt(),
-                                      [Icons.air],
+                                      [Icons.water_drop_outlined],
                                       "%",
                                     ),
                                     const SizedBox(height: 8),
@@ -337,7 +336,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Text(
                                         'Luftfeuchtigkeit',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -656,31 +655,24 @@ Widget _buildCircularChart(
         Positioned.fill(
           child: Align(
             alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: chartSize * 0.4,
-                height: chartSize * 0.4,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${value.toString()}$additionalString',
-                        style: TextStyle(
-                          fontSize: chartSize * 0.14,
-                          fontWeight: FontWeight.bold,
-                          color: pointColor,
-                        ),
-                      ),
-                    ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${value.toString()}$additionalString',
+                  style: TextStyle(
+                    fontSize: chartSize * 0.20,
+                    fontWeight: FontWeight.bold,
+                    color: pointColor,
                   ),
                 ),
-              ),
+                SizedBox(height: 8),
+                Icon(
+                  icons[value % icons.length],
+                  size: chartSize * 0.2,
+                  color: pointColor,
+                ),
+              ],
             ),
           ),
         ),

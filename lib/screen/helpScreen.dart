@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
+import 'dart:math';
 
 class InstructionsScreen extends StatefulWidget {
   @override
@@ -51,12 +52,27 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   };
 
   late List<bool> expansionStates;
+  late List<Color> colors;
 
   @override
   void initState() {
     super.initState();
     expansionStates = List<bool>.filled(instructionsList.length, false);
   }
+
+  final List<Color> colorsList = [
+    Colors.green,
+    Colors.black,
+    Colors.red,
+    Colors.black,
+    Colors.green,
+    Colors.green,
+    Colors.green,
+    Colors.blue,
+    const Color.fromARGB(255, 127, 127, 128),
+    Color.fromARGB(255, 255, 2, 2),
+    const Color.fromARGB(255, 58, 243, 33),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -76,22 +92,11 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
               child: Text(
                 'Willkommen zur Anleitung',
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 26.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 2),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Hier finden Sie eine genaue Beschreibung aller Funktionen, welche diese App besitzt.',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -111,6 +116,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                     instruction == 'Neu Laden') {
                   final IconData icon =
                       instructionIcons[instruction] ?? Icons.help;
+                  final Color iconColor = colorsList[index % colorsList.length];
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -129,6 +135,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                           index % 2 == 0, // Align left for even index items
                       description: instructionDescriptions[instruction] ?? '',
                       icon: icon,
+                      iconColor: iconColor, // Pass the random color
                     ),
                   );
                 } else {

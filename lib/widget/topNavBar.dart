@@ -54,7 +54,9 @@ class _TopNavBarState extends State<TopNavBar>
     return AppBar(
       title: Text(
         widget.title,
-        style: topNavBarDecoration.getTitleTextStyle(),
+        style: topNavBarDecoration
+            .getTitleTextStyle()
+            .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
       backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
@@ -69,7 +71,8 @@ class _TopNavBarState extends State<TopNavBar>
       leading: IconButton(
         icon: const Icon(
           Icons.menu,
-          color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+          color: Color.fromARGB(255, 40, 233, 127),
+          size: 35,
         ),
         onPressed: () {
           Scaffold.of(context).openDrawer();
@@ -79,16 +82,16 @@ class _TopNavBarState extends State<TopNavBar>
         IconButton(
           icon: const Icon(
             Icons.refresh,
-            color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+            color: Color.fromARGB(255, 40, 233, 127),
+            size: 35,
           ),
           onPressed: () {
             _showDialog(context);
           },
-        ), // Show the loading dialog on refresh
+        ),
       ],
       iconTheme: IconThemeData(
-        color: Color.fromARGB(
-            255, 40, 233, 127), // Change this to the desired color
+        color: Color.fromARGB(255, 40, 233, 127),
       ),
     );
   }

@@ -23,7 +23,9 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: returnStatus,
       title: Text(
         title,
-        style: topNavBarDecoration.getTitleTextStyle(),
+        style: topNavBarDecoration
+            .getTitleTextStyle()
+            .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
       backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
@@ -38,15 +40,15 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
-          color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+          color: Color.fromARGB(255, 40, 233, 127),
+          size: 35,
         ),
         onPressed: () {
           Navigator.of(context).pop();
         },
       ),
       iconTheme: IconThemeData(
-        color: Color.fromARGB(
-            255, 40, 233, 127), // Change this to the desired color
+        color: Color.fromARGB(255, 40, 233, 127),
       ),
     );
   }
