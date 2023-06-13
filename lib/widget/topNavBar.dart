@@ -3,6 +3,7 @@ import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/dialog/loadingDialog.dart';
+import 'package:forestapp/db/apiService.dart';
 
 class TopNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -22,6 +23,7 @@ class _TopNavBarState extends State<TopNavBar>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   late AnimationController _animationController;
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _TopNavBarState extends State<TopNavBar>
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return LoadingDialog();
+        return LoadingDialog(apiService: apiService);
       },
     );
   }
@@ -80,7 +82,7 @@ class _TopNavBarState extends State<TopNavBar>
             color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
           ),
           onPressed: () {
-            _showDialog(context); // Call the function to show the dialog
+            _showDialog(context);
           },
         ), // Show the loading dialog on refresh
       ],

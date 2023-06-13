@@ -207,4 +207,50 @@ class LoginService {
       rethrow;
     }
   }
+
+/*
+  Future<Sensor?> fetchSensorFromDatabase(String uuid) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT * FROM Sensors WHERE UUID = ?',
+        [uuid],
+      );
+
+      await database.close();
+
+      if (result.isNotEmpty) {
+        final sensorData = result.first;
+        final sensor = Sensor.fromMap(sensorData);
+        return sensor;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching sensor from database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateSensorNameInDatabase(String uuid, String newName) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.update(
+        'Sensors',
+        {'Name': newName},
+        where: 'UUID = ?',
+        whereArgs: [uuid],
+      );
+
+      await database.close();
+
+      print('Sensor name updated successfully');
+    } catch (e) {
+      print('Error updating sensor name in database: $e');
+      rethrow;
+    }
+  }
+  */
 }

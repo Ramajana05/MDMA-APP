@@ -1,7 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:forestapp/db/apiService.dart';
 
 class LoadingDialog extends StatefulWidget {
+  final ApiService? apiService;
+
+  LoadingDialog({this.apiService});
+
   @override
   _LoadingDialogState createState() => _LoadingDialogState();
 }
@@ -15,9 +19,8 @@ class _LoadingDialogState extends State<LoadingDialog>
     'Herunterladen von neuen Daten...',
   ];
 
-  Timer? _timer;
-  late AnimationController _animationController;
-  late Animation<double> _rotationAnimation;
+  AnimationController? _animationController;
+  Animation<double>? _rotationAnimation;
 
   @override
   void initState() {
@@ -27,40 +30,33 @@ class _LoadingDialogState extends State<LoadingDialog>
       vsync: this,
     )..repeat();
     _rotationAnimation =
-        Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    // Start the timer when the dialog is created
-    _startTimer();
+        Tween(begin: 0.0, end: 1.0).animate(_animationController!);
+
+    // Start the timer to close the dialog after 2 seconds
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+    });
   }
 
   @override
   void dispose() {
-    // Cancel the timer and animation controller when the dialog is disposed
-    _cancelTimer();
-    _animationController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
-  void _startTimer() {
-    Timer(Duration(seconds: 2), () {
-      _timer = Timer.periodic(Duration(seconds: 2), (timer) {
-        // Update the current index and check if it exceeds the text list length
-        setState(() {
-          _currentIndex = (_currentIndex + 1) % dialogTexts.length;
-        });
-
-        // Close the dialog after displaying the last text
-        if (_currentIndex == dialogTexts.length - 1) {
-          Future.delayed(Duration(seconds: 2), () {
-            _cancelTimer();
-            Navigator.of(context).pop();
-          });
-        }
-      });
-    });
-  }
-
-  void _cancelTimer() {
-    _animationController.stop();
+  Future<void> _fetchUsers() async {
+    try {
+      print('Fetching users...');
+      final List<User> userList = await widget.apiService?.getUsers() ?? [];
+      print('Users fetched successfully');
+      // Do something with the userList
+      print('User List: $userList');
+    } catch (e) {
+      print('Error occurred while fetching users: $e');
+      // Handle error
+    } finally {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -79,10 +75,10 @@ class _LoadingDialogState extends State<LoadingDialog>
           mainAxisSize: MainAxisSize.min,
           children: [
             AnimatedBuilder(
-              animation: _rotationAnimation,
+              animation: _rotationAnimation!,
               builder: (context, child) {
                 return Transform.rotate(
-                  angle: _rotationAnimation.value * 4.0 * 3.1415,
+                  angle: _rotationAnimation!.value * 4.0 * 3.1415,
                   child: const Icon(
                     Icons.refresh,
                     color: Color.fromARGB(255, 40, 233, 127),
@@ -103,4 +99,32 @@ class _LoadingDialogState extends State<LoadingDialog>
       ),
     );
   }
+}
+
+void main() {
+  // Create an instance of ApiService
+  final apiService = ApiService();
+
+  // Wrap the LoadingDialog widget with MaterialApp
+  runApp(MaterialApp(
+    home: Builder(
+      builder: (context) {
+        // Show the loading dialog
+        showDialog(
+          context: context,
+          barrierDismissible: false, // Prevent dialog dismissal on tap outside
+          builder: (context) => LoadingDialog(apiService: apiService),
+        );
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Loading Dialog'),
+          ),
+          body: Center(
+            child: Text('This is the home screen'),
+          ),
+        );
+      },
+    ),
+  ));
 }
