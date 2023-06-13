@@ -87,29 +87,25 @@ class _SensorListScreenState extends State<SensorListScreen> {
         child: Column(
           children: [
             Expanded(
-              child: TabBarView(
-                children: [
-                  ListView.builder(
-                    itemCount: damagesList.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 7.0),
-                        child: SensorListItemWidget(
-                          damageTitle: damagesList[index].sensorName,
-                          latitude: damagesList[index].latitude,
-                          longitude: damagesList[index].longitude,
-                          status: damagesList[index].status,
-                          createDate: damagesList[index].createDate,
-                          signalStrength: damagesList[index].signalStrength,
-                          chargerInfo: damagesList[index].chargerInfo,
-                          alignLeft: true,
-                          temperatur: damagesList[index].temperatur,
-                          airPressure: damagesList[index].airPressure,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: damagesList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 7.0),
+                    child: SensorListItemWidget(
+                      damageTitle: damagesList[index].sensorName,
+                      latitude: damagesList[index].latitude,
+                      longitude: damagesList[index].longitude,
+                      status: damagesList[index].status,
+                      createDate: damagesList[index].createDate,
+                      signalStrength: damagesList[index].signalStrength,
+                      chargerInfo: damagesList[index].chargerInfo,
+                      alignLeft: true,
+                      temperatur: damagesList[index].temperatur,
+                      airPressure: damagesList[index].airPressure,
+                    ),
+                  );
+                },
               ),
             ),
           ],
