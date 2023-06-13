@@ -6,17 +6,17 @@ class InformationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Information",
         style: TextStyle(fontSize: 22), // Increase the font size as desired
       ),
-      backgroundColor: Color.fromARGB(220, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(220, 255, 255, 255),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            children: [
+            children: const [
               Text(
                 "Sensoren Akkustand",
                 style: TextStyle(
@@ -26,9 +26,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 18),
+          const SizedBox(height: 18),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.battery_full,
                 color: Color.fromARGB(255, 46, 202, 51),
@@ -41,9 +41,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.battery_5_bar,
                 color: Colors.orange,
@@ -56,9 +56,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.battery_2_bar,
                 color: Colors.red,
@@ -71,9 +71,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
-            children: [
+            children: const [
               Text(
                 "Standort Bevölkerung",
                 style: TextStyle(
@@ -83,9 +83,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.person,
                 color: Color.fromARGB(255, 46, 202, 51),
@@ -98,9 +98,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.person,
                 color: Color.fromARGB(255, 128, 197, 130),
@@ -113,9 +113,9 @@ class InformationDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.person,
                 color: Color.fromARGB(255, 170, 169, 169),

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -19,9 +20,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
   var currentVisitors = 48;
   var maxVisitors = 70;
-
+  
   var currentSensors = 9;
   var maxSensors = 10;
 
@@ -120,6 +122,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+    Random random = Random();
+    currentVisitors = random.nextInt(maxVisitors + 1);
   }
 
   @override
@@ -229,6 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -272,9 +277,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               )
                             ],
+
                           ),
                         ),
                       ),
+
                     ),
                     // Air Humidity
                     Expanded(
@@ -314,6 +321,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               )
                             ],
+
                           ),
                         ),
                       ),
@@ -489,7 +497,7 @@ class WeatherItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.orange.withOpacity(0.3),
+              color: Colors.orange.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 4,
               offset: const Offset(0, 2),

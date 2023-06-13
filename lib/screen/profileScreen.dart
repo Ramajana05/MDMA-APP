@@ -64,8 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Informationen',
                 style: TextStyle(
@@ -82,9 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     buildProfileItem(Icons.person, loggedInUsername ?? ''),
-                    Divider(),
+                    const Divider(),
                     buildProfileItem(Icons.phone_android, 'Förster'),
-                    Divider(),
+                    const Divider(),
                     FutureBuilder<String>(
                       future: getLocationName(),
                       builder: (context, snapshot) {
@@ -104,8 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Aktionen',
                 style: TextStyle(
@@ -127,6 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
+
                             return PasswordDialog(
                               onCurrentPasswordChanged: (value) {
                                 currentPassword = value;
@@ -170,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                   print('Password changed successfully');
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content:
                                           Text('Password changed successfully'),
                                     ),
@@ -181,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   // Passwords do not match or current password is incorrect
                                   print('Password change failed');
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
                                           'Passwort konnte nicht geändert werden.'),
                                     ),
@@ -198,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       child: buildProfileItem(Icons.lock, 'Passwort Ändern'),
                     ),
-                    Divider(),
+                    const Divider(),
                     GestureDetector(
                       onTap: () {
                         showDialog(
