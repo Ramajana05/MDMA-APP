@@ -127,6 +127,7 @@ class PolygonData {
 }
 
 class MapObjects {
+  Set<Marker> _markers = {};
   Future<Set<Circle>> getCircles(Function(CircleData) onTap) async {
     LoginService loginService = LoginService();
     final fetchedCircles = await loginService.fetchCirclesFromDatabase();
@@ -150,6 +151,23 @@ class MapObjects {
     final fetchedPolygons = await loginService.fetchPolygonsFromDatabase();
 
     return Set.from(fetchedPolygons.map((polygonData) {
+      // Calculate the center of the polygon
+      LatLng center = calculatePolygonCenter(polygonData.points);
+
+      // Create a new Marker with the visitor count as the label
+      Marker marker = Marker(
+        markerId: MarkerId(polygonData.polygonId.value),
+        position: center,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        infoWindow: InfoWindow(
+          title: 'Visitors',
+          snippet: polygonData.visitors.toString(),
+        ),
+      );
+
+      // Add the marker to the map
+      _markers.add(marker);
+
       // Create a new instance of Polygon using the PolygonData
       Polygon polygon = Polygon(
         polygonId: polygonData.polygonId,
@@ -159,8 +177,25 @@ class MapObjects {
         strokeWidth: polygonData.strokeWidth,
         onTap: () => onTap(polygonData),
       );
+
       return polygon;
     }));
+  }
+
+  LatLng calculatePolygonCenter(List<LatLng> points) {
+    double latitude = 0;
+    double longitude = 0;
+
+    for (LatLng point in points) {
+      latitude += point.latitude;
+      longitude += point.longitude;
+    }
+
+    int totalPoints = points.length;
+    latitude /= totalPoints;
+    longitude /= totalPoints;
+
+    return LatLng(latitude, longitude);
   }
 
   Set<Circle> getCircless(Function(CircleData) onTap) {

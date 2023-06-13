@@ -35,7 +35,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
           currentIndex: _index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-          selectedItemColor: Color.fromARGB(204, 0, 0, 0),
+          selectedItemColor: Color.fromARGB(204, 0, 165, 22),
           onTap: (value) {
             setState(() {
               _index = value;
@@ -44,19 +44,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
           backgroundColor: Color.fromARGB(255, 253, 253, 253),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
+              icon: Icon(Icons.dashboard),
               label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.graphic_eq),
+              icon: Icon(Icons.bar_chart_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop_outlined),
+              icon: Icon(Icons.pin_drop),
               label: 'Karte',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code),
+              icon: Icon(Icons.qr_code_scanner),
               label: 'QR Code',
             ),
             BottomNavigationBarItem(
