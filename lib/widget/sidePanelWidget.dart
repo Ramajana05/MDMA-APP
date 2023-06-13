@@ -68,8 +68,7 @@ class SidePanel extends StatelessWidget {
             ),
             iconColor: Colors.blue,
             onTap: () async {
-              const url =
-                  'https://www.hs-heilbronn.de/de'; // Replace with your desired URL
+              const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
                 await launch(url);
               } else {

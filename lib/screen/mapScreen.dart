@@ -7,10 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:forestapp/service/loginService.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -21,7 +17,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreen extends State<MapScreen> {
   Set<Marker> _markers = {};
-  static const CameraPosition _kGooglePlex = CameraPosition(
+  CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 14.0,
   );
@@ -29,6 +25,11 @@ class _MapScreen extends State<MapScreen> {
   late Set<Circle> _circles;
   late Set<Polygon> _polygons;
   final Completer<GoogleMapController> _controller = Completer();
+
+  late GoogleMapController _mapController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<String> dropdownItems = ['Wald', 'Current Location'];
+  String? selectedDropdownItem;
 
   @override
   void initState() {
@@ -367,6 +368,40 @@ class _MapScreen extends State<MapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
+  void _moveToCurrentLocation() async {
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Show an alert or toast message to inform the user that location services are disabled
+      return;
+    }
+
+    // Request location permission
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Show an alert or toast message to inform the user that location permission is denied
+        return;
+      }
+    }
+
+    // Get the current position
+    Position position = await Geolocator.getCurrentPosition();
+
+    setState(() {
+      // Update the camera position with the current location
+      _kGooglePlex = CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 14.0,
+      );
+    });
+
+    // Move the map camera to the current location
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(_kGooglePlex));
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -511,11 +546,59 @@ class _MapScreen extends State<MapScreen> {
               },
               child: Icon(
                 Icons.info_outline,
-                size: 24,
+                size: 30,
                 color: const Color.fromARGB(255, 0, 112, 204),
               ),
             ),
+          ), /** 
+          Positioned(
+            top: 60,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                children: [
+                  DropdownButton<String>(
+                    value: selectedDropdownItem ?? 'Wald',
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedDropdownItem = newValue;
+                      });
+
+                      if (newValue == 'Standort') {
+                        _moveToCurrentLocation();
+                      }
+                    },
+                    items: <String>[
+                      'Wald',
+                      'Standort',
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Row(
+                          children: [
+                            value == 'Wald'
+                                ? Icon(Icons.eco)
+                                : Icon(Icons.location_on),
+                            SizedBox(width: 8.0),
+                            Text(value),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
           ),
+          */
         ],
       ),
     );
@@ -537,7 +620,8 @@ class MapSampleState extends State<MapSample> {
   MapObjects mapObjects = MapObjects();
   Set<Circle> circles = Set<Circle>();
   Set<Polygon> polygons = Set<Polygon>();
-  Set<Marker> _markers = {}; // Declare an empty markers set
+  Set<Marker> _markers = {};
+  late GoogleMapController _mapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
@@ -572,6 +656,7 @@ class MapSampleState extends State<MapSample> {
           zoomControlsEnabled: false,
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
+            _mapController = controller;
           },
           circles: circles,
           polygons: polygons,

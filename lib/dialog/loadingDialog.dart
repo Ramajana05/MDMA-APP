@@ -82,6 +82,7 @@ class _LoadingDialogState extends State<LoadingDialog>
                   child: const Icon(
                     Icons.refresh,
                     color: Color.fromARGB(255, 40, 233, 127),
+                    size: 40,
                   ),
                 );
               },
@@ -90,7 +91,7 @@ class _LoadingDialogState extends State<LoadingDialog>
             Text(
               dialogTexts[_currentIndex],
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
