@@ -7,9 +7,17 @@ import 'checkBoxValuesForCharts.dart';
 import '../Model/DataModel.dart';
 
 /// custom LinChart that shows the data represented in hourly or daily interval
-class customLineChart extends StatelessWidget {
+class customLineChart extends StatefulWidget {
   final IntervalType intervalType;
 
+  ///constructor
+  customLineChart({required this.intervalType});
+
+  @override
+  State<customLineChart> createState() => _customLineChartState();
+}
+
+class _customLineChartState extends State<customLineChart> {
   ///lists include the data for the charts
   List<DataModel> chartDataDaily = [
     DataModel(date: 0, value: 2, category: DataCategory.persons),
@@ -34,6 +42,7 @@ class customLineChart extends StatelessWidget {
     DataModel(date: 5, value: 80, category: DataCategory.humidity),
     DataModel(date: 6, value: 66, category: DataCategory.humidity),
   ];
+
   List<DataModel> chartDataHourly = [
     DataModel(date: 0, value: 100, category: DataCategory.persons),
     DataModel(date: 1, value: 15, category: DataCategory.persons),
@@ -77,15 +86,13 @@ class customLineChart extends StatelessWidget {
   ];
 
   ///sub-lists include only x or y values subtracted from the data-lists above
-  late List<double> x_values = intervalType == IntervalType.daily
+  late List<double> x_values = widget.intervalType == IntervalType.daily
       ? chartDataDaily.map((data) => data.date).toList()
       : chartDataHourly.map((data) => data.date).toList();
-  late List<double> y_values = intervalType == IntervalType.daily
+
+  late List<double> y_values = widget.intervalType == IntervalType.daily
       ? chartDataDaily.map((data) => data.value).toList()
       : chartDataHourly.map((data) => data.value).toList();
-
-  ///constructor
-  customLineChart({required this.intervalType});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +136,7 @@ class customLineChart extends StatelessWidget {
 
   ///List contains the data of Persons
   List<DataModel> get categoryDataPersons {
-    if (intervalType == IntervalType.daily) {
+    if (widget.intervalType == IntervalType.daily) {
       return chartDataDaily
           .where((data) => data.category == DataCategory.persons)
           .toList();
@@ -142,7 +149,7 @@ class customLineChart extends StatelessWidget {
 
   ///List contains the data of Temperatures
   List<DataModel> get categoryDataTemperature {
-    if (intervalType == IntervalType.daily) {
+    if (widget.intervalType == IntervalType.daily) {
       return chartDataDaily
           .where((data) => data.category == DataCategory.temperature)
           .toList();
@@ -155,7 +162,7 @@ class customLineChart extends StatelessWidget {
 
   ///List contains the data of Humidity
   List<DataModel> get categoryDataHumidity {
-    if (intervalType == IntervalType.daily) {
+    if (widget.intervalType == IntervalType.daily) {
       return chartDataDaily
           .where((data) => data.category == DataCategory.humidity)
           .toList();
@@ -168,112 +175,143 @@ class customLineChart extends StatelessWidget {
 
   ///return only the charts been checked by the checkboxes
   List<LineChartBarData> get lineBarsData {
-    if (CheckBoxValuesForCharts.isCheckedPersonsDaily && //daily persons checked
-        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
-        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
-      return [
-        personsLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedTemperatureDaily && //daily temperature checked
-        !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
-        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
-      return [
-        temperatureLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedHumidityDaily && //daily humidity checked
-        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
-        !CheckBoxValuesForCharts.isCheckedPersonsDaily) {
-      return [
-        humidityLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedPersonsHourly && //hourly persons checked
-        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
-        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
-      return [
-        personsLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedTemperatureHourly && //hourly temperature checked
-        !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
-        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
-      return [
-        temperatureLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedHumidityHourly && //hourly humidity checked
-        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
-        !CheckBoxValuesForCharts.isCheckedPersonsHourly) {
-      return [
-        humidityLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedPersonsDaily && //daily persons and temperature
-        CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
-        !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
-      return [
-        personsLineChartBarData,
-        temperatureLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedTemperatureDaily && //daily temperature and humidity
-        !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
-        CheckBoxValuesForCharts.isCheckedHumidityDaily) {
-      return [
-        temperatureLineChartBarData,
-        humidityLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedHumidityDaily && //daily humidity and persons
-        !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
-        CheckBoxValuesForCharts.isCheckedPersonsDaily) {
-      return [
-        humidityLineChartBarData,
-        personsLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedPersonsHourly && //Hourly persons and temperature
-        CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
-        !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
-      return [
-        personsLineChartBarData,
-        temperatureLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedTemperatureHourly && //Hourly temperature and humidity
-        !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
-        CheckBoxValuesForCharts.isCheckedHumidityHourly) {
-      return [
-        temperatureLineChartBarData,
-        humidityLineChartBarData,
-      ];
-    } else if (CheckBoxValuesForCharts
-            .isCheckedHumidityHourly && //Hourly humidity and persons
-        !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
-        CheckBoxValuesForCharts.isCheckedPersonsHourly) {
-      return [
-        humidityLineChartBarData,
-        personsLineChartBarData,
-      ];
+    //   if (CheckBoxValuesForCharts.isCheckedPersonsDaily && //daily persons checked
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+    //     return [
+    //       personsLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedTemperatureDaily && //daily temperature checked
+    //       !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+    //     return [
+    //       temperatureLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedHumidityDaily && //daily humidity checked
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+    //       !CheckBoxValuesForCharts.isCheckedPersonsDaily) {
+    //     return [
+    //       humidityLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedPersonsHourly && //hourly persons checked
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+    //     return [
+    //       personsLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedTemperatureHourly && //hourly temperature checked
+    //       !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+    //     return [
+    //       temperatureLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedHumidityHourly && //hourly humidity checked
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+    //       !CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+    //     return [
+    //       humidityLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedPersonsDaily && //daily persons and temperature
+    //       CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+    //     return [
+    //       personsLineChartBarData,
+    //       temperatureLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedTemperatureDaily && //daily temperature and humidity
+    //       !CheckBoxValuesForCharts.isCheckedPersonsDaily &&
+    //       CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+    //     return [
+    //       temperatureLineChartBarData,
+    //       humidityLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedHumidityDaily && //daily humidity and persons
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureDaily &&
+    //       CheckBoxValuesForCharts.isCheckedPersonsDaily) {
+    //     return [
+    //       humidityLineChartBarData,
+    //       personsLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedPersonsHourly && //Hourly persons and temperature
+    //       CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+    //       !CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+    //     return [
+    //       personsLineChartBarData,
+    //       temperatureLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedTemperatureHourly && //Hourly temperature and humidity
+    //       !CheckBoxValuesForCharts.isCheckedPersonsHourly &&
+    //       CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+    //     return [
+    //       temperatureLineChartBarData,
+    //       humidityLineChartBarData,
+    //     ];
+    //   } else if (CheckBoxValuesForCharts
+    //           .isCheckedHumidityHourly && //Hourly humidity and persons
+    //       !CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+    //       CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+    //     return [
+    //       humidityLineChartBarData,
+    //       personsLineChartBarData,
+    //     ];
+    //   }
+    //   else if (CheckBoxValuesForCharts
+    //       .isCheckedHumidityHourly && //Hourly humidity and persons
+    //       CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
+    //       CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+    //     return [
+    //       temperatureLineChartBarData,
+    //       humidityLineChartBarData,
+    //       personsLineChartBarData,
+    //     ];
+    //   } else {
+    //     return [
+    //       personsLineChartBarData,
+    //       temperatureLineChartBarData,
+    //       humidityLineChartBarData
+    //     ];
+    //   }
+    // }
+    List<LineChartBarData>lineBarsDataHourly = [];
+    List<LineChartBarData>lineBarsDataDaily = [];
+
+    if (CheckBoxValuesForCharts.isCheckedPersonsDaily) {
+      lineBarsDataDaily.add(personsLineChartBarData);
     }
-    else if (CheckBoxValuesForCharts
-        .isCheckedHumidityHourly && //Hourly humidity and persons
-        CheckBoxValuesForCharts.isCheckedTemperatureHourly &&
-        CheckBoxValuesForCharts.isCheckedPersonsHourly) {
-      return [
-        temperatureLineChartBarData,
-        humidityLineChartBarData,
-        personsLineChartBarData,
-      ];
-    } else {
-      return [
-        personsLineChartBarData,
-        temperatureLineChartBarData,
-        humidityLineChartBarData
-      ];
+
+    if (CheckBoxValuesForCharts.isCheckedTemperatureDaily) {
+      lineBarsDataDaily.add(temperatureLineChartBarData);
     }
+
+    if (CheckBoxValuesForCharts.isCheckedHumidityDaily) {
+      lineBarsDataDaily.add(humidityLineChartBarData);
+    }
+
+    if (CheckBoxValuesForCharts.isCheckedPersonsHourly) {
+      lineBarsDataHourly.add(personsLineChartBarData);
+    }
+
+    if (CheckBoxValuesForCharts.isCheckedTemperatureHourly) {
+      lineBarsDataHourly.add(temperatureLineChartBarData);
+    }
+
+    if (CheckBoxValuesForCharts.isCheckedHumidityHourly) {
+      lineBarsDataHourly.add(humidityLineChartBarData);
+    }
+
+    return widget.intervalType == IntervalType.daily?lineBarsDataDaily:lineBarsDataHourly;
+
+
   }
 
   ///returns the titles on the left Side
@@ -305,7 +343,7 @@ class customLineChart extends StatelessWidget {
     );
     Widget text;
 
-    switch (intervalType) {
+    switch (widget.intervalType) {
       case IntervalType.hourly:
         if (value == 0) {
           text = const Text('0', style: style);
@@ -378,7 +416,7 @@ class customLineChart extends StatelessWidget {
   double get sideTitelsInterval {
     double interval = 20;
     for (var data in categoryDataPersons) {
-      if ( data.value >= 100) {
+      if (data.value >= 100) {
         interval = 50;
       }
     }
@@ -417,7 +455,7 @@ class customLineChart extends StatelessWidget {
       spots.add(FlSpot(data.date, data.value));
     }
     return LineChartBarData(
-      show: intervalType == IntervalType.hourly
+      show: widget.intervalType == IntervalType.hourly
           ? CheckBoxValuesForCharts.isCheckedPersonsHourly
           : CheckBoxValuesForCharts.isCheckedPersonsDaily,
       isCurved: true,
@@ -435,7 +473,7 @@ class customLineChart extends StatelessWidget {
       spots.add(FlSpot(data.date, data.value));
     }
     return LineChartBarData(
-      show: intervalType == IntervalType.hourly
+      show: widget.intervalType == IntervalType.hourly
           ? CheckBoxValuesForCharts.isCheckedTemperatureHourly
           : CheckBoxValuesForCharts.isCheckedTemperatureDaily,
       isCurved: true,
@@ -454,7 +492,7 @@ class customLineChart extends StatelessWidget {
       spots.add(FlSpot(data.date, data.value));
     }
     return LineChartBarData(
-      show: intervalType == IntervalType.hourly
+      show: widget.intervalType == IntervalType.hourly
           ? CheckBoxValuesForCharts.isCheckedHumidityHourly
           : CheckBoxValuesForCharts.isCheckedHumidityDaily,
       isCurved: true,

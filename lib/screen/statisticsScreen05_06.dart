@@ -251,6 +251,8 @@ class _StatisticsScreen extends State<StatisticsScreen> {
                                                 CheckBoxValuesForCharts
                                                         .isCheckedHumidityDaily =
                                                     newValue!;
+                                                print("humidity daily: $newValue");
+
                                               });
                                             },
                                             controlAffinity: ListTileControlAffinity
