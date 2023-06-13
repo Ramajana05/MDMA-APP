@@ -20,9 +20,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var currentVisitors = 0;
-  var maxVisitors = 1000;
 
+  var currentVisitors = 48;
+  var maxVisitors = 70;
+  
   var currentSensors = 9;
   var maxSensors = 10;
 
@@ -136,155 +137,200 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
-              child: Container(
-                height: 40,
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              children: [
+                Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20, top: 5),
-                      child: Text(
-                        "Übersicht",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    // Visitors
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 190,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 240, 113, 202)
+                                    .withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildCircularChart(
+                                context,
+                                Colors.transparent,
+                                const Color.fromARGB(255, 255, 228, 251),
+                                const Color.fromARGB(255, 240, 113, 202),
+                                maxVisitors.toDouble(),
+                                currentVisitors.toInt(),
+                                [
+                                  Icons.person,
+                                ],
+                                "",
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Besucher',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: Image.asset(
-                        'assets/research.png',
-                        height: 30,
-                        width: 30,
+                    // Sensor
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 190,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 33, 182, 167)
+                                    .withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildCircularChart(
+                                context,
+                                Colors.transparent,
+                                const Color.fromARGB(255, 194, 255, 241),
+                                const Color.fromARGB(255, 33, 182, 167),
+                                maxSensors.toDouble(),
+                                currentSensors.toInt(),
+                                [
+                                  Icons.sensors,
+                                ],
+                                "",
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Sensoren',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isExpanded = !_isExpanded;
-                        });
-                      },
                     ),
                   ],
                 ),
-              ),
-            ),
-            Visibility(
-              visible: _isExpanded,
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          //Visitors
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: _buildCircularChart(
-                              context,
-                              Color.fromARGB(
-                                  255, 245, 186, 227), //box shadow color
-                              const Color.fromARGB(
-                                  255, 255, 228, 251), // color for max value
-                              const Color.fromARGB(
-                                  255, 240, 113, 202), //color for current value
-                              maxVisitors.toDouble(),
-                              currentVisitors.toDouble(),
-                              [
-                                const Icon(
-                                  Icons.person,
-                                  size: 26,
-                                ),
-                                const Icon(
-                                  Icons.person,
-                                  size: 26,
-                                ),
-                                const Icon(
-                                  Icons.person,
-                                  size: 26,
-                                ),
-                              ],
-                            ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Temperature
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 190,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          //Sensor
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: _buildCircularChart(
-                              context,
-                              const Color.fromARGB(
-                                  255, 154, 240, 214), //box shadow color
-                              const Color.fromARGB(
-                                  255, 194, 255, 241), // color for max value
-                              const Color.fromARGB(
-                                  255, 33, 182, 167), //color for current value
-                              maxSensors.toDouble(),
-                              currentSensors.toDouble(),
-                              [
-                                const Icon(
-                                  Icons.sensors,
-                                  size: 26,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          //Temperature
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildCircularChart(
-                              context,
-                              Colors.red.withOpacity(0.5), //box shadow color
-                              const Color.fromARGB(
-                                  255, 255, 199, 199), // color for max value
-                              Colors.red, //color for current value
-                              maxTemperature,
-                              currentTemperature,
-                              [
-                                const Icon(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildCircularChart(
+                                context,
+                                Colors.transparent,
+                                const Color.fromARGB(255, 255, 199, 199),
+                                Colors.red,
+                                maxTemperature,
+                                currentTemperature.toInt(),
+                                [
                                   Icons.thermostat,
-                                  size: 26,
-                                )
-                              ],
-                            ),
+                                ],
+                                "°C",
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Temperatur',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+
                           ),
-                          //Air Humidity
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: _buildCircularChart(
-                              context,
-                              Colors.lightBlue
-                                  .withOpacity(0.5), //box shadow color
-                              const Color.fromARGB(
-                                  255, 196, 236, 255), // color for max value
-                              Colors.blue, //color for current value
-                              avgAirHumidity,
-                              airHumidity,
-                              [
-                                Image.asset(
-                                  'assets/humidity.png', // Replace with the correct path to your image asset
-                                  height: 26,
-                                  width: 26,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+
+                    ),
+                    // Air Humidity
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 190,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildCircularChart(
+                                context,
+                                Colors.transparent,
+                                const Color.fromARGB(255, 196, 236, 255),
+                                Colors.blue,
+                                avgAirHumidity,
+                                airHumidity.toInt(),
+                                [Icons.air],
+                                "%",
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Luftfeuchtigkeit',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+
             const SizedBox(height: 15.0),
             //News
             GestureDetector(
@@ -533,8 +579,9 @@ Widget _buildCircularChart(
   Color trackColor,
   Color pointColor,
   double maxValue,
-  double value,
-  List<Widget> icons,
+  int value,
+  List<IconData> icons,
+  String additionalString,
 ) {
   return Container(
     width: MediaQuery.of(context).size.width / 2.2,
@@ -551,33 +598,35 @@ Widget _buildCircularChart(
         ),
       ],
     ),
-    child: Expanded(
-      child: Stack(
-        children: [
-          SfCircularChart(
-            series: <CircularSeries<_ChartData, String>>[
-              RadialBarSeries<_ChartData, String>(
-                maximumValue: maxValue,
-                radius: '170%',
-                gap: '85%',
-                dataSource: [
-                  _ChartData(
-                    'Value',
-                    value,
-                    pointColor,
-                  ),
-                ],
-                cornerStyle: CornerStyle.bothCurve,
-                xValueMapper: (_ChartData data, _) => data.x,
-                yValueMapper: (_ChartData data, _) => data.y,
-                pointColorMapper: (_ChartData data, _) => data.color,
-                trackColor: trackColor,
-              ),
-            ],
-          ),
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.center,
+    child: Stack(
+      children: [
+        SfCircularChart(
+          series: <CircularSeries<_ChartData, String>>[
+            RadialBarSeries<_ChartData, String>(
+              maximumValue: maxValue.toDouble(),
+              radius: '170%',
+              gap: '85%',
+              dataSource: [
+                _ChartData(
+                  'Value',
+                  value.toDouble(),
+                  pointColor,
+                ),
+              ],
+              cornerStyle: CornerStyle.bothCurve,
+              xValueMapper: (_ChartData data, _) => data.x,
+              yValueMapper: (_ChartData data, _) => data.y,
+              pointColorMapper: (_ChartData data, _) => data.color,
+              trackColor: trackColor,
+            ),
+          ],
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(8.0), // Adjust the padding as needed
               child: Container(
                 width: 120,
                 height: 50,
@@ -586,19 +635,16 @@ Widget _buildCircularChart(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        value.toString(),
-                        style: const TextStyle(
-                          fontSize: 20,
+                        '${value.toString()}$additionalString',
+                        style: TextStyle(
+                          fontSize: 27,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: pointColor,
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: icons,
                       ),
                     ],
                   ),
@@ -606,8 +652,8 @@ Widget _buildCircularChart(
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

@@ -8,6 +8,9 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:forestapp/service/loginService.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -17,6 +20,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreen extends State<MapScreen> {
+  Set<Marker> _markers = {};
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 14.0,
@@ -29,9 +33,12 @@ class _MapScreen extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+    // Initialize _markers set
+    _markers = {};
     _selectedTab = 'alle';
     _circles = Set<Circle>();
     _polygons = Set<Polygon>();
+
     MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
       setState(() {
         _polygons = polygons;
@@ -388,6 +395,7 @@ class _MapScreen extends State<MapScreen> {
                   mapType: MapType.normal,
                   initialCameraPosition: _kGooglePlex,
                   zoomControlsEnabled: false,
+                  markers: _markers,
                   circles: _circles,
                   polygons: _polygons,
                   onMapCreated: (GoogleMapController controller) {
@@ -510,54 +518,6 @@ class _MapScreen extends State<MapScreen> {
           ),
         ],
       ),
-      /*
-floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    // Get current location
-    _getCurrentLocation().then((Position position) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Aktueller Standort"),
-            content: Text(
-                "Latitude: ${position.latitude}\nLongitude: ${position.longitude}"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }).catchError((e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Failed to get current location: $e"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    });
-  },
-  child: Icon(Icons.location_on),
-  backgroundColor: Color.fromARGB(255, 117, 241, 169),
-),
-floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-*/
     );
   }
 }
@@ -577,6 +537,7 @@ class MapSampleState extends State<MapSample> {
   MapObjects mapObjects = MapObjects();
   Set<Circle> circles = Set<Circle>();
   Set<Polygon> polygons = Set<Polygon>();
+  Set<Marker> _markers = {}; // Declare an empty markers set
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude

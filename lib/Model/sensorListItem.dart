@@ -225,8 +225,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           fontSize: 16,
                           color: Colors.black,
                         ),
-                      ),
-                      const SizedBox(height: 6),
+                    ),
+                    SizedBox(height: 6),
+                   
+                      
                       Text(
                         'Aktueller Luftdruck: ${widget.airPressure}hPa',
                         style: const TextStyle(

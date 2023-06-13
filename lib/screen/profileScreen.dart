@@ -127,41 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Daten Aktualisierung'),
-                              content: const Text(
-                                  'Möchtest du deine Daten aktualisieren?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Add your update logic here
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Abbrechen'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Aktualisieren'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: buildProfileItem(
-                        Icons.timelapse_outlined,
-                        'Daten Aktualisierung',
-                        iconColor: const Color.fromARGB(255, 0, 0, 0),
-                        textColor: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
+
                             return PasswordDialog(
                               onCurrentPasswordChanged: (value) {
                                 currentPassword = value;

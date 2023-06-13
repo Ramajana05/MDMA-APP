@@ -39,8 +39,16 @@ class SidePanel extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.person), // Add leading icon
-            title: const Text('Profil'),
+            leading: const Icon(
+              Icons.person,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Profil',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             iconColor: Color.fromARGB(255, 40, 233, 127),
             onTap: () => Navigator.push(
               context,
@@ -48,8 +56,16 @@ class SidePanel extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.public), // Add leading icon
-            title: const Text('Startseite'),
+            leading: const Icon(
+              Icons.public,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Startseite',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             iconColor: Colors.blue,
             onTap: () async {
               const url =
@@ -62,9 +78,16 @@ class SidePanel extends StatelessWidget {
             },
           ),
           ListTile(
-            leading:
-                const Icon(Icons.help_outline_outlined), // Add leading icon
-            title: const Text('Hilfe'),
+            leading: const Icon(
+              Icons.help_outline_outlined,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Hilfe',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => InstructionsScreen()),
@@ -72,8 +95,16 @@ class SidePanel extends StatelessWidget {
           ),
           const Spacer(),
           ListTile(
-            leading: const Icon(Icons.logout), // Add leading icon
-            title: const Text('Ausloggen'),
+            leading: const Icon(
+              Icons.logout,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Ausloggen',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             iconColor: Colors.red,
             onTap: () {
               showDialog(
