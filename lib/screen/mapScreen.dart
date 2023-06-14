@@ -19,7 +19,7 @@ class _MapScreen extends State<MapScreen> {
   Set<Marker> _markers = {};
   CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 14.0,
+    zoom: 15.0,
   );
   late String _selectedTab;
   late Set<Circle> _circles;
@@ -625,7 +625,7 @@ class MapSampleState extends State<MapSample> {
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 10.0,
+    zoom: 1.0,
   );
 
   @override

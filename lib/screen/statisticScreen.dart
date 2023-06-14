@@ -310,7 +310,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               child: Column(
                 children: [
                   TabBarWidget(
-                    tabTexts: const ['Tag', 'Woche', 'Monat', 'Jahr'],
+                    tabTexts: const ['Tag', 'Woche', 'Monat'],
                     onTabSelected: (int index) {
                       setState(() {
                         _selectedTabIndex = index;
@@ -324,7 +324,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         buildDailyTab(),
                         buildWeeklyTab(),
                         buildMonthlyTab(),
-                        buildYearlyTab(),
                       ],
                     ),
                   ),
