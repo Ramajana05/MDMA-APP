@@ -1,35 +1,251 @@
-import 'package:fl_chart/src/chart/bar_chart/bar_chart_data.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:forestapp/main.dart';
-import 'package:forestapp/widget/customBarChartWidget.dart';
-import 'package:forestapp/widget/customLineChartWidget.dart';
-import 'package:forestapp/widget/customStatisticContainerWidget.dart';
-import 'package:forestapp/widget/topNavBar.dart';
-import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:d_chart/d_chart.dart';
-import 'package:intl/intl.dart';
-import '../Model/IntervalTypeEnum.dart';
-import '../dialog/logoutDialog.dart';
-import '../widget/checkBoxValuesForCharts.dart';
-import 'dart:ui';
-import 'package:forestapp/widget/sidePanelWidget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import '../widget/sidePanelWidget.dart';
+import '../widget/topNavBar.dart';
+import '../widget/tabBarWidget.dart';
 
 class StatisticsScreen extends StatefulWidget {
-  StatisticsScreen({Key? key}) : super(key: key);
+  const StatisticsScreen({Key? key}) : super(key: key);
 
   @override
   State<StatisticsScreen> createState() => _StatisticsScreen();
 }
 
-class _StatisticsScreen extends State<StatisticsScreen> {
-  DateTime? _date;
+class _StatisticsScreen extends State<StatisticsScreen>
+    with SingleTickerProviderStateMixin {
+  var visitor = "Besucher";
 
-  String _dateText() {
-    String dateText = '';
-    _date == null
-        ? dateText = 'Heute'
-        : dateText = '${_date?.day}.${_date?.month}';
-    return dateText;
+  var temperature = "Temperatur";
+  var airHumidity = "Luftfeuchtigkeit";
+
+  var monthly = "Monatliche";
+  var daily = "Tägliche";
+  var weekly = "Wöchentliche";
+
+  var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
+  var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
+
+  double dailyMax = 5;
+  double weeklyMax = 6;
+  double monthlyMax = 3;
+  Radius bottom20 = const Radius.circular(20);
+  Radius bottomZero = Radius.zero;
+
+  late List<ChartData> visitorChartDaily;
+  late List<ChartData> visitorChartWeekly;
+  late List<ChartData> visitorChartMonthly;
+
+  late List<ChartData> tempChartDaily;
+  late List<ChartData> tempChartWeekly;
+  late List<ChartData> tempChartMonthly;
+
+  late List<ChartData> airHumidityChartDaily;
+  late List<ChartData> airHumidityChartWeekly;
+  late List<ChartData> airHumidityChartMonthly;
+
+  late List<ChartData> rainPercentChartDaily;
+  late List<ChartData> rainPercentChartWeekly;
+  late List<ChartData> rainPercentChartMonthly;
+  bool visitorVisible = true;
+  bool tempVisible = true;
+  bool airVisible = true;
+  bool rainLineChart = true;
+
+  void handleToggle(bool value) {
+    setState(() {
+      rainLineChart = value;
+    });
+  }
+
+  var visitorGradient = const [
+    Color(0xFF7EA15D), // Medium Green
+    Color(0xFF5D8243), // Dark Green
+    Color(0xFFA67E49), // Light Brown
+    Color(0xFF8B632F), // Medium Brown
+  ];
+
+  var temperatureGradient = const [
+    Color(0xFF87CEEB), // Mid color (Sky Blue)
+    Color(0xFF6495ED), // End color (Cornflower Blue)
+    Color(0xFFFA8072), // Salmon
+    Colors.red, // Red
+  ];
+
+  var airHumidityGradient = const [
+    Color(0xFF87CEEB), // Baby Blue
+    Color(0xFF79A8D3), // Light Blue
+    Color(0xFF6495ED), // Cornflower Blue
+    Color(0xFF5C6ACD), // Medium Blue
+    Color(0xFF6A5ACD), // Slate Blue
+  ];
+
+  final visitorChartShadow = buildChartBoxDecoration(const Color(0xFF7EA15D));
+  final temperatureChartShadow =
+      buildChartBoxDecoration(const Color(0xFF6495ED));
+  final airHumidityChartShadow =
+      buildChartBoxDecoration(const Color(0xFF6A5ACD));
+
+  TabController? _tabController;
+  int _selectedTabIndex = 0;
+
+  String getWeekOfPreviousMonth(int weekNumber) {
+    final now = DateTime.now();
+    final firstDayOfPreviousMonth = DateTime(now.year, now.month - 1, 1);
+    final lastDayOfPreviousMonth = DateTime(now.year, now.month, 0);
+
+    final weekStartDate = firstDayOfPreviousMonth
+        .subtract(Duration(days: firstDayOfPreviousMonth.weekday - 1))
+        .add(Duration(days: (weekNumber - 1) * 7));
+
+    DateTime weekEndDate;
+    if (weekNumber == 4) {
+      weekEndDate = lastDayOfPreviousMonth;
+    } else {
+      weekEndDate = weekStartDate.add(const Duration(days: 6));
+    }
+
+    final weekStartDay = weekStartDate.day.toString().padLeft(2, '0');
+    final weekEndDay = weekEndDate.day.toString().padLeft(2, '0');
+    final month = firstDayOfPreviousMonth.month.toString().padLeft(2, '0');
+
+    return '$weekStartDay.$month - $weekEndDay.$month';
+  }
+
+  String getMonthName(int month) {
+    final germanMonthNames = [
+      '',
+      'Jan',
+      'Feb',
+      'März',
+      'Apr',
+      'Mai',
+      'Juni',
+      'Juli',
+      'Aug',
+      'Sept',
+      'Okt',
+      'Nov',
+      'Dez',
+    ];
+
+    return germanMonthNames[month];
+  }
+
+  String getHours(int hour) {
+    String hourString = hour.toString().padLeft(2, '0');
+    return '$hourString:00';
+  }
+
+  String getWeekday(int day) {
+    switch (day) {
+      case 1:
+        return 'Mo';
+      case 2:
+        return 'Di';
+      case 3:
+        return 'Mi';
+      case 4:
+        return 'Do';
+      case 5:
+        return 'Fr';
+      case 6:
+        return 'Sa';
+      case 7:
+        return 'So';
+      default:
+        throw Exception('Invalid day: $day');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateData();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  void generateData() {
+    visitorChartDaily = generateChartData(24, (hour) {
+      String hourString = getHours(hour);
+      double visitors = Random().nextInt(100) + 100;
+      return ChartData(hourString, visitors);
+    });
+
+    visitorChartWeekly = generateChartData(7, (index) {
+      String weekday = getWeekday(index + 1);
+      double visitors = Random().nextInt(1000) + 700;
+      return ChartData(weekday, visitors);
+    });
+
+    visitorChartMonthly = generateChartData(4, (index) {
+      String weekOfPreviousMonth = getWeekOfPreviousMonth(index + 1);
+      double visitors = Random().nextInt(1000) + 4000;
+      return ChartData(weekOfPreviousMonth, visitors);
+    });
+
+    tempChartDaily = generateChartData(24, (hour) {
+      double temperature = Random().nextInt(21) - 5;
+      return ChartData(getHours(hour), temperature);
+    });
+
+    tempChartWeekly = generateChartData(7, (day) {
+      double temperature = Random().nextInt(11) + 15;
+      return ChartData(getWeekday(day + 1), temperature);
+    });
+
+    tempChartMonthly = generateChartData(4, (week) {
+      double temperature = Random().nextInt(26) + 10;
+      return ChartData(getWeekOfPreviousMonth(week + 1), temperature);
+    });
+
+    airHumidityChartDaily = generateChartData(24, (hour) {
+      double humidity = Random().nextInt(51) + 50;
+      return ChartData(getHours(hour), humidity);
+    });
+
+    airHumidityChartWeekly = generateChartData(7, (index) {
+      double humidity = Random().nextInt(11) + 18;
+      return ChartData(getWeekday(index + 1), humidity);
+    });
+
+    airHumidityChartMonthly = generateChartData(4, (index) {
+      double humidity = Random().nextInt(31) + 20;
+      return ChartData(getWeekOfPreviousMonth(index + 1), humidity);
+    });
+
+    rainPercentChartDaily = generateChartData(24, (hour) {
+      double rainPercentage = Random().nextInt(16) + 10;
+      return ChartData(getHours(hour), rainPercentage);
+    });
+  }
+
+  List<ChartData> generateChartData(
+      int count, ChartData Function(int) generator) {
+    return List.generate(count, generator);
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
+  static buildChartBoxDecoration(Color boxShadowColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.0),
+      boxShadow: [
+        BoxShadow(
+          color: boxShadowColor,
+          spreadRadius: 3,
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    );
   }
 
   @override
@@ -39,262 +255,728 @@ class _StatisticsScreen extends State<StatisticsScreen> {
       backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'STATISTIK',
-        onMenuPressed: () {
-          // Add your side panel logic here
-        },
+        onMenuPressed: () {},
       ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Flexible(
-              flex: 1,
-              child: Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        bottom:
-                            BorderSide(color: Colors.blueGrey, width: 0.5))),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton.icon(
-                        style: const ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll<Color>(Colors.white),
-                            side: MaterialStatePropertyAll<BorderSide>(
-                                BorderSide(color: Colors.black54, width: 0.5))),
-                        onPressed: () async {
-                          final currentDate = DateTime.now();
-                          final oneMonthAgo =
-                              currentDate.subtract(const Duration(days: 30));
-                          final myTheme = ThemeData(
-                            colorScheme: const ColorScheme.light(
-                              primary: Colors.green, // Customize primary color
-                              onPrimary: Colors.black87, // Customize text color
-                            ),
-                          );
-                          final result = await showDatePicker(
-                              builder: (BuildContext context, Widget? child) {
-                                return Theme(data: myTheme, child: child!);
-                              },
-                              context: context,
-                              initialDate: currentDate,
-                              firstDate: oneMonthAgo,
-                              lastDate: currentDate);
-                          if (result != null) {
-                            setState(() {
-                              _date = result;
-                            });
-                          }
-                        },
-                        icon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                        ),
-                        label: Text(
-                          _dateText(),
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 9,
-              child: ListView(
-                shrinkWrap: true,
+      body: Column(
+        children: [
+          DefaultTabController(
+            length: 3,
+            child: Expanded(
+              child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Statistiken der letzen 12 Stunden",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  TabBarWidget(
+                    tabTexts: const ['Tag', 'Woche', 'Monat'],
+                    onTabSelected: (int index) {
+                      setState(() {
+                        _selectedTabIndex = index;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: IndexedStack(
+                      index: _selectedTabIndex,
+                      children: [
+                        buildDailyTab(),
+                        buildWeeklyTab(),
+                        buildMonthlyTab(),
+                      ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      customStatisticContainer(IntervalType.hourly),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-
-                                title: const Text('Personen',
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.green)),
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedPersonsHourly,
-                                checkColor: Colors.white,
-                                activeColor: Colors.green,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedPersonsHourly = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-                                title: const Text(
-                                  "Temparaturen",
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.pink),
-                                ),
-                                checkColor: Colors.white,
-                                activeColor: Colors.pink,
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedTemperatureHourly,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedTemperatureHourly = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-                                title: const Text("Luftfeuchtigkeit",
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.cyan)),
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedHumidityHourly,
-                                checkColor: Colors.white,
-                                activeColor: Colors.cyan,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedHumidityHourly = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Statistiken der letzten Woche",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      customStatisticContainer(IntervalType.daily),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-
-                                title: const Text('Personen',
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.green)),
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedPersonsDaily,
-                                checkColor: Colors.white,
-                                activeColor: Colors.green,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedPersonsDaily = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-                                title: const Text(
-                                  "Temparaturen",
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.pink),
-                                ),
-                                checkColor: Colors.white,
-                                activeColor: Colors.pink,
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedTemperatureDaily,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedTemperatureDaily = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.only(right: 0),
-                                title: const Text("Luftfeuchtigkeit",
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.cyan)),
-                                value: CheckBoxValuesForCharts
-                                    .isCheckedHumidityDaily,
-                                checkColor: Colors.white,
-                                activeColor: Colors.cyan,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    CheckBoxValuesForCharts
-                                        .isCheckedHumidityDaily = newValue!;
-                                  });
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .leading, //  <-- leading Checkbox
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  )
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildChartWidget(
+    List<ChartData> chartData,
+    List<Color> gradientColors,
+    double visibleMaximum,
+    String chartName,
+  ) {
+    bool isDailyTemperatureChart = chartData == tempChartDaily;
+    bool isWeeklyTemperatureChart = chartData == tempChartWeekly;
+
+    String xAxisTitle = '';
+    if (chartData == visitorChartDaily ||
+        chartData == tempChartDaily ||
+        chartData == airHumidityChartDaily) {
+      xAxisTitle = 'Uhrzeit';
+    }
+
+    String yAxisTitle = '';
+    if (chartData == visitorChartDaily ||
+        chartData == visitorChartMonthly ||
+        chartData == visitorChartWeekly) {
+      yAxisTitle = 'Anzahl';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height / 2,
+        child: SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+            axisLine: const AxisLine(color: Colors.black, width: 1.5),
+            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            crossesAt: (isDailyTemperatureChart || isWeeklyTemperatureChart)
+                ? 0
+                : null,
+            placeLabelsNearAxisLine: false,
+            visibleMaximum: visibleMaximum,
+            desiredIntervals: 12,
+            title: AxisTitle(
+              text: xAxisTitle,
+              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          primaryYAxis: NumericAxis(
+            labelFormat: (chartData == airHumidityChartDaily ||
+                    chartData == airHumidityChartWeekly ||
+                    chartData == airHumidityChartMonthly)
+                ? '{value}%'
+                : (chartData == tempChartDaily ||
+                        chartData == tempChartWeekly ||
+                        chartData == tempChartMonthly)
+                    ? '{value}°C'
+                    : '',
+            title: AxisTitle(
+              text: yAxisTitle,
+              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+            majorTickLines:
+                const MajorTickLines(size: 6, width: 2, color: Colors.black),
+            axisLine: const AxisLine(color: Colors.black, width: 1.5),
+            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          ), //Scroll enabling
+          zoomPanBehavior: ZoomPanBehavior(
+            enablePanning: true,
+          ),
+          series: <ChartSeries>[
+            ColumnSeries<ChartData, String>(
+              dataSource: chartData,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              borderRadius:
+                  (chartData == tempChartDaily || chartData == tempChartWeekly)
+                      ? BorderRadius.circular(20)
+                      : const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+              gradient: LinearGradient(
+                colors: gradientColors,
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+            LineSeries<ChartData, String>(
+              dataSource: rainPercentChartDaily,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              markerSettings: const MarkerSettings(
+                isVisible: true,
+                borderColor: Color(0xFF800080),
+                color: Colors.deepOrange,
+                shape: DataMarkerType.circle,
+              ),
+              color: const Color(0xFF00BFFF),
+            ),
           ],
+          tooltipBehavior: TooltipBehavior(enable: true, header: chartName),
         ),
+      ),
+    );
+  }
+
+  Widget buildDailyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(
+                            38, 158, 38, 0.2), // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          rainLineChart ? rainTextVisible : rainTextHidden,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: rainLineChart,
+                        onChanged: handleToggle,
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Visitor
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Container(
+                      child: buildChartWidget(
+                        visitorChartDaily,
+                        visitorGradient,
+                        dailyMax,
+                        '$daily $visitor',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                      tempChartDaily,
+                      temperatureGradient,
+                      dailyMax,
+                      '$daily $temperature',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                      airHumidityChartDaily,
+                      airHumidityGradient,
+                      dailyMax,
+                      '$daily $airHumidity',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildWeeklyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Chart - Visitor
+                  Visibility(
+                    visible: visitorVisible,
+                    child: buildChartWidget(visitorChartWeekly, visitorGradient,
+                        weeklyMax, '$weekly $visitor'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(tempChartWeekly,
+                        temperatureGradient, weeklyMax, '$weekly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Air Humidity
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(airHumidityChartWeekly,
+                        airHumidityGradient, weeklyMax, '$weekly $airHumidity'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMonthlyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              visitorVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Chart - Visitor
+                  Visibility(
+                      visible: visitorVisible,
+                      child: buildChartWidget(visitorChartMonthly,
+                          visitorGradient, monthlyMax, '$monthly $visitor')),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              tempVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(
+                        tempChartMonthly,
+                        temperatureGradient,
+                        monthlyMax,
+                        '$monthly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: const TextStyle(
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              airVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(
+                        airHumidityChartMonthly,
+                        airHumidityGradient,
+                        monthlyMax,
+                        '$monthly $airHumidity'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// DateTime now = DateTime.now();
-// int weekday = now.weekday;
-//
-// int weekday = now.weekday - 1;
-// if (weekday < 0) {
-// weekday = 6;
-// }
+class ChartData {
+  final String x;
+  double y;
+
+  ChartData(this.x, this.y);
+}
