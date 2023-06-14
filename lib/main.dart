@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/screen/sensorListScreen.dart';
-import 'package:forestapp/screen/splashScreen.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
-import 'package:forestapp/screen/loginScreen.dart';
 import 'package:forestapp/db/databaseInitializer.dart';
 import 'package:forestapp/provider/userProvider.dart';
+import 'package:forestapp/screen/splashScreen.dart';
+import 'package:forestapp/screen/statisticScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +34,9 @@ class MyApp extends StatelessWidget {
       create: (context) => UserProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-        // LoginPage(),
+        home:
+            // SplashScreen(),
+            StatisticsScreen(),
       ),
     );
   }

@@ -31,8 +31,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
   double dailyMax = 5;
   double weeklyMax = 6;
   double monthlyMax = 3;
-  Radius bottom20 = const Radius.circular(20);
-  Radius bottomZero = Radius.zero;
 
   late List<ChartData> visitorChartDaily;
   late List<ChartData> visitorChartWeekly;
@@ -47,8 +45,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   late List<ChartData> airHumidityChartMonthly;
 
   late List<ChartData> rainPercentChartDaily;
-  late List<ChartData> rainPercentChartWeekly;
-  late List<ChartData> rainPercentChartMonthly;
+
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
@@ -60,27 +57,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
   }
 
-  var visitorGradient = const [
-    Color(0xFF7EA15D), // Medium Green
-    Color(0xFF5D8243), // Dark Green
-    Color(0xFFA67E49), // Light Brown
-    Color(0xFF8B632F), // Medium Brown
-  ];
-
-  var temperatureGradient = const [
-    Color(0xFF87CEEB), // Mid color (Sky Blue)
-    Color(0xFF6495ED), // End color (Cornflower Blue)
-    Color(0xFFFA8072), // Salmon
-    Colors.red, // Red
-  ];
-
-  var airHumidityGradient = const [
-    Color(0xFF87CEEB), // Baby Blue
-    Color(0xFF79A8D3), // Light Blue
-    Color(0xFF6495ED), // Cornflower Blue
-    Color(0xFF5C6ACD), // Medium Blue
-    Color(0xFF6A5ACD), // Slate Blue
-  ];
+  var visitorGradient = const Color(0xFF7EA15D);
+  var temperatureColor = const Color(0xFF6495ED);
+  var airHumidityColor = const Color(0xFF6A5ACD);
 
   final visitorChartShadow = buildChartBoxDecoration(const Color(0xFF7EA15D));
   final temperatureChartShadow =
@@ -217,7 +196,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
 
     rainPercentChartDaily = generateChartData(24, (hour) {
-      double rainPercentage = Random().nextInt(16) + 10;
+      double rainPercentage = Random().nextInt(91) + 10;
       return ChartData(getHours(hour), rainPercentage);
     });
   }
@@ -293,13 +272,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   Widget buildChartWidget(
     List<ChartData> chartData,
-    List<Color> gradientColors,
+    Color chartColor,
     double visibleMaximum,
     String chartName,
   ) {
-    bool isDailyTemperatureChart = chartData == tempChartDaily;
-    bool isWeeklyTemperatureChart = chartData == tempChartWeekly;
-
     String xAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == tempChartDaily ||
@@ -323,10 +299,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-            crossesAt: (isDailyTemperatureChart || isWeeklyTemperatureChart)
-                ? 0
-                : null,
-            placeLabelsNearAxisLine: false,
             visibleMaximum: visibleMaximum,
             desiredIntervals: 12,
             title: AxisTitle(
@@ -357,35 +329,33 @@ class _StatisticsScreen extends State<StatisticsScreen>
             enablePanning: true,
           ),
           series: <ChartSeries>[
-            ColumnSeries<ChartData, String>(
+            LineSeries<ChartData, String>(
               dataSource: chartData,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              borderRadius:
-                  (chartData == tempChartDaily || chartData == tempChartWeekly)
-                      ? BorderRadius.circular(20)
-                      : const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-              gradient: LinearGradient(
-                colors: gradientColors,
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+              markerSettings: const MarkerSettings(
+                borderColor: Color(0xFFE08055),
+                isVisible: true,
+                color: Color(0xFFCC6699),
+                shape: DataMarkerType.circle,
               ),
+              color: chartColor,
               dataLabelMapper: (ChartData data, _) => '${data.y}',
             ),
             LineSeries<ChartData, String>(
               dataSource: rainPercentChartDaily,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
+              isVisible: rainLineChart == true && chartData == visitorChartDaily
+                  ? true
+                  : false,
               markerSettings: const MarkerSettings(
-                isVisible: true,
                 borderColor: Color(0xFF800080),
+                isVisible: true,
                 color: Colors.deepOrange,
                 shape: DataMarkerType.circle,
               ),
-              color: const Color(0xFF00BFFF),
+              color: const Color.fromARGB(255, 56, 162, 197),
             ),
           ],
           tooltipBehavior: TooltipBehavior(enable: true, header: chartName),
@@ -535,7 +505,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: tempVisible,
                     child: buildChartWidget(
                       tempChartDaily,
-                      temperatureGradient,
+                      temperatureColor,
                       dailyMax,
                       '$daily $temperature',
                     ),
@@ -596,7 +566,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: airVisible,
                     child: buildChartWidget(
                       airHumidityChartDaily,
-                      airHumidityGradient,
+                      airHumidityColor,
                       dailyMax,
                       '$daily $airHumidity',
                     ),
@@ -720,8 +690,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartWeekly,
-                        temperatureGradient, weeklyMax, '$weekly $temperature'),
+                    child: buildChartWidget(tempChartWeekly, temperatureColor,
+                        weeklyMax, '$weekly $temperature'),
                   ),
                 ],
               ),
@@ -778,7 +748,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(airHumidityChartWeekly,
-                        airHumidityGradient, weeklyMax, '$weekly $airHumidity'),
+                        airHumidityColor, weeklyMax, '$weekly $airHumidity'),
                   ),
                 ],
               ),
@@ -898,11 +868,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(
-                        tempChartMonthly,
-                        temperatureGradient,
-                        monthlyMax,
-                        '$monthly $temperature'),
+                    child: buildChartWidget(tempChartMonthly, temperatureColor,
+                        monthlyMax, '$monthly $temperature'),
                   ),
                 ],
               ),
@@ -958,11 +925,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(
-                        airHumidityChartMonthly,
-                        airHumidityGradient,
-                        monthlyMax,
-                        '$monthly $airHumidity'),
+                    child: buildChartWidget(airHumidityChartMonthly,
+                        airHumidityColor, monthlyMax, '$monthly $airHumidity'),
                   ),
                 ],
               ),
