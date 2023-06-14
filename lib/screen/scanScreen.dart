@@ -191,7 +191,7 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Latitude:',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
@@ -367,7 +367,7 @@ class _ScanScreen extends State<ScanScreen> {
                       }
                     },
                   ),
-                  iconSize: 32.0,
+                  iconSize: 40.0,
                   onPressed: () {
                     cameraController.switchCamera();
                   },
@@ -387,7 +387,7 @@ class _ScanScreen extends State<ScanScreen> {
                       }
                     },
                   ),
-                  iconSize: 32.0,
+                  iconSize: 40.0,
                   onPressed: () => cameraController.toggleTorch(),
                 ),
               ],

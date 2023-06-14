@@ -31,6 +31,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
     Color.fromARGB(204, 0, 165, 22), // Sensors
   ];
 
+  void updateSelectedIndex(int newIndex) {
+    _index = newIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

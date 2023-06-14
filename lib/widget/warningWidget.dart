@@ -14,9 +14,7 @@ class WarningWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
-    Color shadowColor = isWarnung
-        ? Colors.orange.withOpacity(0.5)
-        : Colors.blue.withOpacity(0.5);
+
     Color textColor = const Color.fromARGB(255, 0, 0, 0);
     Color titleColor = isWarnung ? Colors.orange : Colors.blue;
 
@@ -56,7 +54,7 @@ class WarningWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: shadowColor,
+                color: Color.fromARGB(255, 170, 170, 170).withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: const Offset(0, 2),

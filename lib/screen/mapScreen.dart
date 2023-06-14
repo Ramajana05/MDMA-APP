@@ -40,7 +40,7 @@ class _MapScreen extends State<MapScreen> {
     _circles = Set<Circle>();
     _polygons = Set<Polygon>();
 
-    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
       setState(() {
         _polygons = polygons;
       });
@@ -66,18 +66,14 @@ class _MapScreen extends State<MapScreen> {
               _circles = circles;
             });
           });
-          MapObjects().getPolygons((PolygonData polygon) {
-            // Handle the polygon tap here
-          }).then((polygons) {
+          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
             setState(() {
               _polygons = polygons;
             });
           });
           break;
         case 'standorte':
-          MapObjects().getPolygons((PolygonData polygon) {
-            // Handle the polygon tap here
-          }).then((polygons) {
+          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
             setState(() {
               _circles = Set<Circle>();
               _polygons = polygons;
@@ -189,7 +185,7 @@ class _MapScreen extends State<MapScreen> {
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
-                                        style: TextStyle(fontSize: 14),
+                                        style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
@@ -275,6 +271,12 @@ class _MapScreen extends State<MapScreen> {
   void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
       builder: (BuildContext context) {
         Timer(Duration(seconds: 2), () {
           Navigator.of(context).pop();
@@ -284,60 +286,114 @@ class _MapScreen extends State<MapScreen> {
           onWillPop: () async {
             return true; // Allow back button to close the bottom sheet
           },
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.0),
-                      topRight: Radius.circular(16.0),
-                    ),
+          child: GestureDetector(
+            onVerticalDragDown:
+                (_) {}, // Disable dragging gesture to prevent unintended behavior
+            child: SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          polygon.polygonId.value,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
+                        ),
+                        Row(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Icon(
+                                    Icons.place,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 58, 216, 10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    polygon.polygonId.value,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.person,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        '${polygon.visitors.toString()} Besucher',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: 7.0,
+                      right: 8.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(); // Close the bottom sheet
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 24,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'You tapped polygon: ${polygon.polygonId.value}',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Icon(
-                    Icons.close,
-                    size: 24,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },
@@ -550,55 +606,7 @@ class _MapScreen extends State<MapScreen> {
                 color: const Color.fromARGB(255, 0, 112, 204),
               ),
             ),
-          ), /** 
-          Positioned(
-            top: 60,
-            left: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.5,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: selectedDropdownItem ?? 'Wald',
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedDropdownItem = newValue;
-                      });
-
-                      if (newValue == 'Standort') {
-                        _moveToCurrentLocation();
-                      }
-                    },
-                    items: <String>[
-                      'Wald',
-                      'Standort',
-                    ].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Row(
-                          children: [
-                            value == 'Wald'
-                                ? Icon(Icons.eco)
-                                : Icon(Icons.location_on),
-                            SizedBox(width: 8.0),
-                            Text(value),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
           ),
-          */
         ],
       ),
     );
