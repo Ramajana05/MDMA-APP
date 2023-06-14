@@ -1,24 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//Please don't delete this part, it could be that we have to implement this widget as a class
-
-// class DamagesListItemWidget extends StatefulWidget {
-//   final String damageTitle;
-//   final String damageDescription;
-//   final String status;
-//
-//   DamagesListItemWidget(
-//       {Key? key,
-//       required this.damageTitle,
-//       required this.damageDescription,
-//       required this.status}):super(key: key);
-//
-//   @override
-//   State<DamagesListItemWidget> createState() {
-//     return _DamagesListItemWidget();
-//   }
-// }
 Widget DamagesListItemWidget(String damageTitle, String damageDescription,
     String status, String createDate) {
   Color statusColor = getStatusColor(status);

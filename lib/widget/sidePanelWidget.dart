@@ -1,97 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/dialog/logoutDialog.dart';
-import 'package:forestapp/db/sessionProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../dialog/logoutDialog.dart';
+import '../screen/profileScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:forestapp/provider/userProvider.dart';
+import 'package:forestapp/screen/helpScreen.dart';
+
 class SidePanel extends StatelessWidget {
-  Future<String?> _getLoggedInUsername() async {
-    // Add your logic to retrieve the logged-in username
-    // For example, you can use the session provider or any other authentication mechanism
+  Future<String?> _getLoggedInUsername(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context);
+    final loggedInUsername = userProvider.loggedInUsername;
 
-    // Return the username or null if not available
-    return ''; // Replace with your actual logic
+    return loggedInUsername ?? ''; // Replace with your actual logic
   }
-
-  static const Color startGradientColor = Color.fromARGB(255, 86, 252, 108);
-  static const Color endGradientColor = Color.fromARGB(255, 40, 233, 127);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
-          Expanded(
-            // Wrap Container with Expanded
-            child: Container(
-              width: double.infinity,
-              height: 80, // Adjust the height as desired
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    startGradientColor,
-                    endGradientColor,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ), // Set the width to occupy the entire available space
-              child: DrawerHeader(
-                child: FutureBuilder<String?>(
-                  future: _getLoggedInUsername(),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      // While waiting for the future to complete, show a loading indicator
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      // If an error occurred, display an error message
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      // If the future completed successfully, display the username
-                      final String? username = snapshot.data;
-                      return Text(
-                        username ?? 'Unknown',
-                        style: TextStyle(color: Colors.white, fontSize: 25),
-                      );
-                    }
-                  },
-                ),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 86, 252, 108),
+                  Color.fromARGB(255, 40, 233, 127),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
               ),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.person), // Add leading icon
-            title: Text('Profil'),
-            onTap: () => Navigator.of(context).pop(),
+            leading: const Icon(
+              Icons.person,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Profil',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            iconColor: Color.fromARGB(255, 40, 233, 127),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.public), // Add leading icon
-            title: Text('Website'),
+            leading: const Icon(
+              Icons.public,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Startseite',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            iconColor: Colors.blue,
             onTap: () async {
-              const url =
-                  'https://www.hs-heilbronn.de/de'; // Replace with your desired URL
+              const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
                 await launch(url);
               } else {
-                throw 'Could not launch $url';
+                throw 'Konnte diese Website nicht laden $url';
               }
             },
           ),
-          Spacer(),
           ListTile(
-            leading: Icon(Icons.logout), // Add leading icon
-            title: Text('Logout'),
+            leading: const Icon(
+              Icons.help_outline_outlined,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Hilfe',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
+          ),
+          const Spacer(),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              size: 28,
+            ), // Add leading icon
+            title: const Text(
+              'Ausloggen',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            iconColor: Colors.red,
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => LogoutDialog(),
+                builder: (context) => const LogoutDialog(),
               );
             },
           ),

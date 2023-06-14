@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
-import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
-import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import '../screen/statisticScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
   BottomTabBar({Key? key}) : super(key: key);
@@ -24,6 +23,14 @@ class _BottomTabBarState extends State<BottomTabBar> {
     SensorListScreen(),
   ];
 
+  final List<Color> tabColors = [
+    Color.fromARGB(204, 0, 165, 22), // Dashboard
+    Colors.blue, // Statistics
+    Colors.red, // Map
+    Colors.blue, // QR Code
+    Color.fromARGB(204, 0, 165, 22), // Sensors
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,40 +42,52 @@ class _BottomTabBarState extends State<BottomTabBar> {
           currentIndex: _index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-          selectedItemColor: Color.fromARGB(204, 12, 156, 77),
+          selectedItemColor: tabColors[
+              _index], // Use the respective color for the selected tab
+
           onTap: (value) {
             setState(() {
               _index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 248, 245, 245),
-          items: const [
+          backgroundColor: Color.fromARGB(255, 253, 253, 253),
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              label: 'Dashbaord',
+              icon: Icon(
+                Icons.dashboard,
+                size: 32, // Increase the size of the icon
+              ),
+              label: '', // Empty label
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.graphic_eq),
-              label: 'Statistik',
+              icon: Icon(
+                Icons.bar_chart_outlined,
+                size: 32, // Increase the size of the icon
+              ),
+              label: '', // Empty label
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
-              label: 'Karte',
+              icon: Icon(
+                Icons.pin_drop,
+                size: 32, // Increase the size of the icon
+              ),
+              label: '', // Empty label
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code),
-              label: 'QR Code',
+              icon: Icon(
+                Icons.qr_code_scanner,
+                size: 32, // Increase the size of the icon
+              ),
+              label: '', // Empty label
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.sensors),
-              label: 'Sensoren',
+              icon: Icon(
+                Icons.sensors,
+                size: 32, // Increase the size of the icon
+              ),
+              label: '', // Empty label
             ),
           ],
-          selectedLabelStyle: const TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
         ),
       ),
     );
