@@ -6,6 +6,11 @@ import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:forestapp/dialog/informationDialog.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:forestapp/service/loginService.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -15,6 +20,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreen extends State<MapScreen> {
+  Set<Marker> _markers = {};
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 14.0,
@@ -22,17 +28,30 @@ class _MapScreen extends State<MapScreen> {
   late String _selectedTab;
   late Set<Circle> _circles;
   late Set<Polygon> _polygons;
-  final Completer<GoogleMapController> _controller = Completer(); // Added
+  final Completer<GoogleMapController> _controller = Completer();
 
   @override
   void initState() {
     super.initState();
+    // Initialize _markers set
+    _markers = {};
     _selectedTab = 'alle';
-    _circles = MapObjects().getCircles();
-    _polygons = MapObjects().getPolygons();
+    _circles = Set<Circle>();
+    _polygons = Set<Polygon>();
+
+    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+      setState(() {
+        _polygons = polygons;
+      });
+    });
+    MapObjects().getCircles(_handleCircleTap).then((circles) {
+      setState(() {
+        _circles = circles;
+      });
+    });
   }
 
-  void _updateSelectedTab(int index) {
+  void _updateSelectedTab(int index) async {
     setState(() {
       _selectedTab = index == 0
           ? 'alle'
@@ -41,23 +60,287 @@ class _MapScreen extends State<MapScreen> {
               : 'sensoren';
       switch (_selectedTab) {
         case 'alle':
-          _circles = MapObjects().getCircles();
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+            });
+          });
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _polygons = polygons;
+            });
+          });
           break;
         case 'standorte':
-          _circles = Set<Circle>();
-          _polygons = MapObjects().getPolygons();
+          MapObjects().getPolygons((PolygonData polygon) {
+            // Handle the polygon tap here
+          }).then((polygons) {
+            setState(() {
+              _circles = Set<Circle>();
+              _polygons = polygons;
+            });
+          });
           break;
         case 'sensoren':
-          _circles = MapObjects().getCircles();
-          _polygons = Set<Polygon>();
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+              _polygons = Set<Polygon>();
+            });
+          });
           break;
         default:
-          _circles = Set<Circle>();
-          _polygons = Set<Polygon>();
+          setState(() {
+            _circles = Set<Circle>();
+            _polygons = Set<Polygon>();
+          });
           break;
       }
     });
+  }
+
+  void _handleCircleTap(CircleData circle) {
+    int batteryLevel = circle.battery;
+
+    showBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        Timer(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+
+        return WillPopScope(
+          onWillPop: () async {
+            return true; // Allow back button to close the bottom sheet
+          },
+          child: GestureDetector(
+            onVerticalDragDown:
+                (_) {}, // Disable dragging gesture to prevent unintended behavior
+            child: SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
+                        ),
+                        Row(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Icon(
+                                    Icons.sensors,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 58, 216, 10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    circle.circleId.value,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Standort: ',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${circle.center.latitude}, ',
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        '${circle.center.longitude}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        width: 24,
+                                        height: 24,
+                                        child: Icon(
+                                          Icons.battery_full,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 2),
+                                      Icon(
+                                        Icons.battery_6_bar_outlined,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        '$batteryLevel%',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: 7.0,
+                      right: 8.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(); // Close the bottom sheet
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 24,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Color _getBatteryColor(int batteryLevel) {
+    if (batteryLevel > 60) {
+      return Color.fromARGB(255, 19, 240, 30); // Green
+    } else if (batteryLevel > 30) {
+      return Colors.orange; // Orange
+    } else {
+      return Colors.red; // Red
+    }
+  }
+
+  void _handlePolygonTap(PolygonData polygon) {
+    showBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        Timer(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+
+        return WillPopScope(
+          onWillPop: () async {
+            return true; // Allow back button to close the bottom sheet
+          },
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          polygon.polygonId.value,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'You tapped polygon: ${polygon.polygonId.value}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -86,6 +369,10 @@ class _MapScreen extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth =
+        20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0;
+
     return Scaffold(
       drawer: SidePanel(),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -95,72 +382,142 @@ class _MapScreen extends State<MapScreen> {
           // Add your side panel logic here
         },
       ),
-      // Add your body here
-
-      body: Column(children: [
-        TabBarWidget(
-          tabTexts: ['Alle', 'Standorte', 'Sensoren'],
-          onTabSelected: _updateSelectedTab,
-        ),
-        Expanded(
-          child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            zoomControlsEnabled: false,
-            circles: _circles,
-            polygons: _polygons,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              TabBarWidget(
+                tabTexts: const ['Alle', 'Standorte', 'Sensoren'],
+                onTabSelected: _updateSelectedTab,
+              ),
+              Expanded(
+                child: GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _kGooglePlex,
+                  zoomControlsEnabled: false,
+                  markers: _markers,
+                  circles: _circles,
+                  polygons: _polygons,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
+              ),
+            ],
           ),
-        ),
-      ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Get current location
-          _getCurrentLocation().then((Position position) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Aktueller Standort"),
-                  content: Text(
-                      "Latitude: ${position.latitude}\nLongitude: ${position.longitude}"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Ok"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+          Positioned(
+            bottom: 2,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.battery_full,
+                      color: Color.fromARGB(255, 46, 202, 51),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Voll',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.battery_5_bar,
+                      color: Colors.orange,
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Mittel',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.battery_2_bar,
+                      color: Colors.red,
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Niedrig',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
-                );
-              },
-            );
-          }).catchError((e) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Failed to get current location: $e"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Close"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 46, 202, 51),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      '+10',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 128, 197, 130),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      '5 - 10',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(width: 16),
+                    Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 170, 169, 169),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      '< 5',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 60,
+            right: 16,
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => InformationDialog(),
                 );
               },
-            );
-          });
-        },
-        child: Icon(Icons.location_on),
-        backgroundColor: Color.fromARGB(255, 117, 241, 169),
+              child: Icon(
+                Icons.info_outline,
+                size: 24,
+                color: const Color.fromARGB(255, 0, 112, 204),
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -180,6 +537,7 @@ class MapSampleState extends State<MapSample> {
   MapObjects mapObjects = MapObjects();
   Set<Circle> circles = Set<Circle>();
   Set<Polygon> polygons = Set<Polygon>();
+  Set<Marker> _markers = {}; // Declare an empty markers set
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
@@ -187,11 +545,19 @@ class MapSampleState extends State<MapSample> {
   );
 
   @override
-  void didUpdateWidget(covariant MapSample oldWidget) {
+  void didUpdateWidget(covariant MapSample oldWidget) async {
     super.didUpdateWidget(oldWidget);
-    setState(() {
-      circles = mapObjects.getCircles();
-      polygons = mapObjects.getPolygons();
+    setState(() async {
+      circles = await mapObjects.getCircles((circleData) {
+        // Define the onTap functionality for the circle here
+        print('You tapped circle: ${circleData.circleId.value}');
+      });
+      polygons = await mapObjects.getPolygons((polygonData) {
+        // Define the onTap functionality for the polygon here
+        print('You tapped polygon: ${polygonData.polygonId.value}');
+      });
+      print('Circles: $circles');
+      print('Polygons: $polygons');
     });
   }
 

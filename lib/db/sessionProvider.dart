@@ -15,7 +15,7 @@ class SessionProvider {
   }
 
   Future<void> insertSessionData(String userId, int isLoggedIn) async {
-    final Database database = await openDatabase('MDMADatabase.db');
+    final Database database = await openDatabase('MDMA.db');
     await createSessionTable(database);
     await database.insert(
       tableName,
@@ -29,7 +29,7 @@ class SessionProvider {
   }
 
   Future<Map<String, dynamic>> getSessionData() async {
-    final Database database = await openDatabase('MDMADatabase.db');
+    final Database database = await openDatabase('MDMA.db');
     final List<Map<String, dynamic>> rows =
         await database.query(tableName, limit: 1);
 

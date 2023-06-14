@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
+import 'package:forestapp/screen/splashScreen.dart';
+import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:provider/provider.dart';
 
 import 'package:forestapp/screen/loginScreen.dart';
-import 'package:forestapp/service/loginService.dart';
-
 import 'package:forestapp/db/databaseInitializer.dart';
+import 'package:forestapp/provider/userProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,19 +17,28 @@ void main() async {
   final databaseInitializer = DatabaseInitializer();
   await databaseInitializer.initDatabase();
 
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white, systemNavigationBarColor: Colors.white));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+    return ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+        // LoginPage(),
+      ),
     );
   }
 }

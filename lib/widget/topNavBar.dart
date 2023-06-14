@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
+import 'package:forestapp/dialog/loadingDialog.dart';
+import 'package:forestapp/db/apiService.dart';
 
-class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
+class TopNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onMenuPressed;
 
@@ -14,10 +16,44 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(60);
 
   @override
+  _TopNavBarState createState() => _TopNavBarState();
+}
+
+class _TopNavBarState extends State<TopNavBar>
+    with SingleTickerProviderStateMixin {
+  bool _isLoading = false;
+  late AnimationController _animationController;
+  final ApiService apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat();
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return LoadingDialog(apiService: apiService);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        title,
+        widget.title,
         style: topNavBarDecoration.getTitleTextStyle(),
       ),
       backgroundColor: Color.fromARGB(146, 255, 255, 255),
@@ -41,17 +77,14 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(
+            Icons.refresh,
+            color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+          ),
           onPressed: () {
-            //showDialog(
-            //context: context,
-
-            //builder: (context) => LogoutDialog(),
-
-            //);
-            // TODO: Implement logout functionality
+            _showDialog(context);
           },
-        ),
+        ), // Show the loading dialog on refresh
       ],
       iconTheme: IconThemeData(
         color: Color.fromARGB(
