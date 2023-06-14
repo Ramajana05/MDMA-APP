@@ -32,11 +32,10 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.white, systemNavigationBarColor: Colors.white));
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home:
-            // SplashScreen(),
-            StatisticsScreen(),
+        home: SplashScreen(),
+        // StatisticsScreen(),
       ),
     );
   }

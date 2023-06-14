@@ -358,7 +358,38 @@ class _StatisticsScreen extends State<StatisticsScreen>
               color: const Color.fromARGB(255, 56, 162, 197),
             ),
           ],
-          tooltipBehavior: TooltipBehavior(enable: true, header: chartName),
+          tooltipBehavior: TooltipBehavior(
+            enable: true,
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
+              if (seriesIndex == 0) {
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    '$chartName: ${data.y}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              } else if (seriesIndex == 1) {
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    'Regenwahrscheinlichkeit: ${data.y}%',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+              return Container();
+            },
+          ),
         ),
       ),
     );
