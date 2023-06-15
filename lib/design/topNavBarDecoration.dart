@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class topNavBarDecoration {
   static const Color startGradientColor = Color.fromARGB(255, 86, 252, 108);
-  static const Color endGradientColor = Color.fromARGB(255, 40, 233, 127);
+  static const Color endGradientColor = primaryAppLightGreen;
 
   static BoxDecoration getBoxDecoration() {
     return const BoxDecoration(
@@ -22,7 +24,7 @@ class topNavBarDecoration {
 
   static TextStyle getTitleTextStyle() {
     return const TextStyle(
-      color: Color.fromARGB(255, 40, 233, 127),
+      color: primaryAppLightGreen,
       fontSize: 24.0,
       fontWeight: FontWeight.w700,
     );

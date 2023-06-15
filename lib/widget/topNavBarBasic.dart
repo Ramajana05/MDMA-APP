@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 
+import '../colors/appColors.dart';
+
 class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onMenuPressed;
@@ -37,15 +39,14 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
-          color: Color.fromARGB(255, 40, 233, 127), // Set the color to green
+          color: primaryAppLightGreen // Set the color to green
         ),
         onPressed: () {
           Navigator.of(context).pop();
         },
       ),
       iconTheme: IconThemeData(
-        color: Color.fromARGB(
-            255, 40, 233, 127), // Change this to the desired color
+        color: primaryAppLightGreen, // Change this to the desired color
       ),
     );
   }

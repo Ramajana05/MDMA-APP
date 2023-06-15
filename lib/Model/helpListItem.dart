@@ -29,7 +29,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      color: Color.fromARGB(249, 255, 255, 255),
+      color: const Color.fromARGB(249, 255, 255, 255),
       elevation: 6,
       shadowColor: Colors.black54,
       child: InkWell(
@@ -54,10 +54,10 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                                 widget.icon,
                                 size: 30,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 widget.title,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -80,7 +80,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                           size: 36,
                           color: Colors.black,
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                       ],
                     ),
                   ),
@@ -89,18 +89,18 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
             ),
             if (widget.expanded)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       widget.description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),

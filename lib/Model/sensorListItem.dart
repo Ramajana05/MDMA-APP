@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+import '../colors/getBatteryColors.dart';
+
+
 class SensorListItemWidget extends StatefulWidget {
-  final String damageTitle;
+  final String sensorTitle;
   final double latitude;
   final double longitude;
   final String status;
@@ -9,21 +13,21 @@ class SensorListItemWidget extends StatefulWidget {
   final String signalStrength;
   final String chargerInfo;
   final bool alignLeft;
-  final double temperatur;
+  final double temperature;
   final int airPressure;
 
   const SensorListItemWidget({
     super.key,
-    required this.damageTitle,
+    required this.sensorTitle,
     required this.latitude,
     required this.longitude,
     required this.status,
     required this.createDate,
     required this.signalStrength,
     required this.chargerInfo,
-    required this.temperatur,
+    required this.temperature,
     required this.airPressure,
-    this.alignLeft = false, // Default value for alignLeft is false
+    this.alignLeft = false, /// Default value for alignLeft is false
   });
 
   @override
@@ -33,23 +37,13 @@ class SensorListItemWidget extends StatefulWidget {
 class _SensorListItemWidgetState extends State<SensorListItemWidget> {
   bool expanded = false;
 
-  Color getTileBorderColor(int batteryLevel) {
-    if (batteryLevel >= 90) {
-      return const Color.fromARGB(255, 46, 202, 51); // Green
-    } else if (batteryLevel >= 60) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
-  }
-
   BoxDecoration buildChartBoxDecoration(Color boxShadowColor) {
     return BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
-          color: boxShadowColor.withOpacity(0.5),
+          color: boxShadowColor.withOpacity(0.3),
           spreadRadius: 3,
           blurRadius: 4,
           offset: const Offset(0, 2),
@@ -71,7 +65,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_5_bar,
         size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 60) {
       return const Icon(
@@ -115,7 +109,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
   @override
   Widget build(BuildContext context) {
     int batteryLevel = int.tryParse(widget.chargerInfo) ?? 0;
-    Color boxShadowColor = getTileBorderColor(batteryLevel);
+    Color boxShadowColor = getBatteryColor(batteryLevel);
 
     return Card(
       elevation: 6,
@@ -139,7 +133,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                 title: Row(
                   children: [
                     Expanded(
-                      flex: widget.alignLeft ? 5 : 3,
+                      flex: widget.alignLeft ? 6 : 3,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -151,11 +145,11 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                                   Icons.sensors,
                                   color: widget.status == 'Online'
                                       ? const Color.fromARGB(255, 64, 236, 73)
-                                      : Colors.black,
+                                      : Colors.red,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  widget.damageTitle,
+                                  widget.sensorTitle,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -220,15 +214,15 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Aktuelle Temperatur: ${widget.temperatur}°C',
+                        'Aktuelle Temperatur: ${widget.temperature}°C',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,
                         ),
-                    ),
-                    SizedBox(height: 6),
-                   
-                      
+                      ),
+                      SizedBox(height: 6),
+
+
                       Text(
                         'Aktueller Luftdruck: ${widget.airPressure}hPa',
                         style: const TextStyle(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
+import '../colors/appColors.dart';
+
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({Key? key}) : super(key: key);
 
@@ -13,7 +15,7 @@ class LogoutDialog extends StatelessWidget {
         style: LogOutDecoration.getTitleTextStyle(),
       ),
       content: Row(
-        children: [
+        children: const [
           //Icon(Icons.warning, color: Colors.orange),
           SizedBox(width: 8.0),
           Text('Wirklich ausloggen?'),
@@ -24,7 +26,7 @@ class LogoutDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
-          child: Text(
+          child: const Text(
             'Abbrechen',
             style: TextStyle(
               color: Colors.grey, // Set the text color to green
@@ -42,7 +44,7 @@ class LogoutDialog extends StatelessWidget {
           },
           child: Text('Ausloggen'),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 40, 233, 127),
+            primary: primaryAppLightGreen,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
@@ -54,7 +56,7 @@ class LogoutDialog extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 8.0,
-      contentPadding: EdgeInsets.symmetric(
+      contentPadding: const EdgeInsets.symmetric(
         horizontal: 16.0,
         vertical: 8.0,
       ),

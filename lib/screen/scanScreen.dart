@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/dialog/scannerHelpDialog.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:forestapp/widget/topNavBar.dart';
+import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/scannerHelpDialog.dart';
@@ -136,12 +137,12 @@ class _ScanScreen extends State<ScanScreen> {
                       ),
                       const SizedBox(width: 8),
                       if (codeExists)
-                        Icon(
+                        const Icon(
                           Icons.close,
                           color: Colors.red,
                         )
                       else
-                        Icon(
+                        const Icon(
                           Icons.check,
                           color: Colors.green,
                         ),
@@ -159,23 +160,23 @@ class _ScanScreen extends State<ScanScreen> {
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 40, 233, 127),
+                            color: primaryAppLightGreen,
                             width: 2.0,
                           ),
                         ),
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         ),
-                        focusColor: Color.fromARGB(255, 40, 233, 127),
+                        focusColor: primaryAppLightGreen,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16.0,
                       ),
                       onChanged: (value) {
@@ -187,7 +188,7 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Latitude:',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
@@ -201,7 +202,7 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Longitude:',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
@@ -243,20 +244,19 @@ class _ScanScreen extends State<ScanScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton(
-                          child: const Text('Hinzufügen'),
                           onPressed: () {
                             Navigator.of(context).pop();
                             _resetScanner(); // Reset scanner after adding
                           },
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all<EdgeInsets>(
-                              EdgeInsets.symmetric(horizontal: 20.0),
+                              const EdgeInsets.symmetric(horizontal: 20.0),
                             ),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 255, 255, 255),
+                              const Color.fromARGB(255, 255, 255, 255),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 40, 233, 127),
+                              primaryAppLightGreen,
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
@@ -265,6 +265,7 @@ class _ScanScreen extends State<ScanScreen> {
                               ),
                             ),
                           ),
+                          child: const Text('Hinzufügen'),
                         ),
                       ),
                     ],

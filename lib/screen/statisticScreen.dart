@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../widget/sidePanelWidget.dart';
@@ -57,15 +58,17 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
   }
 
-  var visitorGradient = const Color(0xFF7EA15D);
-  var temperatureColor = const Color(0xFF6495ED);
-  var airHumidityColor = const Color(0xFF6A5ACD);
+  ///linechart color
+  var visitorGradient = primaryVisitorColor;
+  var temperatureColor = primaryTempColor;
+  var airHumidityColor = primaryHumidityColor;
 
-  final visitorChartShadow = buildChartBoxDecoration(const Color(0xFF7EA15D));
+  ///box shadow color
+  final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
   final temperatureChartShadow =
-      buildChartBoxDecoration(const Color(0xFF6495ED));
+      buildChartBoxDecoration(primaryTempShadowColor);
   final airHumidityChartShadow =
-      buildChartBoxDecoration(const Color(0xFF6A5ACD));
+      buildChartBoxDecoration(primaryHumidityShadowColor);
 
   TabController? _tabController;
   int _selectedTabIndex = 0;
@@ -293,7 +296,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height / 2,
+        height: MediaQuery.of(context).size.height / 3,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
@@ -324,7 +327,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 const MajorTickLines(size: 6, width: 2, color: Colors.black),
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          ), //Scroll enabling
+          ),
+          //Scroll enabling
           zoomPanBehavior: ZoomPanBehavior(
             enablePanning: true,
           ),
@@ -370,7 +374,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
-                    '$chartName: ${data.y}',
+                    '${data.y}',
                     style: const TextStyle(color: Colors.white),
                   ),
                 );
@@ -400,7 +404,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -446,16 +450,15 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Button
+                  /// Button
                   Visibility(
                     visible: visitorVisible,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: SwitchListTile(
-                        activeColor: const Color.fromRGBO(
-                            38, 158, 38, 0.2), // Lighter green tone
-                        activeTrackColor:
-                            const Color.fromARGB(255, 40, 160, 40),
+                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
+                        // Lighter green tone
+                        activeTrackColor: primaryAppLightGreen,
                         title: Text(
                           rainLineChart ? rainTextVisible : rainTextHidden,
                           style: const TextStyle(
@@ -469,7 +472,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Visitor
+                  /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
                     child: Container(
@@ -485,7 +488,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
             ),
           ),
-          // Button
+
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -531,7 +535,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Temperature
+                  /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
                     child: buildChartWidget(
@@ -546,7 +550,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -592,7 +596,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(
@@ -616,7 +620,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -661,7 +665,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       ),
                     ),
                   ),
-                  // Chart - Visitor
+
+                  /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
                     child: buildChartWidget(visitorChartWeekly, visitorGradient,
@@ -672,7 +677,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -718,7 +723,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Temperature
+                  /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
                     child: buildChartWidget(tempChartWeekly, temperatureColor,
@@ -775,7 +780,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(airHumidityChartWeekly,
@@ -795,7 +800,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -840,7 +845,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       ),
                     ),
                   ),
-                  // Chart - Visitor
+
+                  /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
                       child: buildChartWidget(visitorChartMonthly,
@@ -907,7 +913,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -953,7 +959,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(airHumidityChartMonthly,
