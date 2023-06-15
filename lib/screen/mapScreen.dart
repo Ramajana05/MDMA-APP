@@ -8,6 +8,8 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
 
+import '../colors/getBatteryColors.dart';
+
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
 
@@ -18,7 +20,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreen extends State<MapScreen> {
   Set<Marker> _markers = {};
   CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(49.120208, 9.273522),
+    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 15.0,
   );
   late String _selectedTab;
@@ -34,11 +36,12 @@ class _MapScreen extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize _markers set
+
+    /// Initialize _markers set
     _markers = {};
     _selectedTab = 'alle';
-    _circles = Set<Circle>();
-    _polygons = Set<Polygon>();
+    _circles = <Circle>{};
+    _polygons = <Polygon>{};
 
     MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
       setState(() {
@@ -75,7 +78,7 @@ class _MapScreen extends State<MapScreen> {
         case 'standorte':
           MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
             setState(() {
-              _circles = Set<Circle>();
+              _circles = <Circle>{};
               _polygons = polygons;
             });
           });
@@ -84,14 +87,14 @@ class _MapScreen extends State<MapScreen> {
           MapObjects().getCircles(_handleCircleTap).then((circles) {
             setState(() {
               _circles = circles;
-              _polygons = Set<Polygon>();
+              _polygons = <Polygon>{};
             });
           });
           break;
         default:
           setState(() {
-            _circles = Set<Circle>();
-            _polygons = Set<Polygon>();
+            _circles = <Circle>{};
+            _polygons = <Polygon>{};
           });
           break;
       }
@@ -103,27 +106,31 @@ class _MapScreen extends State<MapScreen> {
 
     showBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
         ),
       ),
       builder: (BuildContext context) {
-        Timer(Duration(seconds: 2), () {
+        Timer(const Duration(seconds: 2), () {
           Navigator.of(context).pop();
         });
 
         return WillPopScope(
           onWillPop: () async {
             return true;
+
+            /// Allow back button to close the bottom sheet
           },
           child: GestureDetector(
             onVerticalDragDown: (_) {},
+
+            /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.0),
@@ -135,9 +142,10 @@ class _MapScreen extends State<MapScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
+
+                          /// Reduce the bottom padding
                         ),
                         Row(
                           children: [
@@ -146,12 +154,12 @@ class _MapScreen extends State<MapScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                Positioned.fill(
+                                const Positioned.fill(
                                   child: Icon(
                                     Icons.sensors,
                                     size: 32,
@@ -167,7 +175,7 @@ class _MapScreen extends State<MapScreen> {
                                 children: [
                                   Text(
                                     circle.circleId.value,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -175,7 +183,7 @@ class _MapScreen extends State<MapScreen> {
                                   SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Standort: ',
                                         style: TextStyle(
                                           fontSize: 16,
@@ -188,26 +196,27 @@ class _MapScreen extends State<MapScreen> {
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Container(
                                         width: 24,
                                         height: 24,
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.battery_full,
                                           color: Colors.white,
                                           size: 16,
                                         ),
                                       ),
-                                      SizedBox(width: 2),
+                                      const SizedBox(width: 2),
                                       Icon(
                                         Icons.battery_6_bar_outlined,
+                                        color: getBatteryColor(batteryLevel),
                                       ),
-                                      SizedBox(width: 2),
+                                      const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -219,8 +228,8 @@ class _MapScreen extends State<MapScreen> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
                         ),
                       ],
                     ),
@@ -239,7 +248,7 @@ class _MapScreen extends State<MapScreen> {
                             color: const Color.fromARGB(255, 255, 255, 255)
                                 .withOpacity(0.3),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.close,
                             size: 24,
                             color: Colors.grey,
@@ -255,16 +264,6 @@ class _MapScreen extends State<MapScreen> {
         );
       },
     );
-  }
-
-  Color _getBatteryColor(int batteryLevel) {
-    if (batteryLevel > 60) {
-      return Color.fromARGB(255, 19, 240, 30); // Green
-    } else if (batteryLevel > 30) {
-      return Colors.orange; // Orange
-    } else {
-      return Colors.red; // Red
-    }
   }
 
   void _handlePolygonTap(PolygonData polygon) {
@@ -406,7 +405,7 @@ class _MapScreen extends State<MapScreen> {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw 'Der Standort service ist aus';
+      throw 'Location services are disabled.';
     }
 
     // Request location permission
@@ -415,7 +414,7 @@ class _MapScreen extends State<MapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        throw 'Der Standort zugriff wurde abgelehnt';
+        throw 'Location permissions are denied.';
       }
     }
 
@@ -634,6 +633,23 @@ class MapSampleState extends State<MapSample> {
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 1.0,
   );
+
+  @override
+  void didUpdateWidget(covariant MapSample oldWidget) async {
+    super.didUpdateWidget(oldWidget);
+    setState(() async {
+      circles = await mapObjects.getCircles((circleData) {
+        // Define the onTap functionality for the circle here
+        print('You tapped circle: ${circleData.circleId.value}');
+      });
+      polygons = await mapObjects.getPolygons((polygonData) {
+        // Define the onTap functionality for the polygon here
+        print('You tapped polygon: ${polygonData.polygonId.value}');
+      });
+      print('Circles: $circles');
+      print('Polygons: $polygons');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
