@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/dialog/deleteProfileDialog.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
@@ -203,14 +204,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         showDialog(
                           context: context,
                           builder: (context) => DeleteProfileDialog(
-                            onCancelPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            onDeletePressed: () {
-                              Navigator.of(context).pop();
-                              // Handle account deletion logic
-                            },
-                          ),
+                              // // onCancelPressed: () {
+                              //   Navigator.of(context).pop(); // Close the dialog
+                              // },
+                              // onDeletePressed: () {
+                              //   Navigator.of(context).pop();
+                              //   // Handle account deletion logic
+                              // },
+                              ),
                         );
                       },
                       child: buildProfileItem(Icons.delete, 'Account Löschen',

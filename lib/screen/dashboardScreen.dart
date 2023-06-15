@@ -47,7 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<WeatherItem> weatherForecast = [];
 
   Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static final CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 14.5,
   );
@@ -196,7 +196,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
@@ -205,7 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           .withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: Offset(0, 2),
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -225,9 +226,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       "",
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
                                         'Besucher',
                                         style: TextStyle(
@@ -247,15 +247,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color.fromARGB(255, 65, 199, 48)
-                                          .withOpacity(0.5),
+                                      color:
+                                          const Color.fromARGB(255, 65, 199, 48)
+                                              .withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: Offset(0, 2),
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -266,7 +268,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       context,
                                       Colors.transparent,
                                       const Color.fromARGB(255, 194, 255, 241),
-                                      Color.fromARGB(255, 65, 199, 48),
+                                      const Color.fromARGB(255, 65, 199, 48),
                                       maxSensors.toDouble(),
                                       currentSensors.toInt(),
                                       [
@@ -275,9 +277,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       "",
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
                                         'Sensoren',
                                         style: TextStyle(
@@ -302,14 +303,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.red.withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: Offset(0, 2),
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -329,9 +331,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       "°C",
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
                                         'Temperatur',
                                         style: TextStyle(
@@ -351,14 +352,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.blue.withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: Offset(0, 2),
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -376,9 +378,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       "%",
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
                                         'Luftfeuchtigkeit',
                                         style: TextStyle(
@@ -404,8 +405,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Padding(
+                          children: const [
+                            Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: Text(
                                 "Karte",
@@ -432,7 +433,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 color: Colors.black.withOpacity(0.2),
                                 spreadRadius: 2,
                                 blurRadius: 4,
-                                offset: Offset(0, 2),
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
@@ -777,7 +778,7 @@ Widget _buildCircularChart(
                     color: pointColor,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Icon(
                   icons[value % icons.length],
                   size: chartSize * 0.2,
