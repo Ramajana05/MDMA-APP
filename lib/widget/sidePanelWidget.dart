@@ -7,7 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 
-class SidePanel extends StatelessWidget {
+class SidePanel extends StatefulWidget {
+  const SidePanel({Key? key}) : super(key: key);
+
+  @override
+  _SidePanelState createState() => _SidePanelState();
+}
+
+class _SidePanelState extends State<SidePanel> {
+  bool isDarkMode = false;
   Future<String?> _getLoggedInUsername(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context);
     final loggedInUsername = userProvider.loggedInUsername;
@@ -49,7 +57,7 @@ class SidePanel extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            iconColor: Color.fromARGB(255, 40, 233, 127),
+            iconColor: const Color.fromARGB(255, 40, 233, 127),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -59,7 +67,7 @@ class SidePanel extends StatelessWidget {
             leading: const Icon(
               Icons.public,
               size: 28,
-            ), // Add leading icon
+            ),
             title: const Text(
               'Startseite',
               style: TextStyle(
@@ -72,10 +80,43 @@ class SidePanel extends StatelessWidget {
               if (await canLaunch(url)) {
                 await launch(url);
               } else {
-                throw 'Konnte diese Website nicht laden $url';
+                throw 'Website konnte nicht geladen werden: $url';
               }
             },
           ),
+          ListTile(
+            leading: Icon(
+              isDarkMode ? Icons.light_mode : Icons.dark_mode,
+              color: isDarkMode ? Colors.yellow : Colors.black,
+              size: 28,
+            ),
+            title: Text(
+              isDarkMode ? 'Heller Modus' : 'Dunkler Modus',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () {
+              setState(() {
+                isDarkMode = !isDarkMode;
+              });
+            },
+          ),
+          // ),ListTile(
+          //   leading: const Icon(
+          //     Icons.font_download_outlined,
+          //     size: 28,
+          //   ), // Add leading icon
+          //   title: const Text(
+          //     'Schriftgröße',
+          //     style: TextStyle(
+          //       fontSize: 18,
+          //     ),
+          //   ),
+          //   onTap: () {
+          //
+          // },
+          //  ),
           ListTile(
             leading: const Icon(
               Icons.help_outline_outlined,
