@@ -10,3 +10,4 @@ Color getBatteryColor(int batteryLevel) {
   } else {
     return Colors.red;
   }
+}
