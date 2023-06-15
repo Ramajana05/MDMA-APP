@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/db/apiService.dart';
 
+import '../colors/appColors.dart';
+
 class LoadingDialog extends StatefulWidget {
   final ApiService? apiService;
 

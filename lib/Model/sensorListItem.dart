@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class SensorListItemWidget extends StatefulWidget {
-  final String damageTitle;
+  final String sensorTitle;
   final double latitude;
   final double longitude;
   final String status;
@@ -9,7 +11,7 @@ class SensorListItemWidget extends StatefulWidget {
   final String signalStrength;
   final String chargerInfo;
   final bool alignLeft;
-  final double temperatur;
+  final double temperature;
   final int airPressure;
 
   const SensorListItemWidget({
@@ -43,13 +45,13 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
         color: Color.fromARGB(255, 46, 202, 51),
       );
     } else if (batteryLevel >= 75) {
-      return Icon(
+      return const Icon(
         Icons.battery_5_bar,
         size: 30,
         color: primaryGreen,
       );
     } else if (batteryLevel >= 60) {
-      return Icon(
+      return const Icon(
         Icons.battery_4_bar,
         size: 30,
         color: Colors.orange,
@@ -130,7 +132,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                widget.damageTitle,
+                                widget.sensorTitle,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -190,7 +192,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'Aktuelle Temperatur: ${widget.temperatur}°C',
+                      'Aktuelle Temperatur: ${widget.temperature}°C',
                       style: TextStyle(
                         fontSize: 16,
                       ),
