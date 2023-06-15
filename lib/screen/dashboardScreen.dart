@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:forestapp/widget/warningWidget.dart';
 
+import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
@@ -196,13 +197,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color: const Color.fromARGB(255, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color.fromARGB(
-                                              255, 240, 113, 202)
-                                          .withOpacity(0.5),
+                                      color:
+                                          primaryVisitorColor.withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
                                       offset: Offset(0, 2),
@@ -215,8 +215,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     _buildCircularChart(
                                       context,
                                       Colors.transparent,
-                                      const Color.fromARGB(255, 255, 228, 251),
-                                      const Color.fromARGB(255, 240, 113, 202),
+                                      primaryVisitorShadowColor,
+                                      primaryVisitorColor,
                                       maxVisitors.toDouble(),
                                       currentVisitors.toInt(),
                                       [
@@ -225,9 +225,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       "",
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
                                         'Besucher',
                                         style: TextStyle(
@@ -241,7 +240,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ),
                           ),
-                          // Sensor
+                          /// Sensor
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -251,7 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color.fromARGB(255, 65, 199, 48)
+                                      color: primaryGreen
                                           .withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 4,
@@ -266,7 +265,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       context,
                                       Colors.transparent,
                                       const Color.fromARGB(255, 194, 255, 241),
-                                      Color.fromARGB(255, 65, 199, 48),
+                                      primaryGreen,
                                       maxSensors.toDouble(),
                                       currentSensors.toInt(),
                                       [

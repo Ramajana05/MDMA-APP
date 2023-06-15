@@ -21,12 +21,12 @@ class _ScannerHelpDialog extends State<ScannerHelpDialog> {
             ),
             const SizedBox(height: 8),
             Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.check,
                   color: Colors.green,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Flexible(
                   child: Text(
                     'Sensor ID ist bereit zum hinzufügen',
@@ -36,12 +36,12 @@ class _ScannerHelpDialog extends State<ScannerHelpDialog> {
             ),
             const SizedBox(height: 16),
             Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.warning,
                   color: Colors.orange,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Flexible(
                   child: Text(
                     'Sensor ID existiert bereits und ist schon aktiv',
@@ -51,12 +51,12 @@ class _ScannerHelpDialog extends State<ScannerHelpDialog> {
             ),
             const SizedBox(height: 16),
             Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.question_mark_outlined,
                   color: Colors.grey,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Flexible(
                   child: Text(
                     'Sensor ID existiert nicht',
