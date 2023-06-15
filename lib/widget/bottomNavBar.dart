@@ -4,7 +4,6 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
-import '../colors/appColors.dart';
 import '../screen/statisticScreen.dart';
 
 class BottomTabBar extends StatefulWidget {
@@ -17,12 +16,24 @@ class BottomTabBar extends StatefulWidget {
 class _BottomTabBarState extends State<BottomTabBar> {
   int _index = 0;
   final screens = [
-    const DashboardScreen(),
+    DashboardScreen(),
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    const SensorListScreen(),
+    SensorListScreen(),
   ];
+
+  final List<Color> tabColors = [
+    Color.fromARGB(204, 0, 165, 22), // Dashboard
+    Colors.blue, // Statistics
+    Colors.red, // Map
+    Colors.blue, // QR Code
+    Color.fromARGB(204, 0, 165, 22), // Sensors
+  ];
+
+  void updateSelectedIndex(int newIndex) {
+    _index = newIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +46,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
           currentIndex: _index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-
-          selectedItemColor: primaryAppLightGreen,
+          selectedItemColor: tabColors[
+              _index], // Use the respective color for the selected tab
 
           onTap: (value) {
             setState(() {

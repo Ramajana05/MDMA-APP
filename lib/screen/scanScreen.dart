@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:forestapp/dialog/scannerHelpDialog.dart';
@@ -8,6 +9,7 @@ import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/scannerHelpDialog.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class ScanScreen extends StatefulWidget {
   ScanScreen({Key? key}) : super(key: key);
@@ -76,15 +78,20 @@ class _ScanScreen extends State<ScanScreen> {
     super.dispose();
   }
 
-  void _showAlertDialog(String code) {
-    bool codeExists = myList.contains(code);
+  void _showAlertDialog(String code, double latitude, double longitude) async {
     String qrCodeValue = code;
+    String sensorName = '';
 
-    showDialog(
+    bool isSensorNameNull =
+        false; // Check if the sensor name is null in your database
+
+    final loginService = LoginService();
+    await loginService.isSensorNameNull(code);
+
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          key: _scaffoldKey,
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Row(
@@ -136,16 +143,10 @@ class _ScanScreen extends State<ScanScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (codeExists)
-                        const Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        )
-                      else
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        ),
+                      Icon(
+                        isSensorNameNull ? Icons.check : Icons.close,
+                        color: isSensorNameNull ? Colors.green : Colors.red,
+                      )
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -153,6 +154,7 @@ class _ScanScreen extends State<ScanScreen> {
                     width: double.infinity,
                     height: 40,
                     child: TextField(
+                      controller: TextEditingController(text: sensorName),
                       readOnly: false,
                       decoration: InputDecoration(
                         labelText: 'Sensor Name',
@@ -180,7 +182,9 @@ class _ScanScreen extends State<ScanScreen> {
                         fontSize: 16.0,
                       ),
                       onChanged: (value) {
-                        // Add your logic to handle the sensor name input field
+                        setState(() {
+                          sensorName = value; // Save the sensor name
+                        });
                       },
                     ),
                   ),
@@ -193,7 +197,7 @@ class _ScanScreen extends State<ScanScreen> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        latitude ?? 'Laden...',
+                        latitude.toString() ?? 'Laden...',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ],
@@ -207,7 +211,7 @@ class _ScanScreen extends State<ScanScreen> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        longitude ?? 'Laden...',
+                        longitude.toString() ?? 'Laden...',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ],
@@ -244,7 +248,14 @@ class _ScanScreen extends State<ScanScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          child: const Text('Hinzufügen'),
+                          onPressed: () async {
+                            print(
+                                'Code: $code, Sensor Name: $sensorName, Latitude: $latitude, Longitude: $longitude');
+                            final loginService = LoginService();
+                            await loginService.updateSensorNameInDatabase(
+                                code, sensorName, latitude, longitude);
+                            // Update the sensor name in the database
                             Navigator.of(context).pop();
                             _resetScanner(); // Reset scanner after adding
                           },
@@ -265,7 +276,6 @@ class _ScanScreen extends State<ScanScreen> {
                               ),
                             ),
                           ),
-                          child: const Text('Hinzufügen'),
                         ),
                       ),
                     ],
@@ -321,14 +331,20 @@ class _ScanScreen extends State<ScanScreen> {
                       _isDialogShown =
                           true; // Set the flag when the dialog is shown
                     });
-                    _showAlertDialog(barcode.rawValue.toString());
+                    _showAlertDialog(
+                        barcode.rawValue ?? '',
+                        double.parse(latitude ?? '0.0'),
+                        double.parse(longitude ?? '0.0'));
                   } else {
                     myList.add(code!);
                     setState(() {
                       _isDialogShown =
                           true; // Set the flag when the dialog is shown
                     });
-                    _showAlertDialog(barcode.rawValue.toString());
+                    _showAlertDialog(
+                        barcode.rawValue ?? '',
+                        double.parse(latitude ?? '0.0'),
+                        double.parse(longitude ?? '0.0'));
                   }
                 }
               }
@@ -352,7 +368,7 @@ class _ScanScreen extends State<ScanScreen> {
                       }
                     },
                   ),
-                  iconSize: 32.0,
+                  iconSize: 40.0,
                   onPressed: () {
                     cameraController.switchCamera();
                   },
@@ -372,7 +388,7 @@ class _ScanScreen extends State<ScanScreen> {
                       }
                     },
                   ),
-                  iconSize: 32.0,
+                  iconSize: 40.0,
                   onPressed: () => cameraController.toggleTorch(),
                 ),
               ],

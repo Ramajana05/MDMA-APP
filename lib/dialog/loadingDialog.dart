@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/db/apiService.dart';
 
-import '../colors/appColors.dart';
-
 class LoadingDialog extends StatefulWidget {
   final ApiService? apiService;
 
@@ -83,6 +81,7 @@ class _LoadingDialogState extends State<LoadingDialog>
                   angle: _rotationAnimation!.value * 4.0 * 3.1415,
                   child: const Icon(
                     Icons.refresh,
+                    size: 40,
                     color: primaryAppLightGreen,
                   ),
                 );
@@ -92,7 +91,7 @@ class _LoadingDialogState extends State<LoadingDialog>
             Text(
               dialogTexts[_currentIndex],
               style: const TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
-
-import '../colors/appColors.dart';
+import 'package:forestapp/dialog/logoutDialog.dart';
 
 class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -24,7 +23,9 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: returnStatus,
       title: Text(
         title,
-        style: topNavBarDecoration.getTitleTextStyle(),
+        style: topNavBarDecoration
+            .getTitleTextStyle()
+            .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
       backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
@@ -39,14 +40,15 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
-          color: primaryAppLightGreen // Set the color to green
+          size: 35,
+          color: primaryAppLightGreen
         ),
         onPressed: () {
           Navigator.of(context).pop();
         },
       ),
       iconTheme: IconThemeData(
-        color: primaryAppLightGreen, // Change this to the desired color
+        color: primaryAppLightGreen,
       ),
     );
   }

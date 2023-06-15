@@ -8,6 +8,7 @@ class HelpListItemWidget extends StatefulWidget {
   final bool alignLeft;
   final String description;
   final IconData icon;
+  final Color iconColor; // New property for icon color
 
   HelpListItemWidget({
     required this.title,
@@ -16,6 +17,7 @@ class HelpListItemWidget extends StatefulWidget {
     required this.alignLeft,
     required this.description,
     required this.icon,
+    required this.iconColor, // Initialize icon color
   });
 
   @override
@@ -53,6 +55,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                               Icon(
                                 widget.icon,
                                 size: 30,
+                                color: widget.iconColor, // Set icon color
                               ),
                               const SizedBox(width: 8),
                               Text(

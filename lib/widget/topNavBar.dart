@@ -5,8 +5,6 @@ import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/dialog/loadingDialog.dart';
 import 'package:forestapp/db/apiService.dart';
 
-import '../colors/appColors.dart';
-
 class TopNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onMenuPressed;
@@ -56,8 +54,9 @@ class _TopNavBarState extends State<TopNavBar>
     return AppBar(
       title: Text(
         widget.title,
-        style: topNavBarDecoration.getTitleTextStyle(),
-      ),
+        style: topNavBarDecoration
+            .getTitleTextStyle()
+            .copyWith(fontSize: 27),
       backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
       elevation: 0,
@@ -71,8 +70,7 @@ class _TopNavBarState extends State<TopNavBar>
       leading: IconButton(
         icon: const Icon(
           Icons.menu,
-          color: primaryAppLightGreen, // Set the color to green
-        ),
+          color: primaryAppLightGreen,
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },
@@ -81,15 +79,16 @@ class _TopNavBarState extends State<TopNavBar>
         IconButton(
           icon: const Icon(
             Icons.refresh,
-            color: primaryAppLightGreen, // Set the color to green
+            color: primaryAppLightGreen,
+            size: 35,
           ),
           onPressed: () {
             _showDialog(context);
           },
-        ), // Show the loading dialog on refresh
+        ),
       ],
       iconTheme: const IconThemeData(
-        color: primaryAppLightGreen, // Change this to the desired color
+        color: primaryAppLightGreen,
       ),
     );
   }

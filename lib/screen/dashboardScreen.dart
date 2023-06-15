@@ -11,6 +11,14 @@ import 'package:forestapp/widget/warningWidget.dart';
 import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
+import '../widget/bottomNavBar.dart';
+import 'dart:async';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:forestapp/screen/mapScreen.dart';
+
+import 'package:forestapp/widget/mapObjects.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -33,10 +41,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var avgAirHumidity = 0.0;
 
   bool showWarningWidget = true;
+  bool showmap = true;
   bool showWeatherForecast = true;
   bool _isExpanded = true;
 
   List<WeatherItem> weatherForecast = [];
+
+  Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
+    zoom: 14.5,
+  );
+  Set<Marker> _markers = {}; // Define the markers set
+  Set<Circle> _circles = {}; // Define the circles set
+  Set<Polygon> _polygons = {}; // Define the polygons set
+  late GoogleMapController _mapController;
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -121,6 +140,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+
+    super.initState();
+    // Initialize _markers set
+    _markers = {};
+    _circles = Set<Circle>();
+    _polygons = Set<Polygon>();
+
+    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+      setState(() {
+        _polygons = polygons;
+      });
+    });
+    MapObjects().getCircles(_handleCircleTap).then((circles) {
+      setState(() {
+        _circles = circles;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  void _handleCircleTap(CircleData circle) {
+    int batteryLevel = circle.battery;
   }
 
   @override
@@ -346,6 +392,71 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  Column(
+                    children: [
+                      Container(
+                        height: 40,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Text(
+                                "Karte",
+                                style: TextStyle(
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {},
+                              child: GoogleMap(
+                                mapType: MapType.normal,
+                                initialCameraPosition: _kGooglePlex,
+                                zoomControlsEnabled: false,
+                                markers: _markers,
+                                circles: _circles,
+                                polygons: _polygons,
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller.complete(controller);
+                                },
+                                onCameraMove: (CameraPosition position) {
+                                  // Handle camera movements if needed
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
