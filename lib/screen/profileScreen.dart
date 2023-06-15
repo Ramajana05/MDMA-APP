@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
-import 'package:forestapp/dialog/deleteProfileDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
@@ -67,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Informationen',
+                'Persönliche Daten',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -107,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Aktionen',
+                'Kontoaktionen',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -127,7 +126,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
-
                             return PasswordDialog(
                               onCurrentPasswordChanged: (value) {
                                 currentPassword = value;
@@ -197,28 +195,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         );
                       },
-                      child: buildProfileItem(Icons.lock, 'Passwort Ändern'),
-                    ),
-                    const Divider(),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => DeleteProfileDialog(
-                            onCancelPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            onDeletePressed: () {
-                              Navigator.of(context).pop();
-                              // Handle account deletion logic
-                            },
-                          ),
-                        );
-                      },
-                      child: buildProfileItem(Icons.delete, 'Account Löschen',
+                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
                           iconColor: Colors.red, textColor: Colors.red),
                     ),
                   ],
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+              child: Text(
+                'Einstellungen',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Card(
+                elevation: 2.0,
+                color:
+                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
+                child: Column(
+                  children: [
+                    buildProfileItem(Icons.dark_mode, 'Nacht Modus'),
+                    const Divider(),
+                    buildProfileItem(
+                        Icons.font_download_outlined, 'Schriftgröße'),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                'Powered by',
+                style: TextStyle(
+                  fontSize: 24.0,
                 ),
               ),
             ),

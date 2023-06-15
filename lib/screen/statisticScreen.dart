@@ -61,10 +61,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 
   var visitorGradient = const [
-    Color(0xFF7EA15D), // Medium Green
-    Color(0xFF5D8243), // Dark Green
-    Color(0xFFA67E49), // Light Brown
-    Color(0xFF8B632F), // Medium Brown
+    Color.fromARGB(255, 46, 90, 4), // Medium Green
+    Color.fromARGB(255, 59, 133, 6), // Dark Green
+    Color.fromARGB(255, 68, 204, 75), // Light Brown
+    Color.fromARGB(255, 45, 250, 63), // Medium Brown
   ];
 
   var temperatureGradient = const [

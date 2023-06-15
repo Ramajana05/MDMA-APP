@@ -175,6 +175,7 @@ class MapObjects {
         fillColor: polygonData.fillColor,
         strokeColor: polygonData.strokeColor,
         strokeWidth: polygonData.strokeWidth,
+        consumeTapEvents: true,
         onTap: () => onTap(polygonData),
       );
 
