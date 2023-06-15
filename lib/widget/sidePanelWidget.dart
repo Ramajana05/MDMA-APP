@@ -15,6 +15,9 @@ class SidePanel extends StatelessWidget {
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
+  bool isNightMode = false;
+  late final Function(bool) onToggle;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -75,6 +78,23 @@ class SidePanel extends StatelessWidget {
                 throw 'Konnte diese Website nicht laden $url';
               }
             },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.dark_mode_outlined,
+              size: 28,
+            ), //
+            iconColor: const Color.fromARGB(255, 7, 19, 29),
+            title: const Text(
+              'Nacht modus',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
           ),
           ListTile(
             leading: const Icon(

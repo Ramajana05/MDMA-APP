@@ -18,7 +18,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreen extends State<MapScreen> {
   Set<Marker> _markers = {};
   CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
+    target: LatLng(49.120208, 9.273522),
     zoom: 15.0,
   );
   late String _selectedTab;
@@ -116,11 +116,10 @@ class _MapScreen extends State<MapScreen> {
 
         return WillPopScope(
           onWillPop: () async {
-            return true; // Allow back button to close the bottom sheet
+            return true;
           },
           child: GestureDetector(
-            onVerticalDragDown:
-                (_) {}, // Disable dragging gesture to prevent unintended behavior
+            onVerticalDragDown: (_) {},
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -407,7 +406,7 @@ class _MapScreen extends State<MapScreen> {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw 'Location services are disabled.';
+      throw 'Der Standort service ist aus';
     }
 
     // Request location permission
@@ -416,7 +415,7 @@ class _MapScreen extends State<MapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        throw 'Location permissions are denied.';
+        throw 'Der Standort zugriff wurde abgelehnt';
       }
     }
 
@@ -635,23 +634,6 @@ class MapSampleState extends State<MapSample> {
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 1.0,
   );
-
-  @override
-  void didUpdateWidget(covariant MapSample oldWidget) async {
-    super.didUpdateWidget(oldWidget);
-    setState(() async {
-      circles = await mapObjects.getCircles((circleData) {
-        // Define the onTap functionality for the circle here
-        print('You tapped circle: ${circleData.circleId.value}');
-      });
-      polygons = await mapObjects.getPolygons((polygonData) {
-        // Define the onTap functionality for the polygon here
-        print('You tapped polygon: ${polygonData.polygonId.value}');
-      });
-      print('Circles: $circles');
-      print('Polygons: $polygons');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
