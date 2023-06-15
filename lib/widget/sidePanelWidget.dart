@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../colors/appColors.dart';
 import '../dialog/logoutDialog.dart';
 import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +26,11 @@ class SidePanel extends StatelessWidget {
         children: <Widget>[
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromARGB(255, 86, 252, 108),
-                  Color.fromARGB(255, 40, 233, 127),
+                  const Color.fromARGB(255, 86, 252, 108),
+                  primaryAppLightGreen,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -52,7 +53,7 @@ class SidePanel extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            iconColor: Color.fromARGB(255, 40, 233, 127),
+            iconColor: primaryAppLightGreen,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileScreen()),

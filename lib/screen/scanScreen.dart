@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:forestapp/widget/topNavBar.dart';
+import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -131,23 +132,23 @@ class _ScanScreen extends State<ScanScreen> {
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 40, 233, 127),
+                            color: primaryAppLightGreen,
                             width: 2.0,
                           ),
                         ),
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         ),
-                        focusColor: Color.fromARGB(255, 40, 233, 127),
+                        focusColor: primaryAppLightGreen,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16.0,
                       ),
                       onChanged: (value) {
@@ -175,7 +176,7 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Longitude:',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
@@ -230,13 +231,13 @@ class _ScanScreen extends State<ScanScreen> {
                           },
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all<EdgeInsets>(
-                              EdgeInsets.symmetric(horizontal: 20.0),
+                              const EdgeInsets.symmetric(horizontal: 20.0),
                             ),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 255, 255, 255),
+                              const Color.fromARGB(255, 255, 255, 255),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 40, 233, 127),
+                              primaryAppLightGreen,
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(

@@ -28,19 +28,19 @@ class UserProvider with ChangeNotifier {
       final databasesPath = await getDatabasesPath();
       final path = join(databasesPath, 'MDMA.db');
 
-      // Open the database
+      /// Open the database
       _database = await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
-          // Create the 'User' table if it doesn't exist
+          /// Create the 'User' table if it doesn't exist
           await db.execute(
             'CREATE TABLE IF NOT EXISTS User (ID INTEGER PRIMARY KEY, Username TEXT, Role TEXT, CreationDate TEXT)',
           );
         },
       );
     } catch (e) {
-      // Handle any errors that occur during database initialization
+      /// Handle any errors that occur during database initialization
       print('Database initialization failed: $e');
       rethrow;
     }

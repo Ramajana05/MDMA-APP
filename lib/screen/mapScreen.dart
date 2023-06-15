@@ -36,8 +36,6 @@ class _MapScreen extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-
-    /// Initialize _markers set
     _markers = {};
     _selectedTab = 'alle';
     _circles = <Circle>{};
@@ -119,12 +117,12 @@ class _MapScreen extends State<MapScreen> {
 
         return WillPopScope(
           onWillPop: () async {
+
             return true;
 
             /// Allow back button to close the bottom sheet
           },
           child: GestureDetector(
-            onVerticalDragDown: (_) {},
 
             /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
@@ -143,9 +141,10 @@ class _MapScreen extends State<MapScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
+
                           padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
 
-                          /// Reduce the bottom padding
+
                         ),
                         Row(
                           children: [
