@@ -1,6 +1,0 @@
-String databasesPath = await getDatabasesPath();
-String dbPath = join(databasesPath, 'my_database.db');
-ByteData data = await rootBundle.load(join('assets', 'databases', 'my_database.db'));
-List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-await File(dbPath).writeAsBytes(bytes);
-Database db = await openDatabase(dbPath);
