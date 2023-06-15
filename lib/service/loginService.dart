@@ -208,6 +208,69 @@ class LoginService {
     }
   }
 
+  Future<void> updateSensorNameInDatabase(
+      String uuid, String newName, double latitude, double longitude) async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Check if the sensor with the given UUID exists in the database
+      final result = await database.rawQuery(
+        'SELECT * FROM Sensor WHERE Uuid = ?',
+        [uuid],
+      );
+
+      if (result.isNotEmpty) {
+        // Update the sensor name, latitude, and longitude in the database
+        await database.update(
+          'Sensor',
+          {
+            'Name': newName,
+            'Latitude': latitude,
+            'Longitude': longitude,
+          },
+          where: 'Uuid = ?',
+          whereArgs: [uuid],
+        );
+
+        print('Sensor name, latitude, and longitude updated successfully');
+      } else {
+        print('Sensor with UUID $uuid not found in the database');
+      }
+
+      // Close the database
+      await database.close();
+    } catch (e) {
+      print(
+          'Error updating sensor name, latitude, and longitude in database: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> isSensorNameNull(String uuid) async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Check if the sensor with the given UUID exists in the database
+      final result = await database.rawQuery(
+        'SELECT Name FROM Sensor WHERE Uuid = ?',
+        [uuid],
+      );
+
+      // Check if the sensor name is null
+      bool isNull = result.isEmpty || result.first['Name'] == null;
+
+      // Close the database
+      await database.close();
+
+      return isNull;
+    } catch (e) {
+      print('Error retrieving sensor name from database: $e');
+      rethrow;
+    }
+  }
+
 /*
   Future<Sensor?> fetchSensorFromDatabase(String uuid) async {
     try {
