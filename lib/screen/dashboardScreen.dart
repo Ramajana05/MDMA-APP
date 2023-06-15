@@ -53,11 +53,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _currentPage = 0;
   Timer? _scrollTimer;
 
-  final List<Statistic> _statistics = [
-    Statistic('Gestrige Besucher'),
-    Statistic("Gestrige Temperatur"),
-    Statistic("Gestrige Luftfeuchtigkeit"),
-  ];
+  String dailyVisitors = "Gestrige Besucher";
+  String dailyTemps = "Gestrige Temperatur";
+  String dailyAir = 'Gestrige Luftfeuchtigkeit';
+
+  late List<Statistic> _statistics;
 
   List<WeatherItem> weatherForecast = [];
 
@@ -156,6 +156,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     fetchWeatherData();
 
+    _statistics = [
+      Statistic(dailyVisitors),
+      Statistic(dailyTemps),
+      Statistic(dailyAir),
+    ];
     _pageController = PageController(initialPage: _statistics.length);
     _currentPage = _statistics.length;
     _startAutoScroll();
@@ -610,7 +615,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     visible: showStatistics,
                     child: Container(
                       color: Colors.white,
-                      height: 200,
+                      height: 250,
                       child: Stack(
                         children: [
                           PageView.builder(
@@ -761,19 +766,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(_statistics.length, (index) {
-        return Container(
-          width: 10,
-          height: 10,
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _currentPage == index ? Colors.blue : Colors.grey,
-          ),
-        );
-      }),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(_statistics.length, (index) {
+          return Container(
+            width: 10,
+            height: 10,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _currentPage == index ? Colors.blue : Colors.grey,
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -782,7 +790,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Color chartColor,
   ) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 6,
+      height: MediaQuery.of(context).size.height / 5,
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(
           crossesAt: 0,
@@ -823,19 +831,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildStatisticItem(Statistic statistic) {
     Widget chartWidget = Container();
+
     List<Map<String, dynamic>> statistics = [
       {
-        'title': 'Gestrige Besucher',
+        'title': dailyVisitors,
         'chartData': visitorChartDaily,
         'chartColor': Color.fromARGB(255, 235, 134, 218),
       },
       {
-        'title': 'Gestrige Temperatur',
+        'title': dailyTemps,
         'chartData': tempChartDaily,
         'chartColor': Colors.red,
       },
       {
-        'title': 'Gestrige Luftfeuchtigkeit',
+        'title': dailyAir,
         'chartData': airHumidityChartDaily,
         'chartColor': Colors.blue,
       },
@@ -865,13 +874,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      child: Center(
+      child: Padding(
+        padding: EdgeInsets.all(8),
         child: Column(
           children: [
             Text(
               statistic.title,
               style: const TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.w400,
                 color: Colors.black,
               ),
             ),
