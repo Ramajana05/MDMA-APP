@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
@@ -300,6 +301,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
             visibleMaximum: visibleMaximum,
+            crossesAt: 0,
+            placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
@@ -967,11 +970,4 @@ class _StatisticsScreen extends State<StatisticsScreen>
       ),
     );
   }
-}
-
-class ChartData {
-  final String x;
-  double y;
-
-  ChartData(this.x, this.y);
 }

@@ -24,11 +24,11 @@ class _BottomTabBarState extends State<BottomTabBar> {
   ];
 
   final List<Color> tabColors = [
-    Color.fromARGB(204, 0, 165, 22), // Dashboard
+    const Color.fromARGB(204, 0, 165, 22), // Dashboard
     Colors.blue, // Statistics
     Colors.red, // Map
     Colors.blue, // QR Code
-    Color.fromARGB(204, 0, 165, 22), // Sensors
+    const Color.fromARGB(204, 0, 165, 22), // Sensors
   ];
 
   void updateSelectedIndex(int newIndex) {
@@ -54,8 +54,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
               _index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 253, 253, 253),
-          items: [
+          backgroundColor: const Color.fromARGB(255, 253, 253, 253),
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.dashboard,
