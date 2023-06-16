@@ -128,7 +128,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                                 Icons.sensors,
                                 color: widget.status == 'Online'
                                     ? Color.fromARGB(255, 64, 236, 73)
-                                    : Colors.black,
+                                    : Colors.red,
                               ),
                               SizedBox(width: 4),
                               Text(
