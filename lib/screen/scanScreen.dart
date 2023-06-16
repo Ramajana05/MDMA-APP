@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:forestapp/dialog/scannerHelpDialog.dart';
+
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import '../colors/appColors.dart';
 import '../widget/sidePanelWidget.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:forestapp/dialog/scannerHelpDialog.dart';
 import 'package:forestapp/service/loginService.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -100,33 +97,6 @@ class _ScanScreen extends State<ScanScreen> {
                   const Text(
                     'Sensor hinzufügen',
                     style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      tooltipTheme: TooltipThemeData(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                      ),
-                    ),
-                    child: Positioned(
-                      top: 0,
-                      right: -10,
-                      child: Tooltip(
-                        message: 'Tooltip information',
-                        child: IconButton(
-                          icon: Icon(Icons.info_outline_rounded),
-                          color: Colors.blue,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ScannerHelpDialog(),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
