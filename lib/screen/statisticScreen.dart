@@ -303,6 +303,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
             visibleMaximum: visibleMaximum,
+            crossesAt: 0,
+            placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
