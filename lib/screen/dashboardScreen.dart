@@ -45,7 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   bool showWarningWidget = false;
   bool showMap = false;
-  bool showStatistics = true;
+  bool showStatistics = false;
   bool showWeatherForecast = true;
 
   late List<ChartData> visitorChartDaily;
@@ -219,101 +219,122 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Row(
                         children: [
-                          // Visitors
+                          /// Visitors
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          primaryVisitorColor.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildCircularChart(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
                                       context,
-                                      Colors.transparent,
-                                      primaryVisitorShadowColor,
-                                      primaryVisitorColor,
-                                      maxVisitors.toDouble(),
-                                      currentVisitors.toInt(),
-                                      [
-                                        Icons.person,
-                                      ],
-                                      "",
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Padding(
-                                      padding: EdgeInsets.only(bottom: 12.0),
-                                      child: Text(
-                                        'Besucher',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustomBottomTabBar(
+                                                  trans_index: 1)));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: primaryVisitorColor
+                                            .withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildCircularChart(
+                                        context,
+                                        Colors.transparent,
+                                        primaryVisitorShadowColor,
+                                        primaryVisitorColor,
+                                        maxVisitors.toDouble(),
+                                        currentVisitors.toInt(),
+                                        [
+                                          Icons.person,
+                                        ],
+                                        "",
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Besucher',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
+
                           /// Sensor
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: primaryGreen
-                                          .withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildCircularChart(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
                                       context,
-                                      Colors.transparent,
-                                      const Color.fromARGB(255, 194, 255, 241),
-                                      primaryGreen,
-                                      maxSensors.toDouble(),
-                                      currentSensors.toInt(),
-                                      [
-                                        Icons.sensors,
-                                      ],
-                                      "",
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Padding(
-                                      padding: EdgeInsets.only(bottom: 12.0),
-                                      child: Text(
-                                        'Sensoren',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustomBottomTabBar(
+                                                  trans_index: 4)));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: primaryGreen.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildCircularChart(
+                                        context,
+                                        Colors.transparent,
+                                        const Color.fromARGB(
+                                            255, 194, 255, 241),
+                                        primaryGreen,
+                                        maxSensors.toDouble(),
+                                        currentSensors.toInt(),
+                                        [
+                                          Icons.sensors,
+                                        ],
+                                        "",
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Sensoren',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -327,93 +348,116 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.red.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildCircularChart(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
                                       context,
-                                      Colors.transparent,
-                                      const Color.fromARGB(255, 255, 199, 199),
-                                      Colors.red,
-                                      maxTemperature,
-                                      currentTemperature.toInt(),
-                                      [
-                                        Icons.thermostat,
-                                      ],
-                                      "°C",
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Padding(
-                                      padding: EdgeInsets.only(bottom: 12.0),
-                                      child: Text(
-                                        'Temperatur',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustomBottomTabBar(
+                                                  trans_index: 1)));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.red.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildCircularChart(
+                                        context,
+                                        Colors.transparent,
+                                        const Color.fromARGB(
+                                            255, 255, 199, 199),
+                                        Colors.red,
+                                        maxTemperature,
+                                        currentTemperature.toInt(),
+                                        [
+                                          Icons.thermostat,
+                                        ],
+                                        "°C",
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Temperatur',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          // Air Humidity
+
+                          /// Air Humidity
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.blue.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildCircularChart(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
                                       context,
-                                      Colors.transparent,
-                                      const Color.fromARGB(255, 196, 236, 255),
-                                      Colors.blue,
-                                      avgAirHumidity,
-                                      airHumidity.toInt(),
-                                      [Icons.water_drop_outlined],
-                                      "%",
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Padding(
-                                      padding: EdgeInsets.only(bottom: 12.0),
-                                      child: Text(
-                                        'Luftfeuchtigkeit',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustomBottomTabBar(
+                                                  trans_index: 1)));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blue.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildCircularChart(
+                                        context,
+                                        Colors.transparent,
+                                        const Color.fromARGB(
+                                            255, 196, 236, 255),
+                                        Colors.blue,
+                                        avgAirHumidity,
+                                        airHumidity.toInt(),
+                                        [Icons.water_drop_outlined],
+                                        "%",
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 12.0),
+                                        child: Text(
+                                          'Luftfeuchtigkeit',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -424,44 +468,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   //Map
                   const SizedBox(height: 15.0),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        showMap = !showMap;
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0.15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
+                  Container(
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 0.15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CustomBottomTabBar(trans_index: 2)));
+                            },
+                            child: const Text(
                               "Karte",
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 27,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showMap = !showMap;
-                                });
-                              },
-                              icon: Icon(
-                                showMap
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                showMap = !showMap;
+                              });
+                            },
+                            icon: Icon(
+                              showMap
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                              color: Colors.black,
+                              size: 30.0,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -570,21 +616,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 15.0),
                   // Statistics
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        showStatistics = !showStatistics;
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
+                  Container(
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CustomBottomTabBar(trans_index: 1)));
+                            },
+                            child: const Text(
                               "Statistiken",
                               style: TextStyle(
                                 fontSize: 24,
@@ -592,95 +640,105 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showStatistics = !showStatistics;
-                                });
-                              },
-                              icon: Icon(
-                                showStatistics
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showStatistics,
-                    child: Container(
-                      color: Colors.white,
-                      height: 250,
-                      child: Stack(
-                        children: [
-                          PageView.builder(
-                            controller: _pageController,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _statistics.length *
-                                3, // Multiply the count to create a loop effect
-
-                            onPageChanged: (int index) {
+                          ),
+                          IconButton(
+                            onPressed: () {
                               setState(() {
-                                _currentPage = index %
-                                    _statistics
-                                        .length; // Adjust the current page index
+                                showStatistics = !showStatistics;
                               });
                             },
-                            itemBuilder: (BuildContext context, int index) {
-                              // Adjust the index to wrap around the statistics list
-                              int adjustedIndex = index % _statistics.length;
-                              return _buildStatisticItem(
-                                  _statistics[adjustedIndex]);
-                            },
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: _buildIndicator(),
+                            icon: Icon(
+                              showStatistics
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                              color: Colors.black,
+                              size: 30.0,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  // Weather Forecast
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
-                      setState(() {
-                        showWeatherForecast = !showWeatherForecast;
-                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CustomBottomTabBar(trans_index: 1)));
                     },
-                    child: Container(
-                      height: 70,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 8.3),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Visibility(
+                      visible: showStatistics,
+                      child: Container(
+                        color: Colors.white,
+                        height: 250,
+                        child: Stack(
                           children: [
-                            const Text(
-                              "Wettervorhersage",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                            PageView.builder(
+                              controller: _pageController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _statistics.length * 3,
+                              // Multiply the count to create a loop effect
+
+                              onPageChanged: (int index) {
+                                setState(() {
+                                  _currentPage = index %
+                                      _statistics
+                                          .length; // Adjust the current page index
+                                });
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                // Adjust the index to wrap around the statistics list
+                                int adjustedIndex = index % _statistics.length;
+                                return _buildStatisticItem(
+                                    _statistics[adjustedIndex]);
+                              },
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: _buildIndicator(),
                               ),
                             ),
-                            Icon(
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// Weather Forecast
+                  Container(
+                    height: 70,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 8.3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Wettervorhersage",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showWeatherForecast = !showWeatherForecast;
+                              });
+                            },
+                            child: Icon(
                               showWeatherForecast
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
                               color: Colors.black,
                               size: 30.0,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -875,7 +933,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
             Text(

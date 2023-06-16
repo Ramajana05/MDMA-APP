@@ -6,15 +6,18 @@ import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import '../screen/statisticScreen.dart';
 
-class BottomTabBar extends StatefulWidget {
-  BottomTabBar({Key? key}) : super(key: key);
+class CustomBottomTabBar extends StatefulWidget {
+  int index = 0;
+
+  CustomBottomTabBar({int trans_index=0}) {
+    index = trans_index;
+  }
 
   @override
-  State<BottomTabBar> createState() => _BottomTabBarState();
+  State<CustomBottomTabBar> createState() => _CustomBottomTabBarState();
 }
 
-class _BottomTabBarState extends State<BottomTabBar> {
-  int _index = 0;
+class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   final screens = [
     DashboardScreen(),
     StatisticsScreen(),
@@ -32,26 +35,26 @@ class _BottomTabBarState extends State<BottomTabBar> {
   ];
 
   void updateSelectedIndex(int newIndex) {
-    _index = newIndex;
+    widget.index = newIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_index],
+      body: screens[widget.index],
       bottomNavigationBar: Container(
         decoration: bottomNavBarDecoration2,
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _index,
+          type: BottomNavigationBarType.shifting,
+          currentIndex: widget.index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-          selectedItemColor: tabColors[
-              _index], // Use the respective color for the selected tab
+          selectedItemColor: tabColors[widget.index],
+          // Use the respective color for the selected tab
 
           onTap: (value) {
             setState(() {
-              _index = value;
+              widget.index = value;
             });
           },
           backgroundColor: Color.fromARGB(255, 253, 253, 253),

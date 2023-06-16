@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
@@ -118,7 +119,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   String getHours(int hour) {
     String hourString = hour.toString().padLeft(2, '0');
-    return '$hourString:00';
+    return hourString;
   }
 
   String getWeekday(int day) {
@@ -340,9 +341,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
-                borderColor: Color(0xFFE08055),
+                borderColor: Colors.deepPurple,
                 isVisible: true,
-                color: Color(0xFFCC6699),
+                color: Colors.grey,
                 shape: DataMarkerType.circle,
               ),
               color: chartColor,
@@ -977,9 +978,3 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 }
 
-class ChartData {
-  final String x;
-  double y;
-
-  ChartData(this.x, this.y);
-}
