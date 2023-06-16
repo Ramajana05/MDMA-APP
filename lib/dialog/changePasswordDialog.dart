@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class PasswordDialog extends StatefulWidget {
   final ValueChanged<String> onCurrentPasswordChanged;
   final ValueChanged<String> onNewPasswordChanged;
@@ -78,14 +80,14 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Color.fromARGB(255, 40, 233, 127),
+                        color: primaryAppLightGreen,
                         width: 2.0,
                       ),
                     ),
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     ),
-                    focusColor: Color.fromARGB(255, 40, 233, 127),
+                    focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 16.0,
@@ -130,14 +132,14 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Color.fromARGB(255, 40, 233, 127),
+                        color: primaryAppLightGreen,
                         width: 2.0,
                       ),
                     ),
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     ),
-                    focusColor: Color.fromARGB(255, 40, 233, 127),
+                    focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 16.0,
@@ -181,14 +183,14 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 40, 233, 127),
+                      color: primaryAppLightGreen,
                       width: 2.0,
                     ),
                   ),
                   labelStyle: TextStyle(
                     color: Colors.grey,
                   ),
-                  focusColor: Color.fromARGB(255, 40, 233, 127),
+                  focusColor: primaryAppLightGreen,
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 12.0,
                     horizontal: 16.0,
@@ -281,7 +283,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       Color.fromARGB(255, 255, 255, 255),
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 40, 233, 127),
+                      primaryAppLightGreen,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(

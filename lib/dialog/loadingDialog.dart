@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/db/apiService.dart';
 
+import '../colors/appColors.dart';
+
 class LoadingDialog extends StatefulWidget {
   final ApiService? apiService;
 
@@ -12,7 +14,7 @@ class LoadingDialog extends StatefulWidget {
 
 class _LoadingDialogState extends State<LoadingDialog>
     with SingleTickerProviderStateMixin {
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
   final List<String> dialogTexts = [
     'Verbindung wird hergestellt...',
     'Änderungen werden hochgeladen...',
@@ -33,7 +35,7 @@ class _LoadingDialogState extends State<LoadingDialog>
         Tween(begin: 0.0, end: 1.0).animate(_animationController!);
 
     // Start the timer to close the dialog after 2 seconds
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
   }
@@ -81,8 +83,8 @@ class _LoadingDialogState extends State<LoadingDialog>
                   angle: _rotationAnimation!.value * 4.0 * 3.1415,
                   child: const Icon(
                     Icons.refresh,
-                    color: Color.fromARGB(255, 40, 233, 127),
                     size: 40,
+                    color: primaryAppLightGreen,
                   ),
                 );
               },
@@ -90,7 +92,7 @@ class _LoadingDialogState extends State<LoadingDialog>
             const SizedBox(height: 16.0),
             Text(
               dialogTexts[_currentIndex],
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -121,7 +123,7 @@ void main() {
           appBar: AppBar(
             title: Text('Loading Dialog'),
           ),
-          body: Center(
+          body: const Center(
             child: Text('This is the home screen'),
           ),
         );

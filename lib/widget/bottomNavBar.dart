@@ -6,92 +6,85 @@ import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import '../screen/statisticScreen.dart';
 
-class BottomTabBar extends StatefulWidget {
-  BottomTabBar({Key? key}) : super(key: key);
+class CustomBottomTabBar extends StatefulWidget {
+  int index = 0;
+
+  CustomBottomTabBar({int trans_index=0}) {
+    index = trans_index;
+  }
 
   @override
-  State<BottomTabBar> createState() => _BottomTabBarState();
+  State<CustomBottomTabBar> createState() => _CustomBottomTabBarState();
 }
 
-class _BottomTabBarState extends State<BottomTabBar> {
-  int _index = 0;
+class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   final screens = [
-    const DashboardScreen(),
+    DashboardScreen(),
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    const SensorListScreen(),
+    SensorListScreen(),
   ];
 
   final List<Color> tabColors = [
-    const Color.fromARGB(204, 0, 165, 22), // Dashboard
+    Color.fromARGB(204, 0, 165, 22), // Dashboard
     Colors.blue, // Statistics
     Colors.red, // Map
     Colors.blue, // QR Code
-    const Color.fromARGB(204, 0, 165, 22), // Sensors
+    Color.fromARGB(204, 0, 165, 22), // Sensors
   ];
 
   void updateSelectedIndex(int newIndex) {
-    _index = newIndex;
+    widget.index = newIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_index],
+      body: screens[widget.index],
       bottomNavigationBar: Container(
         decoration: bottomNavBarDecoration2,
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _index,
+          type: BottomNavigationBarType.shifting,
+          currentIndex: widget.index,
           showUnselectedLabels: false,
           unselectedItemColor: Colors.black,
-          selectedItemColor: tabColors[
-              _index], // Use the respective color for the selected tab
+          selectedItemColor: tabColors[widget.index],
+          // Use the respective color for the selected tab
 
           onTap: (value) {
             setState(() {
-              _index = value;
+              widget.index = value;
             });
           },
-          backgroundColor: const Color.fromARGB(255, 253, 253, 253),
+          backgroundColor: Color.fromARGB(255, 253, 253, 253),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.dashboard,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.dashboard),
+              label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bar_chart_outlined,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.bar_chart_outlined),
+              label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.pin_drop,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.pin_drop),
+              label: 'Karte',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.qr_code_scanner,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.qr_code_scanner),
+              label: 'QR Code',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.sensors,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.sensors),
+              label: 'Sensoren',
             ),
           ],
+          selectedLabelStyle: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );

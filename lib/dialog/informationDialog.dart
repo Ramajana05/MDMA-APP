@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
+import '../colors/appColors.dart';
+
 class InformationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class InformationDialog extends StatelessWidget {
             children: const [
               Icon(
                 Icons.battery_full,
-                color: Color.fromARGB(255, 46, 202, 51),
+                color: primaryGreen,
                 size: 22,
               ),
               SizedBox(width: 8),
@@ -88,7 +90,7 @@ class InformationDialog extends StatelessWidget {
             children: const [
               Icon(
                 Icons.person,
-                color: Color.fromARGB(255, 46, 202, 51),
+                color: primaryGreen,
                 size: 24,
               ),
               SizedBox(width: 8),
