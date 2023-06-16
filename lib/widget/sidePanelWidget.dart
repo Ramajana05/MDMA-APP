@@ -56,7 +56,7 @@ class SidePanel extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                iconColor: Color.fromARGB(255, 40, 233, 127),
+                iconColor: const Color.fromARGB(255, 40, 233, 127),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -73,61 +73,60 @@ class SidePanel extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-            ),
-            iconColor: Colors.blue,
-            onTap: () async {
-              const url = 'https://mdma.haveachin.de/';
-              if (await canLaunch(url)) {
-                await launch(url);
-              } else {
-                throw 'Konnte diese Website nicht laden $url';
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.dark_mode_outlined,
-              size: 28,
-            ), //
-            iconColor: const Color.fromARGB(255, 7, 19, 29),
-            title: const Text(
-              'Nacht modus',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => InstructionsScreen()),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.help_outline_outlined,
-              size: 28,
-            ), // Add leading icon
-            title: const Text(
-              'Hilfe',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => InstructionsScreen()),
-            ),
-          ),
-          const Spacer(),
-          ListTile(
-            leading: const Icon(
-              Icons.logout,
-              size: 28,
-            ), // Add leading icon
-            title: const Text(
-              'Ausloggen',
-              style: TextStyle(
-                fontSize: 18,
 
+                iconColor: Colors.blue,
+                onTap: () async {
+                  const url = 'https://mdma.haveachin.de/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Konnte diese Website nicht laden $url';
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.dark_mode_outlined,
+                  size: 28,
+                ), //
+                iconColor: const Color.fromARGB(255, 7, 19, 29),
+                title: const Text(
+                  'Nacht modus',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.help_outline_outlined,
+                  size: 28,
+                ), // Add leading icon
+                title: const Text(
+                  'Hilfe',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
+                ),
+              ),
+              const Spacer(),
+              const ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  size: 28,
+                ), // Add leading icon
+                title: Text('Ausloggen',
+                    style: TextStyle(
+                      fontSize: 18,
+                    )),
               ),
             ],
           ),
