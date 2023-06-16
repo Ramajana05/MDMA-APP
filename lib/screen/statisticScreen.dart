@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../widget/sidePanelWidget.dart';
@@ -31,8 +32,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
   double dailyMax = 5;
   double weeklyMax = 6;
   double monthlyMax = 3;
-  Radius bottom20 = const Radius.circular(20);
-  Radius bottomZero = Radius.zero;
 
   late List<ChartData> visitorChartDaily;
   late List<ChartData> visitorChartWeekly;
@@ -47,8 +46,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   late List<ChartData> airHumidityChartMonthly;
 
   late List<ChartData> rainPercentChartDaily;
-  late List<ChartData> rainPercentChartWeekly;
-  late List<ChartData> rainPercentChartMonthly;
+
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
@@ -60,33 +58,17 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
   }
 
-  var visitorGradient = const [
-    Color.fromARGB(255, 46, 90, 4), // Medium Green
-    Color.fromARGB(255, 59, 133, 6), // Dark Green
-    Color.fromARGB(255, 68, 204, 75), // Light Brown
-    Color.fromARGB(255, 45, 250, 63), // Medium Brown
-  ];
+  ///linechart color
+  var visitorGradient = primaryVisitorColor;
+  var temperatureColor = primaryTempColor;
+  var airHumidityColor = primaryHumidityColor;
 
-  var temperatureGradient = const [
-    Color(0xFF87CEEB), // Mid color (Sky Blue)
-    Color(0xFF6495ED), // End color (Cornflower Blue)
-    Color(0xFFFA8072), // Salmon
-    Colors.red, // Red
-  ];
-
-  var airHumidityGradient = const [
-    Color(0xFF87CEEB), // Baby Blue
-    Color(0xFF79A8D3), // Light Blue
-    Color(0xFF6495ED), // Cornflower Blue
-    Color(0xFF5C6ACD), // Medium Blue
-    Color(0xFF6A5ACD), // Slate Blue
-  ];
-
-  final visitorChartShadow = buildChartBoxDecoration(const Color(0xFF7EA15D));
+  ///box shadow color
+  final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
   final temperatureChartShadow =
-      buildChartBoxDecoration(const Color(0xFF6495ED));
+      buildChartBoxDecoration(primaryTempShadowColor);
   final airHumidityChartShadow =
-      buildChartBoxDecoration(const Color(0xFF6A5ACD));
+      buildChartBoxDecoration(primaryHumidityShadowColor);
 
   TabController? _tabController;
   int _selectedTabIndex = 0;
@@ -217,7 +199,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
 
     rainPercentChartDaily = generateChartData(24, (hour) {
-      double rainPercentage = Random().nextInt(16) + 10;
+      double rainPercentage = Random().nextInt(91) + 10;
       return ChartData(getHours(hour), rainPercentage);
     });
   }
@@ -293,13 +275,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   Widget buildChartWidget(
     List<ChartData> chartData,
-    List<Color> gradientColors,
+    Color chartColor,
     double visibleMaximum,
     String chartName,
   ) {
-    bool isDailyTemperatureChart = chartData == tempChartDaily;
-    bool isWeeklyTemperatureChart = chartData == tempChartWeekly;
-
     String xAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == tempChartDaily ||
@@ -317,16 +296,12 @@ class _StatisticsScreen extends State<StatisticsScreen>
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height / 2,
+        height: MediaQuery.of(context).size.height / 3,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-            crossesAt: (isDailyTemperatureChart || isWeeklyTemperatureChart)
-                ? 0
-                : null,
-            placeLabelsNearAxisLine: false,
             visibleMaximum: visibleMaximum,
             desiredIntervals: 12,
             title: AxisTitle(
@@ -352,43 +327,73 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 const MajorTickLines(size: 6, width: 2, color: Colors.black),
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          ), //Scroll enabling
+          ),
+          //Scroll enabling
           zoomPanBehavior: ZoomPanBehavior(
             enablePanning: true,
           ),
           series: <ChartSeries>[
-            ColumnSeries<ChartData, String>(
+            LineSeries<ChartData, String>(
               dataSource: chartData,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              borderRadius:
-                  (chartData == tempChartDaily || chartData == tempChartWeekly)
-                      ? BorderRadius.circular(20)
-                      : const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-              gradient: LinearGradient(
-                colors: gradientColors,
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+              markerSettings: const MarkerSettings(
+                borderColor: Color(0xFFE08055),
+                isVisible: true,
+                color: Color(0xFFCC6699),
+                shape: DataMarkerType.circle,
               ),
+              color: chartColor,
               dataLabelMapper: (ChartData data, _) => '${data.y}',
             ),
             LineSeries<ChartData, String>(
               dataSource: rainPercentChartDaily,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
+              isVisible: rainLineChart == true && chartData == visitorChartDaily
+                  ? true
+                  : false,
               markerSettings: const MarkerSettings(
-                isVisible: true,
                 borderColor: Color(0xFF800080),
+                isVisible: true,
                 color: Colors.deepOrange,
                 shape: DataMarkerType.circle,
               ),
-              color: const Color(0xFF00BFFF),
+              color: const Color.fromARGB(255, 56, 162, 197),
             ),
           ],
-          tooltipBehavior: TooltipBehavior(enable: true, header: chartName),
+          tooltipBehavior: TooltipBehavior(
+            enable: true,
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
+              if (seriesIndex == 0) {
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    '${data.y}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              } else if (seriesIndex == 1) {
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    'Regenwahrscheinlichkeit: ${data.y}%',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+              return Container();
+            },
+          ),
         ),
       ),
     );
@@ -399,7 +404,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -445,16 +450,15 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Button
+                  /// Button
                   Visibility(
                     visible: visitorVisible,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: SwitchListTile(
-                        activeColor: const Color.fromRGBO(
-                            38, 158, 38, 0.2), // Lighter green tone
-                        activeTrackColor:
-                            const Color.fromARGB(255, 40, 160, 40),
+                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
+                        // Lighter green tone
+                        activeTrackColor: primaryAppLightGreen,
                         title: Text(
                           rainLineChart ? rainTextVisible : rainTextHidden,
                           style: const TextStyle(
@@ -468,7 +472,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Visitor
+                  /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
                     child: Container(
@@ -484,7 +488,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
             ),
           ),
-          // Button
+
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -530,12 +535,12 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Temperature
+                  /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
                     child: buildChartWidget(
                       tempChartDaily,
-                      temperatureGradient,
+                      temperatureColor,
                       dailyMax,
                       '$daily $temperature',
                     ),
@@ -545,7 +550,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -591,12 +596,12 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(
                       airHumidityChartDaily,
-                      airHumidityGradient,
+                      airHumidityColor,
                       dailyMax,
                       '$daily $airHumidity',
                     ),
@@ -615,7 +620,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -660,7 +665,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       ),
                     ),
                   ),
-                  // Chart - Visitor
+
+                  /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
                     child: buildChartWidget(visitorChartWeekly, visitorGradient,
@@ -671,7 +677,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -717,11 +723,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Temperature
+                  /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartWeekly,
-                        temperatureGradient, weeklyMax, '$weekly $temperature'),
+                    child: buildChartWidget(tempChartWeekly, temperatureColor,
+                        weeklyMax, '$weekly $temperature'),
                   ),
                 ],
               ),
@@ -774,11 +780,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
                     child: buildChartWidget(airHumidityChartWeekly,
-                        airHumidityGradient, weeklyMax, '$weekly $airHumidity'),
+                        airHumidityColor, weeklyMax, '$weekly $airHumidity'),
                   ),
                 ],
               ),
@@ -794,7 +800,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Visitor
+          /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -839,7 +845,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       ),
                     ),
                   ),
-                  // Chart - Visitor
+
+                  /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
                       child: buildChartWidget(visitorChartMonthly,
@@ -898,18 +905,15 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(
-                        tempChartMonthly,
-                        temperatureGradient,
-                        monthlyMax,
-                        '$monthly $temperature'),
+                    child: buildChartWidget(tempChartMonthly, temperatureColor,
+                        monthlyMax, '$monthly $temperature'),
                   ),
                 ],
               ),
             ),
           ),
 
-          // Button
+          /// Button
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -955,14 +959,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     ),
                   ),
 
-                  // Chart - Air Humidity
+                  /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(
-                        airHumidityChartMonthly,
-                        airHumidityGradient,
-                        monthlyMax,
-                        '$monthly $airHumidity'),
+                    child: buildChartWidget(airHumidityChartMonthly,
+                        airHumidityColor, monthlyMax, '$monthly $airHumidity'),
                   ),
                 ],
               ),

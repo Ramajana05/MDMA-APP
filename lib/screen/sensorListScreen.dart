@@ -93,7 +93,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 7.0),
                     child: SensorListItemWidget(
-                      damageTitle: damagesList[index].sensorName,
+                      sensorTitle: damagesList[index].sensorName,
                       latitude: damagesList[index].latitude,
                       longitude: damagesList[index].longitude,
                       status: damagesList[index].status,
@@ -101,7 +101,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
                       signalStrength: damagesList[index].signalStrength,
                       chargerInfo: damagesList[index].chargerInfo,
                       alignLeft: true,
-                      temperatur: damagesList[index].temperatur,
+                      temperature: damagesList[index].temperatur,
                       airPressure: damagesList[index].airPressure,
                     ),
                   );

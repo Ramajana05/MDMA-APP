@@ -55,43 +55,33 @@ class _BottomTabBarState extends State<BottomTabBar> {
             });
           },
           backgroundColor: Color.fromARGB(255, 253, 253, 253),
-          items: [
+          items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.dashboard,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.dashboard),
+              label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bar_chart_outlined,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.bar_chart_outlined),
+              label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.pin_drop,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.pin_drop),
+              label: 'Karte',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.qr_code_scanner,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.qr_code_scanner),
+              label: 'QR Code',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.sensors,
-                size: 32, // Increase the size of the icon
-              ),
-              label: '', // Empty label
+              icon: Icon(Icons.sensors),
+              label: 'Sensoren',
             ),
           ],
+          selectedLabelStyle: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );

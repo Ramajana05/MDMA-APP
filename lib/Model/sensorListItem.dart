@@ -1,8 +1,9 @@
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class SensorListItemWidget extends StatefulWidget {
-  final String damageTitle;
+  final String sensorTitle;
   final double latitude;
   final double longitude;
   final String status;
@@ -10,18 +11,19 @@ class SensorListItemWidget extends StatefulWidget {
   final String signalStrength;
   final String chargerInfo;
   final bool alignLeft;
-  final double temperatur;
+  final double temperature;
   final int airPressure;
 
-  SensorListItemWidget({
-    required this.damageTitle,
+  const SensorListItemWidget({
+    super.key,
+    required this.sensorTitle,
     required this.latitude,
     required this.longitude,
     required this.status,
     required this.createDate,
     required this.signalStrength,
     required this.chargerInfo,
-    required this.temperatur,
+    required this.temperature,
     required this.airPressure,
     this.alignLeft = false,
   });
@@ -37,49 +39,49 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     int batteryLevel = int.tryParse(chargerInfo) ?? 0;
 
     if (batteryLevel >= 90) {
-      return Icon(
+      return const Icon(
         Icons.battery_full,
         size: 30,
         color: Color.fromARGB(255, 46, 202, 51),
       );
     } else if (batteryLevel >= 75) {
-      return Icon(
+      return const Icon(
         Icons.battery_5_bar,
         size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 60) {
-      return Icon(
+      return const Icon(
         Icons.battery_4_bar,
         size: 30,
         color: Colors.orange,
       );
     } else if (batteryLevel >= 45) {
-      return Icon(
+      return const Icon(
         Icons.battery_3_bar,
         size: 30,
         color: Colors.orange,
       );
     } else if (batteryLevel >= 30) {
-      return Icon(
+      return const Icon(
         Icons.battery_3_bar,
         size: 30,
         color: Colors.red,
       );
     } else if (batteryLevel >= 15) {
-      return Icon(
+      return const Icon(
         Icons.battery_2_bar,
         size: 30,
         color: Colors.red,
       );
     } else if (batteryLevel >= 5) {
-      return Icon(
+      return const Icon(
         Icons.battery_1_bar,
         size: 30,
         color: Colors.red,
       );
     } else {
-      return Icon(
+      return const Icon(
         Icons.battery_0_bar,
         size: 30,
         color: Colors.red,
@@ -130,7 +132,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                widget.damageTitle,
+                                widget.sensorTitle,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -190,7 +192,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'Aktuelle Temperatur: ${widget.temperatur}°C',
+                      'Aktuelle Temperatur: ${widget.temperature}°C',
                       style: TextStyle(
                         fontSize: 16,
                       ),

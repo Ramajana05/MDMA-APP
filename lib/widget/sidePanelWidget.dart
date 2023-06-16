@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../colors/appColors.dart';
 import '../dialog/logoutDialog.dart';
 import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,9 @@ class SidePanel extends StatelessWidget {
 
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
+
+  bool isNightMode = false;
+  late final Function(bool) onToggle;
 
   @override
   Widget build(BuildContext context) {
