@@ -117,14 +117,9 @@ class _MapScreen extends State<MapScreen> {
 
         return WillPopScope(
           onWillPop: () async {
-
             return true;
-
-            /// Allow back button to close the bottom sheet
           },
           child: GestureDetector(
-
-            /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -141,10 +136,7 @@ class _MapScreen extends State<MapScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-
                           padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
-
-
                         ),
                         Row(
                           children: [
@@ -162,7 +154,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.sensors,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
                               ],
@@ -281,11 +273,10 @@ class _MapScreen extends State<MapScreen> {
 
         return WillPopScope(
           onWillPop: () async {
-            return true; // Allow back button to close the bottom sheet
+            return true;
           },
           child: GestureDetector(
-            onVerticalDragDown:
-                (_) {}, // Disable dragging gesture to prevent unintended behavior
+            onVerticalDragDown: (_) {},
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -404,7 +395,7 @@ class _MapScreen extends State<MapScreen> {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw 'Location services are disabled.';
+      throw 'Standort Service ist ausgeschaltet';
     }
 
     // Request location permission
@@ -413,7 +404,7 @@ class _MapScreen extends State<MapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        throw 'Location permissions are denied.';
+        throw 'Standort Service wurde abgelehnt';
       }
     }
 
@@ -435,7 +426,6 @@ class _MapScreen extends State<MapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        // Show an alert or toast message to inform the user that location permission is denied
         return;
       }
     }
@@ -460,6 +450,10 @@ class _MapScreen extends State<MapScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth =
         20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0;
+    bool showBatteryLegend = _selectedTab == 'sensoren';
+    bool showPersonLegend = _selectedTab == 'standorte';
+    bool showBothLegends = _selectedTab == 'alle';
+    double legendPosition = showPersonLegend ? 2 : 30;
 
     return Scaffold(
       drawer: SidePanel(),
@@ -502,46 +496,48 @@ class _MapScreen extends State<MapScreen> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.battery_full,
-                      color: Color.fromARGB(255, 46, 202, 51),
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Voll',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(width: 16),
-                    Icon(
-                      Icons.battery_5_bar,
-                      color: Colors.orange,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Mittel',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(width: 16),
-                    Icon(
-                      Icons.battery_2_bar,
-                      color: Colors.red,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Niedrig',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                  children: [
+                    if (showBatteryLegend || showBothLegends) ...[
+                      Icon(
+                        Icons.battery_full,
+                        color: Color.fromARGB(255, 46, 202, 51),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Voll',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(width: 16),
+                      Icon(
+                        Icons.battery_5_bar,
+                        color: Colors.orange,
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Mittel',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(width: 16),
+                      Icon(
+                        Icons.battery_2_bar,
+                        color: Colors.red,
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Niedrig',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ],
                 ),
               ),
             ),
           ),
           Positioned(
-            bottom: 30,
+            bottom: legendPosition,
             left: 0,
             right: 0,
             child: Center(
@@ -549,39 +545,41 @@ class _MapScreen extends State<MapScreen> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(255, 46, 202, 51),
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '+10',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(width: 16),
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(255, 128, 197, 130),
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '5 - 10',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(width: 16),
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(255, 170, 169, 169),
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '< 5',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                  children: [
+                    if (showPersonLegend || showBothLegends) ...[
+                      Icon(
+                        Icons.person,
+                        color: Color.fromARGB(255, 46, 202, 51),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '+10',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(width: 16),
+                      Icon(
+                        Icons.person,
+                        color: Color.fromARGB(255, 128, 197, 130),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '5 - 10',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(width: 16),
+                      Icon(
+                        Icons.person,
+                        color: Color.fromARGB(255, 170, 169, 169),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '< 5',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ],
                 ),
               ),

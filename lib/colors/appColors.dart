@@ -22,3 +22,7 @@ const primaryHumidityShadowColor = Color.fromARGB(255, 196, 236, 255);
 
 ///Battery green color
 const primaryGreen = Color.fromARGB(255, 46, 202, 51);
+const primaryOrange = Colors.orange;
+const primaryred = Colors.red;
+
+const primarygrey = Color.fromARGB(255, 134, 134, 134);
