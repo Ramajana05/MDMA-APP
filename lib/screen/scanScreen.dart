@@ -265,6 +265,12 @@ class _ScanScreen extends State<ScanScreen> {
                                                   'Sensor Name darf nicht leer sein.'),
                                               actions: [
                                                 ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                primaryGreen),
+                                                  ),
                                                   child: const Text('OK'),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
@@ -332,10 +338,23 @@ class _ScanScreen extends State<ScanScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('UUID existiert nicht'),
-            content: Text('Dieser UUID existiert nicht in der Datenbank.'),
+            title: Row(
+              children: [
+                Text('Sensor existiert nicht'),
+                SizedBox(width: 8),
+                Icon(
+                  Icons.warning_amber,
+                  color: Colors.red,
+                ),
+              ],
+            ),
+            content: Text('Der Sensor existiert nicht.'),
             actions: [
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(primaryGreen),
+                ),
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
