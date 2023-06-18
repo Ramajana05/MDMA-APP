@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
@@ -18,7 +19,6 @@ class StatisticsScreen extends StatefulWidget {
 class _StatisticsScreen extends State<StatisticsScreen>
     with SingleTickerProviderStateMixin {
   var visitor = "Besucher";
-
   var temperature = "Temperatur";
   var airHumidity = "Luftfeuchtigkeit";
 
@@ -59,7 +59,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   }
 
   ///linechart color
-  var visitorGradient = primaryVisitorColor;
+  var visitorColor = primaryVisitorColor;
   var temperatureColor = primaryTempColor;
   var airHumidityColor = primaryHumidityColor;
 
@@ -93,27 +93,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     final weekEndDay = weekEndDate.day.toString().padLeft(2, '0');
     final month = firstDayOfPreviousMonth.month.toString().padLeft(2, '0');
 
-    return '$weekStartDay.$month - $weekEndDay.$month';
-  }
-
-  String getMonthName(int month) {
-    final germanMonthNames = [
-      '',
-      'Jan',
-      'Feb',
-      'März',
-      'Apr',
-      'Mai',
-      'Juni',
-      'Juli',
-      'Aug',
-      'Sept',
-      'Okt',
-      'Nov',
-      'Dez',
-    ];
-
-    return germanMonthNames[month];
+    return '$weekStartDay.$month. - $weekEndDay.$month.';
   }
 
   String getHours(int hour) {
@@ -169,7 +149,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     });
 
     tempChartDaily = generateChartData(24, (hour) {
-      double temperature = Random().nextInt(21) - 5;
+      double temperature = Random().nextInt(41) - 5;
       return ChartData(getHours(hour), temperature);
     });
 
@@ -303,6 +283,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
             visibleMaximum: visibleMaximum,
+            placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
@@ -338,9 +319,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
-                borderColor: Color(0xFFE08055),
+                borderColor: Colors.deepPurple,
                 isVisible: true,
-                color: Color(0xFFCC6699),
+                color: Colors.grey,
                 shape: DataMarkerType.circle,
               ),
               color: chartColor,
@@ -367,27 +348,127 @@ class _StatisticsScreen extends State<StatisticsScreen>
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
               if (seriesIndex == 0) {
+                String formattedY = data.y.toString();
+                String formattedYWithUnit = formattedY;
+
+                if (formattedY.endsWith('.0')) {
+                  formattedY = formattedY.substring(0, formattedY.length - 2);
+                }
+
+                if (chartData == tempChartDaily ||
+                    chartData == tempChartMonthly ||
+                    chartData == tempChartWeekly) {
+                  formattedYWithUnit = '$formattedY°C';
+                } else if (chartData == airHumidityChartDaily ||
+                    chartData == airHumidityChartMonthly ||
+                    chartData == airHumidityChartWeekly) {
+                  formattedYWithUnit = '$formattedY%';
+                } else {
+                  formattedYWithUnit = formattedY;
+                }
+
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Text(
-                    '${data.y}',
-                    style: const TextStyle(color: Colors.white),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       chartName,
+                      //       style: const TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
+                      // const Text(
+                      //   '────────────────',
+                      //   style: TextStyle(color: Colors.white),
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: chartColor,
+                            ),
+                          ),
+                          Text(
+                            '  ${data.x} : '
+                            '$formattedYWithUnit',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 );
               } else if (seriesIndex == 1) {
+                String formattedY = data.y.toString();
+
+                if (formattedY.endsWith('.0')) {
+                  formattedY = formattedY.substring(0, formattedY.length - 2);
+                }
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Text(
-                    'Regenwahrscheinlichkeit: ${data.y}%',
-                    style: const TextStyle(color: Colors.white),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            'Regenwahrscheinlichkeit',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Text(
+                        '────────────────',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: chartColor,
+                            ),
+                          ),
+                          Text(
+                            '  ${data.x} : '
+                            '$formattedY%',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 );
               }
@@ -478,7 +559,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Container(
                       child: buildChartWidget(
                         visitorChartDaily,
-                        visitorGradient,
+                        visitorColor,
                         dailyMax,
                         '$daily $visitor',
                       ),
@@ -669,7 +750,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
-                    child: buildChartWidget(visitorChartWeekly, visitorGradient,
+                    child: buildChartWidget(visitorChartWeekly, visitorColor,
                         weeklyMax, '$weekly $visitor'),
                   ),
                 ],
@@ -849,8 +930,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
-                      child: buildChartWidget(visitorChartMonthly,
-                          visitorGradient, monthlyMax, '$monthly $visitor')),
+                      child: buildChartWidget(visitorChartMonthly, visitorColor,
+                          monthlyMax, '$monthly $visitor')),
                 ],
               ),
             ),
@@ -973,11 +1054,4 @@ class _StatisticsScreen extends State<StatisticsScreen>
       ),
     );
   }
-}
-
-class ChartData {
-  final String x;
-  double y;
-
-  ChartData(this.x, this.y);
 }

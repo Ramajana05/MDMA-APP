@@ -127,8 +127,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
+
                                     ? primaryGreen
                                     : primarygrey,
+
                               ),
                               SizedBox(width: 4),
                               Text(
