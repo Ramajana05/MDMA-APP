@@ -22,6 +22,7 @@ import 'package:location/location.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -61,6 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+  LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
 
@@ -76,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<Circle> _circles = {}; // Define the circles set
   Set<Polygon> _polygons = {}; // Define the polygons set
   late GoogleMapController _mapController;
+  List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -170,6 +173,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+    loadAlerts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -206,6 +210,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController.dispose();
     _scrollTimer?.cancel();
     super.dispose();
+  }
+
+  Future<void> loadAlerts() async {
+    try {
+      final List<Widget> alerts =
+          await loginService.loadAlertsFromDatabaseWidgets();
+      setState(() {
+        alertWidgets = alerts;
+      });
+    } catch (error) {
+      print('Error loading alerts: $error');
+    }
   }
 
   @override
@@ -477,8 +493,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  //Map
                   const SizedBox(height: 15.0),
+                  // News
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CustomBottomTabBar(trans_index: 4),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Neuigkeiten",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showWarningWidget = !showWarningWidget;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    showWarningWidget
+                                        ? Icons.arrow_drop_up
+                                        : Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                    size: 30.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: showWarningWidget,
+                          child: Column(
+                            children: alertWidgets,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15.0),
+                  //Map
                   Container(
                     height: 40,
                     alignment: Alignment.centerLeft,
@@ -563,68 +637,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 15.0),
-                  // News
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomBottomTabBar(trans_index: 4)));
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Neuigkeiten",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showWarningWidget = !showWarningWidget;
-                                });
-                              },
-                              icon: Icon(
-                                showWarningWidget
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message:
-                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
-                      isWarnung: false,
-                      iconColor: const Color.fromARGB(255, 37, 70, 255),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
-                      isWarnung: true,
-                      iconColor: const Color.fromARGB(255, 255, 106, 37),
                     ),
                   ),
                   const SizedBox(height: 15.0),
