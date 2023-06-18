@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/damage.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/service/loginService.dart';
 
@@ -20,7 +19,7 @@ class SensorListScreen extends StatefulWidget {
 }
 
 class _SensorListScreenState extends State<SensorListScreen> {
-  List<Damage> damagesList = [];
+  List<Sensor> damagesList = [];
 
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
     });
   }
 
-  void _showDamageDetails(Damage damage) {
+  void _showDamageDetails(Sensor damage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -115,7 +114,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
   }
 }
 
-class Damage {
+class Sensor {
   final String sensorName;
   final double latitude;
   final double longitude;
@@ -126,7 +125,7 @@ class Damage {
   final double temperatur;
   final int airPressure;
 
-  Damage({
+  Sensor({
     required this.sensorName,
     required this.latitude,
     required this.longitude,
