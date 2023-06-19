@@ -35,8 +35,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var currentVisitors = 48;
   var maxVisitors = 70;
 
-  var currentSensors = 9;
-  var maxSensors = 10;
+  var currentSensors = 0;
+  var maxSensors = 0;
 
   var currentTemperature = 0.0;
   var maxTemperature = 0.0;
@@ -65,6 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
+  bool hasLoadedAlerts = false;
 
   List<WeatherItem> weatherForecast = [];
 
@@ -174,6 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     fetchWeatherData();
     loadAlerts();
+    updateSensorCounts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -209,6 +211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
+
     super.dispose();
   }
 
@@ -221,6 +224,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     } catch (error) {
       print('Error loading alerts: $error');
+    }
+  }
+
+  Future<void> updateSensorCounts() async {
+    try {
+      final onlineCount = await loginService.countOnlineSensorsWithName();
+      final allCount = await loginService.countAllSensorsWithName();
+
+      currentSensors = onlineCount;
+      maxSensors = allCount;
+
+      print(
+          'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+    } catch (e) {
+      print('Error updating sensor counts: $e');
     }
   }
 
@@ -521,20 +539,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showWarningWidget = !showWarningWidget;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    showWarningWidget
-                                        ? Icons.arrow_drop_up
-                                        : Icons.arrow_drop_down,
-                                    color: Colors.black,
-                                    size: 30.0,
                                   ),
                                 ),
                               ],

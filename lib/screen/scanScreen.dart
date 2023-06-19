@@ -290,6 +290,9 @@ class _ScanScreen extends State<ScanScreen> {
                                                 localSensorName,
                                                 latitude,
                                                 longitude);
+
+                                        await loginService
+                                            .addAlertNewSensor(localSensorName);
                                         // Update the sensor name in the database
                                         Navigator.of(dialogContext).pop();
                                         _resetScanner(); // Reset scanner after adding

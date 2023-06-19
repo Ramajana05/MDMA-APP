@@ -312,7 +312,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.place,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
                               ],
@@ -323,7 +323,7 @@ class _MapScreen extends State<MapScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    polygon.polygonId.value,
+                                    'Standort: ${polygon.polygonId.value}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
   final bool isWarnung;
   final Color iconColor;
+  LoginService loginService = LoginService();
 
   WarningWidget({
     required this.message,
@@ -34,16 +36,18 @@ class WarningWidget extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.white, // Set the background color to white
-            content: Text(
-              'Neuigkeit gelöscht',
-              style:
-                  TextStyle(color: Colors.black), // Set the text color to black
+        () async {
+          await loginService.deleteAlertEntry(message);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.white,
+              content: Text(
+                'Neuigkeit gelöscht',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-        );
+          );
+        }();
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
