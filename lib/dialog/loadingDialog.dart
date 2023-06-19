@@ -107,7 +107,7 @@ class _LoadingDialogState extends State<LoadingDialog>
 void main() {
   // Create an instance of ApiService
   final apiService = ApiService();
-
+  apiService.fetchUsers();
   // Wrap the LoadingDialog widget with MaterialApp
   runApp(MaterialApp(
     home: Builder(

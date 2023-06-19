@@ -50,7 +50,7 @@ class SidePanel extends StatelessWidget {
             title: const Text(
               'Profil',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
             iconColor: primaryAppLightGreen,
@@ -67,10 +67,10 @@ class SidePanel extends StatelessWidget {
             title: const Text(
               'Startseite',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
-            iconColor: Colors.blue,
+            iconColor: primaryHumidityColor,
             onTap: () async {
               const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
@@ -89,7 +89,7 @@ class SidePanel extends StatelessWidget {
             title: const Text(
               'Nacht modus',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
             onTap: () => Navigator.push(
@@ -105,7 +105,7 @@ class SidePanel extends StatelessWidget {
             title: const Text(
               'Hilfe',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
             onTap: () => Navigator.push(
@@ -122,10 +122,10 @@ class SidePanel extends StatelessWidget {
             title: const Text(
               'Ausloggen',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
-            iconColor: Colors.red,
+            iconColor: primaryTempColor,
             onTap: () {
               showDialog(
                 context: context,

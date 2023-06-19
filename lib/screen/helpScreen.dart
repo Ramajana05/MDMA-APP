@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 import 'dart:math';
@@ -49,9 +50,9 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   };
 
   final Map<String, IconData> instructionIcons = {
-    'Dashboard': Icons.dashboard,
-    'Statistik': Icons.bar_chart_outlined,
-    'Karte': Icons.pin_drop,
+    'Dashboard': Icons.dashboard_outlined,
+    'Statistik': Icons.line_axis_outlined,
+    'Karte': Icons.pin_drop_outlined,
     'QR Scanner': Icons.qr_code_scanner,
     'Sensoren Liste': Icons.sensors,
     'Menu': Icons.menu,
@@ -72,14 +73,14 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   }
 
   final List<Color> colorsList = [
-    Colors.green,
-    Colors.black,
-    Colors.red,
-    Colors.black,
-    Colors.green,
-    Colors.green,
-    Colors.green,
-    Colors.blue,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryAppLightGreen,
+    primaryHumidityColor,
     const Color.fromARGB(255, 127, 127, 128),
     Color.fromARGB(255, 255, 2, 2),
     const Color.fromARGB(255, 58, 243, 33),
