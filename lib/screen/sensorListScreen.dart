@@ -20,6 +20,8 @@ class SensorListScreen extends StatefulWidget {
 
 class _SensorListScreenState extends State<SensorListScreen> {
   List<Sensor> damagesList = [];
+  List<Sensor> filteredDamagesList = []; // Store the filtered list
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +35,24 @@ class _SensorListScreenState extends State<SensorListScreen> {
 
     setState(() {
       damagesList = fetchedSensors;
+      filteredDamagesList = damagesList;
+    });
+  }
+
+  void _filterDamages(String query) {
+    List<Sensor> filteredList = [];
+    if (query.isNotEmpty) {
+      filteredList = damagesList.where((sensor) {
+        final String sensorName = sensor.sensorName.toLowerCase();
+        final String queryLower = query.toLowerCase();
+        return sensorName.contains(queryLower);
+      }).toList();
+    } else {
+      filteredList = damagesList; // Show all sensors if query is empty
+    }
+
+    setState(() {
+      filteredDamagesList = filteredList;
     });
   }
 
@@ -70,6 +90,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -81,34 +102,51 @@ class _SensorListScreenState extends State<SensorListScreen> {
           // Add your side panel logic here
         },
       ),
-      body: DefaultTabController(
-        length: 1,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: damagesList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 7.0),
-                    child: SensorListItemWidget(
-                      sensorTitle: damagesList[index].sensorName,
-                      latitude: damagesList[index].latitude,
-                      longitude: damagesList[index].longitude,
-                      status: damagesList[index].status,
-                      createDate: damagesList[index].createDate,
-                      signalStrength: damagesList[index].signalStrength,
-                      chargerInfo: damagesList[index].chargerInfo,
-                      alignLeft: true,
-                      temperature: damagesList[index].temperatur,
-                      airPressure: damagesList[index].airPressure,
-                    ),
-                  );
-                },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              onChanged: _filterDamages,
+              decoration: InputDecoration(
+                labelText: 'Suche',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                filled: true,
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredDamagesList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 7.0),
+                  child: SensorListItemWidget(
+                    sensorTitle: filteredDamagesList[index].sensorName,
+                    latitude: filteredDamagesList[index].latitude,
+                    longitude: filteredDamagesList[index].longitude,
+                    status: filteredDamagesList[index].status,
+                    createDate: filteredDamagesList[index].createDate,
+                    signalStrength: filteredDamagesList[index].signalStrength,
+                    chargerInfo: filteredDamagesList[index].chargerInfo,
+                    alignLeft: true,
+                    temperature: filteredDamagesList[index].temperatur,
+                    airPressure: filteredDamagesList[index].airPressure,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

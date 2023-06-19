@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => CustomBottomTabBar(trans_index: 4)),
+              builder: (context) => CustomBottomTabBar(trans_index: 0)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

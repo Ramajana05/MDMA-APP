@@ -242,6 +242,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  Widget buildNewsSection() {
+    if (alertWidgets.isNotEmpty) {
+      return InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomBottomTabBar(trans_index: 4),
+            ),
+          );
+        },
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Neuigkeiten",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: showWarningWidget,
+              child: Column(
+                children: alertWidgets.toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox.shrink(); // Return an empty widget if no news alerts
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -513,47 +560,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 15.0),
                   // News
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CustomBottomTabBar(trans_index: 4),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 40,
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Neuigkeiten",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: showWarningWidget,
-                          child: Column(
-                            children: alertWidgets,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  buildNewsSection(),
 
                   const SizedBox(height: 15.0),
                   //Map
