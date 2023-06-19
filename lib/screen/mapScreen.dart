@@ -182,11 +182,11 @@ class _MapScreen extends State<MapScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${circle.center.latitude}, ',
+                                        '${circle.center.latitude.toStringAsFixed(3)},  ',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '${circle.center.longitude}',
+                                        '${circle.center.longitude.toStringAsFixed(3)}',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       const SizedBox(width: 8),
@@ -199,16 +199,15 @@ class _MapScreen extends State<MapScreen> {
                                           size: 16,
                                         ),
                                       ),
-                                      const SizedBox(width: 2),
+                                      const SizedBox(width: 1),
                                       Icon(
                                         Icons.battery_6_bar_outlined,
                                         color: getBatteryColor(batteryLevel),
                                       ),
-                                      const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
                                         style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -323,7 +322,7 @@ class _MapScreen extends State<MapScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Standort: ${polygon.polygonId.value}',
+                                    '${polygon.polygonId.value}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,

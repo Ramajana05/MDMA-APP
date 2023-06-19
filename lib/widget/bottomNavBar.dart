@@ -73,7 +73,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               label: 'Karte',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner),
+              icon: Icon(Icons.qr_code),
               label: 'QR Code',
             ),
             BottomNavigationBarItem(
