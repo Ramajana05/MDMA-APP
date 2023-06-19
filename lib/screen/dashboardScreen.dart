@@ -22,6 +22,7 @@ import 'package:location/location.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -43,9 +44,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var airHumidity = 0.0;
   var avgAirHumidity = 0.0;
 
-  bool showWarningWidget = false;
-  bool showMap = false;
-  bool showStatistics = false;
+  bool showWarningWidget = true;
+  bool showMap = true;
+  bool showStatistics = true;
   bool showWeatherForecast = true;
 
   late List<ChartData> visitorChartDaily;
@@ -56,10 +57,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late PageController _pageController;
   int _currentPage = 0;
   Timer? _scrollTimer;
+  bool _userScrolled = false;
 
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+  LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
 
@@ -75,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<Circle> _circles = {}; // Define the circles set
   Set<Polygon> _polygons = {}; // Define the polygons set
   late GoogleMapController _mapController;
+  List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -155,10 +159,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  void _handleUserScroll() {
+    setState(() {
+      _userScrolled = true;
+    });
+    _scrollTimer?.cancel();
+    _scrollTimer = Timer(Duration(seconds: 3), () {
+      _startAutoScroll();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fetchWeatherData();
+    loadAlerts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -197,6 +212,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.dispose();
   }
 
+  Future<void> loadAlerts() async {
+    try {
+      final List<Widget> alerts =
+          await loginService.loadAlertsFromDatabaseWidgets();
+      setState(() {
+        alertWidgets = alerts;
+      });
+    } catch (error) {
+      print('Error loading alerts: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +246,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Row(
                         children: [
-                          /// Visitors
+                          // Visitors
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -466,8 +493,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  //Map
                   const SizedBox(height: 15.0),
+                  // News
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CustomBottomTabBar(trans_index: 4),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Neuigkeiten",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showWarningWidget = !showWarningWidget;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    showWarningWidget
+                                        ? Icons.arrow_drop_up
+                                        : Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                    size: 30.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: showWarningWidget,
+                          child: Column(
+                            children: alertWidgets,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15.0),
+                  //Map
                   Container(
                     height: 40,
                     alignment: Alignment.centerLeft,
@@ -487,7 +572,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: const Text(
                               "Karte",
                               style: TextStyle(
-                                fontSize: 27,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -555,66 +640,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   const SizedBox(height: 15.0),
-                  // News
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        showWarningWidget = !showWarningWidget;
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Neuigkeiten",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showWarningWidget = !showWarningWidget;
-                                });
-                              },
-                              icon: Icon(
-                                showWarningWidget
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message:
-                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
-                      isWarnung: false,
-                      iconColor: const Color.fromARGB(255, 37, 70, 255),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
-                      isWarnung: true,
-                      iconColor: const Color.fromARGB(255, 255, 106, 37),
-                    ),
-                  ),
-                  const SizedBox(height: 15.0),
                   // Statistics
                   Container(
                     height: 40,
@@ -676,16 +701,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: [
                             PageView.builder(
                               controller: _pageController,
-                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: _statistics.length * 3,
-                              // Multiply the count to create a loop effect
-
                               onPageChanged: (int index) {
                                 setState(() {
                                   _currentPage = index %
                                       _statistics
                                           .length; // Adjust the current page index
                                 });
+                                _handleUserScroll();
                               },
                               itemBuilder: (BuildContext context, int index) {
                                 // Adjust the index to wrap around the statistics list
@@ -707,38 +730,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
 
-                  /// Weather Forecast
+                  // Weather Forecast
                   Container(
                     height: 70,
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 8.3),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Wettervorhersage",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            showWeatherForecast = !showWeatherForecast;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Wettervorhersage",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                showWeatherForecast = !showWeatherForecast;
-                              });
-                            },
-                            child: Icon(
+                            Icon(
                               showWeatherForecast
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
                               color: Colors.black,
                               size: 30.0,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -762,7 +785,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         },
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -774,17 +797,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _startAutoScroll() {
     _scrollTimer?.cancel();
-    _scrollTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < _statistics.length * 3 - 1) {
-        _currentPage++;
+    _scrollTimer = Timer.periodic(Duration(seconds: 2), (Timer timer) {
+      if (!_userScrolled) {
+        if (_currentPage < _statistics.length * 3 - 1) {
+          _currentPage++;
+        } else {
+          _currentPage = _statistics.length;
+        }
+        _pageController.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
       } else {
-        _currentPage = _statistics.length;
+        _userScrolled = false; // Reset the user scrolling flag
       }
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
     });
   }
 
@@ -874,9 +901,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             markerSettings: const MarkerSettings(
-              borderColor: Color(0xFFE08055),
+              borderColor: Colors.deepPurple,
               isVisible: true,
-              color: Color(0xFFCC6699),
+              color: Colors.grey,
               shape: DataMarkerType.circle,
             ),
             color: chartColor,
@@ -894,17 +921,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {
         'title': dailyVisitors,
         'chartData': visitorChartDaily,
-        'chartColor': const Color.fromARGB(255, 235, 134, 218),
+        'chartColor': primaryVisitorColor,
       },
       {
         'title': dailyTemps,
         'chartData': tempChartDaily,
-        'chartColor': Colors.red,
+        'chartColor': primaryTempColor,
       },
       {
         'title': dailyAir,
         'chartData': airHumidityChartDaily,
-        'chartColor': Colors.blue,
+        'chartColor': primaryHumidityColor,
       },
     ];
 

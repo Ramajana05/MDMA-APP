@@ -12,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+  bool _isVideoReady = false;
 
   @override
   void initState() {
@@ -20,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
       setState(() {
         _controller.play();
+        _isVideoReady = true;
       });
     });
     _controller.addListener(_videoPlayerListener);
@@ -49,9 +51,17 @@ class _SplashScreenState extends State<SplashScreen> {
             future: _initializeVideoPlayerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+                return AnimatedOpacity(
+                  opacity: _isVideoReady ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: _controller.value.size.width,
+                      height: _controller.value.size.height,
+                      child: VideoPlayer(_controller),
+                    ),
+                  ),
                 );
               } else {
                 return Container();

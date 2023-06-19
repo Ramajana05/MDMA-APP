@@ -42,7 +42,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_full,
         size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 75) {
       return const Icon(
@@ -54,37 +54,37 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_4_bar,
         size: 30,
-        color: Colors.orange,
+        color: primaryOrange,
       );
     } else if (batteryLevel >= 45) {
       return const Icon(
         Icons.battery_3_bar,
         size: 30,
-        color: Colors.orange,
+        color: primaryOrange,
       );
     } else if (batteryLevel >= 30) {
       return const Icon(
         Icons.battery_3_bar,
         size: 30,
-        color: Colors.red,
+        color: primaryOrange,
       );
     } else if (batteryLevel >= 15) {
       return const Icon(
         Icons.battery_2_bar,
         size: 30,
-        color: Colors.red,
+        color: primaryTempColor,
       );
     } else if (batteryLevel >= 5) {
       return const Icon(
         Icons.battery_1_bar,
         size: 30,
-        color: Colors.red,
+        color: primaryTempColor,
       );
     } else {
       return const Icon(
         Icons.battery_0_bar,
         size: 30,
-        color: Colors.red,
+        color: primaryTempColor,
       );
     }
   }
@@ -127,8 +127,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? Color.fromARGB(255, 64, 236, 73)
-                                    : Colors.red,
+
+                                    ? primaryGreen
+                                    : primarygrey,
+
                               ),
                               SizedBox(width: 4),
                               Text(

@@ -11,6 +11,8 @@ import 'package:forestapp/screen/sensorListScreen.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:forestapp/widget/warningWidget.dart';
 
 class LoginService {
   void main() async {
@@ -131,7 +133,7 @@ class LoginService {
     }
   }
 
-  Future<List<Damage>> fetchSensorsFromDatabase() async {
+  Future<List<Sensor>> fetchSensorsFromDatabase() async {
     try {
       final database = await _initDatabase();
 
@@ -144,7 +146,7 @@ class LoginService {
 
       return List.generate(sensors.length, (index) {
         final sensor = sensors[index];
-        return Damage(
+        return Sensor(
           sensorName: sensor['Name'] as String,
           latitude: (sensor['Latitude'] as num?)?.toDouble() ?? 0.0,
           longitude: (sensor['Longitude'] as num?)?.toDouble() ?? 0.0,
@@ -208,6 +210,7 @@ class LoginService {
     }
   }
 
+//QR Code Scanner
   Future<void> updateSensorNameInDatabase(
       String uuid, String newName, double latitude, double longitude) async {
     try {
@@ -220,20 +223,28 @@ class LoginService {
         [uuid],
       );
 
-      if (result.isNotEmpty) {
-        // Update the sensor name, latitude, and longitude in the database
+      if (result.isNotEmpty && result.first['Name'] != null) {
+        // Sensor exists and has a name
+        print('Sensor with UUID $uuid already exists in the database');
+      } else if (result.isNotEmpty && result.first['Name'] == null) {
+        // Sensor exists but has no name, update the sensor details
+        // Get the current date
+        final currentDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+        // Update the sensor name, latitude, longitude, and creation date in the database
         await database.update(
           'Sensor',
           {
             'Name': newName,
-            'Latitude': latitude,
-            'Longitude': longitude,
+            'Latitude': latitude.toDouble(),
+            'Longitude': longitude.toDouble(),
+            'CreationDate': currentDate.toString(),
           },
           where: 'Uuid = ?',
           whereArgs: [uuid],
         );
 
-        print('Sensor name, latitude, and longitude updated successfully');
+        print('Sensor details updated successfully');
       } else {
         print('Sensor with UUID $uuid not found in the database');
       }
@@ -241,8 +252,7 @@ class LoginService {
       // Close the database
       await database.close();
     } catch (e) {
-      print(
-          'Error updating sensor name, latitude, and longitude in database: $e');
+      print('Error updating sensor details in the database: $e');
       rethrow;
     }
   }
@@ -271,49 +281,129 @@ class LoginService {
     }
   }
 
-/*
-  Future<Sensor?> fetchSensorFromDatabase(String uuid) async {
+  Future<bool> isUuidNotInDatabase(String uuid) async {
     try {
+      // Open the database
       final database = await _initDatabase();
 
+      // Check if the sensor with the given UUID exists in the database
       final result = await database.rawQuery(
-        'SELECT * FROM Sensors WHERE UUID = ?',
+        'SELECT Uuid FROM Sensor WHERE Uuid = ?',
         [uuid],
       );
 
+      // Check if the UUID is null or not found in the database
+      bool isUuidNull = result.isEmpty || result.first['Uuid'] == null;
+
+      // Close the database
       await database.close();
 
-      if (result.isNotEmpty) {
-        final sensorData = result.first;
-        final sensor = Sensor.fromMap(sensorData);
-        return sensor;
-      } else {
-        return null;
-      }
+      return isUuidNull;
     } catch (e) {
-      print('Error fetching sensor from database: $e');
+      print('Error retrieving sensor UUID from database: $e');
       rethrow;
     }
   }
 
-  Future<void> updateSensorNameInDatabase(String uuid, String newName) async {
+  Future<int> countOnlineSensorsWithName() async {
     try {
+      // Open the database
       final database = await _initDatabase();
 
-      await database.update(
-        'Sensors',
-        {'Name': newName},
-        where: 'UUID = ?',
-        whereArgs: [uuid],
+      // Count the sensors with a name and status "Online"
+      final result = await database.rawQuery(
+        'SELECT COUNT(*) AS Count FROM Sensor WHERE Name IS NOT NULL AND Available = "Online"',
       );
 
+      // Extract the count from the query result
+      final count = result.isNotEmpty ? result.first['Count'] as int : 0;
+
+      // Close the database
       await database.close();
 
-      print('Sensor name updated successfully');
+      return count;
     } catch (e) {
-      print('Error updating sensor name in database: $e');
+      print('Error counting online sensors with name from database: $e');
       rethrow;
     }
   }
-  */
+
+//Alerts
+  Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Query the database to retrieve alerts
+      final result = await database.rawQuery(
+        'SELECT * FROM Alert WHERE Type IN (?, ?)',
+        ['Warnung', 'Neuigkeit'],
+      );
+
+      // Close the database
+      await database.close();
+
+      return result;
+    } catch (e) {
+      print('An error occurred while loading alerts: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<Widget>> loadAlertsFromDatabaseWidgets() async {
+    try {
+      final List<Map<String, dynamic>> alertsData =
+          await loadAlertsFromDatabase();
+      final List<Widget> alertsWidgets = [];
+
+      for (final alertData in alertsData) {
+        final String type = alertData['Type'];
+        final String message = alertData['Message'];
+        final Color iconColor = type == 'Warnung'
+            ? const Color.fromARGB(255, 255, 106, 37)
+            : const Color.fromARGB(255, 37, 70, 255);
+
+        final WarningWidget alertWidget = WarningWidget(
+          message: message,
+          isWarnung: type == 'Warnung',
+          iconColor: iconColor,
+        );
+
+        alertsWidgets.add(alertWidget);
+      }
+
+      return alertsWidgets;
+    } catch (e) {
+      print('An error occurred while loading alerts: $e');
+      return [];
+    }
+  }
+
+  Future<void> addAlertRow() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Get the current date
+      final currentDate = DateTime.now().toString();
+
+      // Prepare the row values
+      final values = <String, dynamic>{
+        'Name': null,
+        'Available': 'Warning',
+        'CreationDate': currentDate,
+      };
+
+      // Insert the row into the "Sensor" table
+      await database.insert('Sensor', values);
+
+      // Close the database
+      await database.close();
+
+      print('Sensor row added successfully!');
+    } catch (e) {
+      print('Error adding sensor row to the database: $e');
+      rethrow;
+    }
+  }
 }
