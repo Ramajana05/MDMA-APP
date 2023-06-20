@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
+const primaryAppWhiteColor=Color.fromARGB(255, 255, 255, 255);
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
@@ -26,3 +27,5 @@ const primaryOrange = Colors.orange;
 const primaryred = Colors.red;
 
 const primarygrey = Color.fromARGB(255, 134, 134, 134);
+const primaryWarningOrange=Color.fromARGB(255, 255, 106, 37);
+const primaryNewsBlue= Color.fromARGB(255, 37, 70, 255);

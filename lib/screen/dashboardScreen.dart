@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:forestapp/widget/warningWidget.dart';
 
+import '../Model/dateHelper.dart';
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
@@ -18,8 +18,6 @@ import '../widget/bottomNavBar.dart';
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -77,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<Marker> _markers = {}; // Define the markers set
   Set<Circle> _circles = {}; // Define the circles set
   Set<Polygon> _polygons = {}; // Define the polygons set
-  late GoogleMapController _mapController;
+  //late GoogleMapController _mapController;
   List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
@@ -138,26 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return [];
   }
 
-  String getGermanWeekday(int weekday) {
-    switch (weekday) {
-      case DateTime.monday:
-        return 'Montag';
-      case DateTime.tuesday:
-        return 'Dienstag';
-      case DateTime.wednesday:
-        return 'Mittwoch';
-      case DateTime.thursday:
-        return 'Donnerstag';
-      case DateTime.friday:
-        return 'Freitag';
-      case DateTime.saturday:
-        return 'Samstag';
-      case DateTime.sunday:
-        return 'Sonntag';
-      default:
-        return '';
-    }
-  }
+
 
   void _handleUserScroll() {
     setState(() {
@@ -206,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    _mapController.dispose();
+   // _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
     super.dispose();
@@ -322,7 +301,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: primaryAppWhiteColor,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -403,9 +382,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 255, 199, 199),
-                                        Colors.red,
+                                        primaryTempShadowColor,
+                                        primaryTempColor,
                                         maxTemperature,
                                         currentTemperature.toInt(),
                                         [
@@ -464,9 +442,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 196, 236, 255),
-                                        Colors.blue,
+                                        primaryHumidityShadowColor,
+                                        primaryHumidityColor,
                                         avgAirHumidity,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],

@@ -3,16 +3,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forestapp/Model/ChartData.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
-import 'package:forestapp/Model/sensorListItem.dart';
 import 'package:forestapp/provider/userProvider.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:forestapp/widget/warningWidget.dart';
+import '../colors/appColors.dart';
 
 class LoginService {
   void main() async {
@@ -210,7 +210,7 @@ class LoginService {
     }
   }
 
-//QR Code Scanner
+  ///QR Code Scanner
   Future<void> updateSensorNameInDatabase(
       String uuid, String newName, double latitude, double longitude) async {
     try {
@@ -328,7 +328,7 @@ class LoginService {
     }
   }
 
-//Alerts
+  ///Alerts
   Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
     try {
       // Open the database
@@ -359,9 +359,8 @@ class LoginService {
       for (final alertData in alertsData) {
         final String type = alertData['Type'];
         final String message = alertData['Message'];
-        final Color iconColor = type == 'Warnung'
-            ? const Color.fromARGB(255, 255, 106, 37)
-            : const Color.fromARGB(255, 37, 70, 255);
+        final Color iconColor =
+            type == 'Warnung' ? primaryWarningOrange : primaryNewsBlue;
 
         final WarningWidget alertWidget = WarningWidget(
           message: message,
@@ -404,6 +403,111 @@ class LoginService {
     } catch (e) {
       print('Error adding sensor row to the database: $e');
       rethrow;
+    }
+  }
+
+  Future<List<ChartData>> fetchStatisticDataHourFromDatabase(
+      String type) async {
+    try {
+      final database = await _initDatabase();
+
+      final statisticHourly =
+          await database.query('StaitsicsDataHour', columns: ['Hour', type]);
+      await database.close();
+
+      //print('Fetched StatisticsHour: $statisticHourly');
+
+      return List.generate(statisticHourly.length, (index) {
+        final data = statisticHourly[index];
+        return ChartData(
+          data['Hour'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
+    }
+  }
+
+  Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
+      String type) async {
+    DateTime now = DateTime.now();
+    DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
+
+    DateFormat dateFormat = DateFormat('dd.MM.yyyy');
+    String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
+    String todayFormatted = dateFormat.format(now);
+    try {
+      final database = await _initDatabase();
+
+      // Query the database
+      final statisticWeek = await database.query(
+        'StatisticsDataDay',
+        columns: ['Date', type],
+        where: "strftime('%d.%m.%Y', Date) BETWEEN ? AND ?",
+        whereArgs: [sevenDaysAgoFormatted, todayFormatted],
+      );
+
+      print('Fetched StatisticsWeek: $statisticWeek');
+
+      return List.generate(statisticWeek.length, (index) {
+        final data = statisticWeek[index];
+        return ChartData(
+          data['Date'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
+    }
+  }
+
+  //
+  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
+      String type) async {
+    // Calculate the date range
+    DateTime now = DateTime.now();
+    DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
+    DateTime lastDayOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
+    String firstDayOfCurrentMonthFormatted =
+        firstDayOfCurrentMonth.toString().split(' ')[0];
+    String lastDayOfCurrentMonthFormatted =
+        lastDayOfCurrentMonth.toString().split(' ')[0];
+
+    try {
+      final database = await _initDatabase();
+
+      // Query the database
+      final statisticMonth = await database.query('StatisticsDataDay',
+          columns: [
+            'AVG($type) AS average_value',
+            "strftime('%W', date(Date, 'unixODBC')) AS week_number"
+          ],
+          where:
+              'date(Date, \'unixODBC\') BETWEEN date(?, \'localtime\') AND date(?, \'localtime\')',
+          whereArgs: [
+            firstDayOfCurrentMonthFormatted,
+            lastDayOfCurrentMonthFormatted
+          ],
+          groupBy: "week_number");
+
+      await database.close();
+
+      print('Fetched StatisticsMonth: $statisticMonth');
+
+      return List.generate(statisticMonth.length, (index) {
+        final data = statisticMonth[index];
+
+        return ChartData(
+          data['Date'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
     }
   }
 }
