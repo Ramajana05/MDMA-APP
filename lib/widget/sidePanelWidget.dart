@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,7 +9,16 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 
-class SidePanel extends StatelessWidget {
+import 'bottomNavBar.dart';
+
+class SidePanel extends StatefulWidget {
+  const SidePanel({Key? key}) : super(key: key);
+
+  @override
+  State<SidePanel> createState() => _SidePanel();
+}
+
+class _SidePanel extends State<SidePanel> {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context);
     final loggedInUsername = userProvider.loggedInUsername;
@@ -16,8 +26,34 @@ class SidePanel extends StatelessWidget {
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
-  bool isNightMode = false;
-  late final Function(bool) onToggle;
+  bool _lightMode = false; //( true-->Light mode  /  false-->Dark mode )
+  changeThemeMode() {
+    setState(() {
+      if (_lightMode) {
+        // colors of Light Mode
+        primarybackgroundColor = Colors.white;
+        dashboard_background_Color = Colors.white;
+        mapScreen_background_Color = Colors.white;
+        sensorListScreen_background_Color = Colors.white;
+        topNavBar_background_Color = Colors.white;
+        profileScreen_background_Color = Colors.white;
+        helpScreen_background_Color = Colors.white;
+
+        _lightMode = false;
+      } else {
+        // colors of Dark Mode
+        primarybackgroundColor = Colors.black;
+        dashboard_background_Color = Colors.black;
+        mapScreen_background_Color = Colors.black;
+        sensorListScreen_background_Color = Colors.black;
+        topNavBar_background_Color = Colors.black;
+        profileScreen_background_Color = Colors.black;
+        helpScreen_background_Color = Colors.black;
+
+        _lightMode = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +66,7 @@ class SidePanel extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   const Color.fromARGB(255, 86, 252, 108),
-                  primaryAppLightGreen,
+                  primarybackgroundColor,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -70,7 +106,7 @@ class SidePanel extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            iconColor: primaryHumidityColor,
+            iconColor: Colors.blue,
             onTap: () async {
               const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
@@ -81,22 +117,25 @@ class SidePanel extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(
-              Icons.dark_mode_outlined,
-              size: 28,
-            ), //
-            iconColor: const Color.fromARGB(255, 7, 19, 29),
-            title: const Text(
-              'Nacht modus',
-              style: TextStyle(
-                fontSize: 20,
+              leading: const Icon(
+                Icons.dark_mode_outlined,
+                size: 28,
+              ), //
+              iconColor: const Color.fromARGB(255, 7, 19, 29),
+              title: Text(
+                _lightMode ? 'Light mode' : 'Dark mode',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
               ),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => InstructionsScreen()),
-            ),
-          ),
+              onTap: () => {
+                    changeThemeMode(),
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => CustomBottomTabBar()),
+                    // ),
+                  }),
           ListTile(
             leading: const Icon(
               Icons.help_outline_outlined,

@@ -10,6 +10,7 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/service/loginService.dart';
+import 'package:forestapp/colors/appColors.dart';
 
 class SensorListScreen extends StatefulWidget {
   const SensorListScreen({Key? key}) : super(key: key);
@@ -111,13 +112,17 @@ class _SensorListScreenState extends State<SensorListScreen> {
               onChanged: _filterDamages,
               decoration: InputDecoration(
                 labelText: 'Suche',
-                prefixIcon: Icon(Icons.search),
+                labelStyle: TextStyle(color: primarygrey),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: primaryAppLightGreen,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color: primaryAppLightGreen),
                 ),
                 fillColor: const Color.fromARGB(255, 255, 255, 255),
                 filled: true,
