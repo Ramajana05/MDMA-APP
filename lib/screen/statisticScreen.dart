@@ -214,7 +214,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Colors.white,
+      backgroundColor: primarybackgroundColor,
       appBar: TopNavBar(
         title: 'STATISTIK',
         onMenuPressed: () {},

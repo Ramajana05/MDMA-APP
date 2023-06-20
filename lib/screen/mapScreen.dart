@@ -8,6 +8,7 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
 
+import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
 
 class MapScreen extends StatefulWidget {
@@ -457,7 +458,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: mapScreen_background_Color,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {

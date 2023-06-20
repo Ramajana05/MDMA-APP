@@ -32,13 +32,23 @@ class _SidePanel extends State<SidePanel> {
       if (_lightMode) {
         // colors of Light Mode
         primarybackgroundColor = Colors.white;
-        dashboard_background_Color=Colors.white;
+        dashboard_background_Color = Colors.white;
+        mapScreen_background_Color = Colors.white;
+        sensorListScreen_background_Color = Colors.white;
+        topNavBar_background_Color = Colors.white;
+        profileScreen_background_Color = Colors.white;
+        helpScreen_background_Color = Colors.white;
 
         _lightMode = false;
       } else {
         // colors of Dark Mode
         primarybackgroundColor = Colors.black;
-        dashboard_text_Color=Colors.black;
+        dashboard_background_Color = Colors.black;
+        mapScreen_background_Color = Colors.black;
+        sensorListScreen_background_Color = Colors.black;
+        topNavBar_background_Color = Colors.black;
+        profileScreen_background_Color = Colors.black;
+        helpScreen_background_Color = Colors.black;
 
         _lightMode = true;
       }

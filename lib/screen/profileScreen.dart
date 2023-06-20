@@ -8,6 +8,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/service/LoginService.dart';
 
+import '../colors/appColors.dart';
+
 class ProfileScreen extends StatefulWidget {
   final String? currentUsername;
 
@@ -52,8 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
+      backgroundColor: profileScreen_background_Color,
       appBar: TopNavBarBasic(
-        title: 'Mein Profil',
+        title: 'Mein Profil ',
         returnStatus: true,
         onMenuPressed: () {
           // Add your side panel logic here
@@ -68,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Persönliche Daten',
                 style: TextStyle(
+                  color: primaryAppLightGreen,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -108,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Kontoaktionen',
                 style: TextStyle(
+                  color: primaryAppLightGreen,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -209,6 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Powered by',
                 style: TextStyle(
+                  color: primaryAppLightGreen,
                   fontSize: 24.0,
                 ),
               ),

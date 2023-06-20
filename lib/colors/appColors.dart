@@ -33,10 +33,18 @@ var primarybackgroundColor = Colors.white;
 
 // dashboard screens Colors:
 var dashboard_background_Color = Colors.white;
-var dashboard_text_Color = Colors.black;
 
-// ScanScreen  Colors
+// MapScreen  Colors
+var mapScreen_background_Color = Colors.white;
 
-// other screens
+// SensorListScreen  Colors
+var sensorListScreen_background_Color = Colors.white;
 
-//-----
+// SensorListScreen  Colors
+var profileScreen_background_Color = Colors.white;
+
+// HelpScreen  Colors
+var helpScreen_background_Color = Colors.white;
+
+// topNavBar  Colors
+var topNavBar_background_Color = Colors.white;
