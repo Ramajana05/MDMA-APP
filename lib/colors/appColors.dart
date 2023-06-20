@@ -27,5 +27,29 @@ const primaryOrange = Colors.orange;
 const primaryred = Colors.red;
 
 const primarygrey = Color.fromARGB(255, 134, 134, 134);
+
 const primaryWarningOrange=Color.fromARGB(255, 255, 106, 37);
 const primaryNewsBlue= Color.fromARGB(255, 37, 70, 255);
+
+// Light-Dark Mode Colors------------------------------
+// Shared Colors
+var primarybackgroundColor = Colors.white;
+
+// dashboard screens Colors:
+var dashboard_background_Color = Colors.white;
+
+// MapScreen  Colors
+var mapScreen_background_Color = Colors.white;
+
+// SensorListScreen  Colors
+var sensorListScreen_background_Color = Colors.white;
+
+// SensorListScreen  Colors
+var profileScreen_background_Color = Colors.white;
+
+// HelpScreen  Colors
+var helpScreen_background_Color = Colors.white;
+
+// topNavBar  Colors
+var topNavBar_background_Color = Colors.white;
+

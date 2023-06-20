@@ -316,19 +316,44 @@ class LoginService {
       );
 
       // Extract the count from the query result
-      final count = result.isNotEmpty ? result.first['Count'] as int : 0;
+      final onlineCount = result.isNotEmpty ? result.first['Count'] as int : 0;
 
       // Close the database
       await database.close();
 
-      return count;
+      return onlineCount;
     } catch (e) {
       print('Error counting online sensors with name from database: $e');
       rethrow;
     }
   }
 
-  ///Alerts
+
+  Future<int> countAllSensorsWithName() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Count the sensors with a name and status "Online"
+      final result = await database.rawQuery(
+        'SELECT COUNT(*) AS Count FROM Sensor WHERE Name IS NOT NULL',
+      );
+
+      // Extract the count from the query result
+      final allCount = result.isNotEmpty ? result.first['Count'] as int : 0;
+
+      // Close the database
+      await database.close();
+
+      return allCount;
+    } catch (e) {
+      print('Error counting all sensors with name from database: $e');
+      rethrow;
+    }
+  }
+
+//Alerts
+
   Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
     try {
       // Open the database
@@ -378,30 +403,59 @@ class LoginService {
     }
   }
 
-  Future<void> addAlertRow() async {
+  Future<void> addAlertNewSensor(String sensorName) async {
     try {
       // Open the database
       final database = await _initDatabase();
 
-      // Get the current date
-      final currentDate = DateTime.now().toString();
+      // Get the current date and time
+      final now = DateTime.now();
+
+      // Format the date as "DD.MM.YYYY"
+      final dateFormat = DateFormat('dd.MM.yyyy');
+      final formattedDate = dateFormat.format(now);
+
+      // Format the time as "HH:MM"
+      final timeFormat = DateFormat('HH:mm');
+      final formattedTime = timeFormat.format(now);
 
       // Prepare the row values
       final values = <String, dynamic>{
-        'Name': null,
-        'Available': 'Warning',
-        'CreationDate': currentDate,
+        'Type': 'Neuigkeit',
+        'Message':
+            'Neuer Sensor "$sensorName" wurde am $formattedDate um $formattedTime Uhr hinzugefügt.',
+        'CreationDate': now.toString(),
       };
 
-      // Insert the row into the "Sensor" table
-      await database.insert('Sensor', values);
+      // Insert the row into the "Alerts" table
+      await database.insert('Alert', values);
 
       // Close the database
       await database.close();
 
-      print('Sensor row added successfully!');
+      print('Alert row added successfully!');
     } catch (e) {
-      print('Error adding sensor row to the database: $e');
+      print('Error adding alert row to the database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteAlertEntry(String message) async {
+    try {
+      final database = await _initDatabase();
+
+      // Delete the entry where 'Message' matches the specified message
+      await database.delete(
+        'Alert',
+        where: 'Message = ?',
+        whereArgs: [message],
+      );
+
+      await database.close();
+
+      print('Alert entry deleted successfully!');
+    } catch (e) {
+      print('Error deleting alert entry from the database: $e');
       rethrow;
     }
   }

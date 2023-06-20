@@ -8,6 +8,7 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
 
+import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
 
 class MapScreen extends StatefulWidget {
@@ -312,7 +313,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.place,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
                               ],
@@ -323,7 +324,7 @@ class _MapScreen extends State<MapScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    polygon.polygonId.value,
+                                    'Standort: ${polygon.polygonId.value}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -457,7 +458,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: mapScreen_background_Color,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {

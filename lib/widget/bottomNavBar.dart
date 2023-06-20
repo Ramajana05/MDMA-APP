@@ -4,12 +4,13 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import '../colors/appColors.dart';
 import '../screen/statisticScreen.dart';
 
 class CustomBottomTabBar extends StatefulWidget {
   int index = 0;
 
-  CustomBottomTabBar({int trans_index=0}) {
+  CustomBottomTabBar({int trans_index = 0}) {
     index = trans_index;
   }
 
