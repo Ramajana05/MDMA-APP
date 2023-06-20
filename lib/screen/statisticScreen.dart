@@ -2,9 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../Model/ChartData.dart';
+import '../Model/dateHelper.dart';
+import '../service/LoginService.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
@@ -26,37 +30,25 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var daily = "Tägliche";
   var weekly = "Wöchentliche";
 
-  var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
-  var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
-
   double dailyMax = 5;
-  double weeklyMax = 6;
+  double weeklyMax = 4;
   double monthlyMax = 3;
 
-  late List<ChartData> visitorChartDaily;
-  late List<ChartData> visitorChartWeekly;
-  late List<ChartData> visitorChartMonthly;
+  List<ChartData> visitorChartDaily = [];
+  List<ChartData> visitorChartWeekly = [];
+  List<ChartData> visitorChartMonthly = [];
 
-  late List<ChartData> tempChartDaily;
-  late List<ChartData> tempChartWeekly;
-  late List<ChartData> tempChartMonthly;
+  List<ChartData> tempChartDaily = [];
+  List<ChartData> tempChartWeekly = [];
+  List<ChartData> tempChartMonthly = [];
 
-  late List<ChartData> airHumidityChartDaily;
-  late List<ChartData> airHumidityChartWeekly;
-  late List<ChartData> airHumidityChartMonthly;
-
-  late List<ChartData> rainPercentChartDaily;
+  List<ChartData> airHumidityChartDaily = [];
+  List<ChartData> airHumidityChartWeekly = [];
+  List<ChartData> airHumidityChartMonthly = [];
 
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
-  bool rainLineChart = true;
-
-  void handleToggle(bool value) {
-    setState(() {
-      rainLineChart = value;
-    });
-  }
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
@@ -73,120 +65,62 @@ class _StatisticsScreen extends State<StatisticsScreen>
   TabController? _tabController;
   int _selectedTabIndex = 0;
 
-  String getWeekOfPreviousMonth(int weekNumber) {
-    final now = DateTime.now();
-    final firstDayOfPreviousMonth = DateTime(now.year, now.month - 1, 1);
-    final lastDayOfPreviousMonth = DateTime(now.year, now.month, 0);
-
-    final weekStartDate = firstDayOfPreviousMonth
-        .subtract(Duration(days: firstDayOfPreviousMonth.weekday - 1))
-        .add(Duration(days: (weekNumber - 1) * 7));
-
-    DateTime weekEndDate;
-    if (weekNumber == 4) {
-      weekEndDate = lastDayOfPreviousMonth;
-    } else {
-      weekEndDate = weekStartDate.add(const Duration(days: 6));
-    }
-
-    final weekStartDay = weekStartDate.day.toString().padLeft(2, '0');
-    final weekEndDay = weekEndDate.day.toString().padLeft(2, '0');
-    final month = firstDayOfPreviousMonth.month.toString().padLeft(2, '0');
-
-    return '$weekStartDay.$month. - $weekEndDay.$month.';
-  }
-
-  String getHours(int hour) {
-    String hourString = hour.toString().padLeft(2, '0');
-    return '$hourString:00';
-  }
-
-  String getWeekday(int day) {
-    switch (day) {
-      case 1:
-        return 'Mo';
-      case 2:
-        return 'Di';
-      case 3:
-        return 'Mi';
-      case 4:
-        return 'Do';
-      case 5:
-        return 'Fr';
-      case 6:
-        return 'Sa';
-      case 7:
-        return 'So';
-      default:
-        throw Exception('Invalid day: $day');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    generateData();
+    _loadChartData();
     _tabController = TabController(length: 3, vsync: this);
   }
 
-  void generateData() {
-    visitorChartDaily = generateChartData(24, (hour) {
-      String hourString = getHours(hour);
-      double visitors = Random().nextInt(100) + 100;
-      return ChartData(hourString, visitors);
-    });
+  Future<void> _loadChartData() async {
+    LoginService loginService = LoginService();
 
-    visitorChartWeekly = generateChartData(7, (index) {
-      String weekday = getWeekday(index + 1);
-      double visitors = Random().nextInt(1000) + 700;
-      return ChartData(weekday, visitors);
-    });
+    //get the statistics data hourly
+    final fetchStatisticsDataHourVisitor =
+        await loginService.fetchStatisticDataHourFromDatabase('Visitor');
 
-    visitorChartMonthly = generateChartData(4, (index) {
-      String weekOfPreviousMonth = getWeekOfPreviousMonth(index + 1);
-      double visitors = Random().nextInt(1000) + 4000;
-      return ChartData(weekOfPreviousMonth, visitors);
-    });
+    final fetchStatisticsDataHourTemp =
+        await loginService.fetchStatisticDataHourFromDatabase('Temperatur');
 
-    tempChartDaily = generateChartData(24, (hour) {
-      double temperature = Random().nextInt(41) - 5;
-      return ChartData(getHours(hour), temperature);
-    });
+    final fetchStatisticsDataHourHumidity =
+        await loginService.fetchStatisticDataHourFromDatabase('AirHumidity');
 
-    tempChartWeekly = generateChartData(7, (day) {
-      double temperature = Random().nextInt(11) + 15;
-      return ChartData(getWeekday(day + 1), temperature);
-    });
+    //get the statistics data daily for a week
+    final fetchStatisticsDataWeekVisitor =
+        await loginService.fetchStatisticDataWeekFromDatabase('Visitor');
 
-    tempChartMonthly = generateChartData(4, (week) {
-      double temperature = Random().nextInt(26) + 10;
-      return ChartData(getWeekOfPreviousMonth(week + 1), temperature);
-    });
+    final fetchStatisticsDataWeekTemperatur =
+        await loginService.fetchStatisticDataWeekFromDatabase('Temperatur');
 
-    airHumidityChartDaily = generateChartData(24, (hour) {
-      double humidity = Random().nextInt(51) + 50;
-      return ChartData(getHours(hour), humidity);
-    });
+    final fetchStatisticsDataWeekHumidity =
+        await loginService.fetchStatisticDataWeekFromDatabase('AirHumidity');
 
-    airHumidityChartWeekly = generateChartData(7, (index) {
-      double humidity = Random().nextInt(11) + 18;
-      return ChartData(getWeekday(index + 1), humidity);
-    });
+    //get the statistics data daily for a month
+    final fetchStatisticsDataMonthVisitor =
+        await loginService.fetchStatisticDataMonthFromDatabase('Visitor');
 
-    airHumidityChartMonthly = generateChartData(4, (index) {
-      double humidity = Random().nextInt(31) + 20;
-      return ChartData(getWeekOfPreviousMonth(index + 1), humidity);
-    });
+    final fetchStatisticsDataMonthTemperatur =
+        await loginService.fetchStatisticDataMonthFromDatabase('Temperatur');
 
-    rainPercentChartDaily = generateChartData(24, (hour) {
-      double rainPercentage = Random().nextInt(91) + 10;
-      return ChartData(getHours(hour), rainPercentage);
-    });
-  }
+    final fetchStatisticsDataMonthHumidity =
+        await loginService.fetchStatisticDataMonthFromDatabase('AirHumidity');
 
-  List<ChartData> generateChartData(
-      int count, ChartData Function(int) generator) {
-    return List.generate(count, generator);
+    setState(() {
+      //day charts
+      visitorChartDaily = fetchStatisticsDataHourVisitor;
+      tempChartDaily = fetchStatisticsDataHourTemp;
+      airHumidityChartDaily = fetchStatisticsDataHourHumidity;
+
+      //week charts
+      visitorChartWeekly = fetchStatisticsDataWeekVisitor;
+      tempChartWeekly = fetchStatisticsDataWeekTemperatur;
+      airHumidityChartWeekly = fetchStatisticsDataWeekHumidity;
+
+      //month chart
+      visitorChartMonthly = fetchStatisticsDataMonthVisitor;
+      tempChartMonthly = fetchStatisticsDataMonthTemperatur;
+      airHumidityChartMonthly = fetchStatisticsDataMonthHumidity;
+    });
   }
 
   @override
@@ -210,7 +144,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
@@ -231,6 +164,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     onTabSelected: (int index) {
                       setState(() {
                         _selectedTabIndex = index;
+                        _loadChartData();
                       });
                     },
                   ),
@@ -266,12 +200,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
       xAxisTitle = 'Uhrzeit';
     }
 
+   // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == visitorChartMonthly ||
         chartData == visitorChartWeekly) {
       yAxisTitle = 'Anzahl';
     }
+    // String locale = Localizations.localeOf(context).languageCode;
+    // DateTime now = new DateTime.now();
+    // String dayOfWeek = DateFormat.EEEE(locale).format(now);
+    // String dayMonth = DateFormat.MMMMd(locale).format(now);
+    // String year = DateFormat.y(locale).format(now);
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -316,7 +256,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
               dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
+              xValueMapper: (ChartData data, _) =>data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
                 borderColor: Colors.deepPurple,
@@ -325,25 +265,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 shape: DataMarkerType.circle,
               ),
               color: chartColor,
-              dataLabelMapper: (ChartData data, _) => '${data.y}',
-            ),
-            LineSeries<ChartData, String>(
-              dataSource: rainPercentChartDaily,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              isVisible: rainLineChart == true && chartData == visitorChartDaily
-                  ? true
-                  : false,
-              markerSettings: const MarkerSettings(
-                borderColor: Color(0xFF800080),
-                isVisible: true,
-                color: Colors.deepOrange,
-                shape: DataMarkerType.circle,
-              ),
-              color: const Color.fromARGB(255, 56, 162, 197),
-            ),
+              dataLabelMapper: (ChartData data, _) => '${data.x}',
+            )
           ],
           tooltipBehavior: TooltipBehavior(
+            animationDuration: 1,
             enable: true,
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
@@ -377,23 +303,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Text(
-                      //       chartName,
-                      //       style: const TextStyle(
-                      //         color: Colors.white,
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     )
-                      //   ],
-                      // ),
-                      // const Text(
-                      //   '────────────────',
-                      //   style: TextStyle(color: Colors.white),
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -422,55 +331,55 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 if (formattedY.endsWith('.0')) {
                   formattedY = formattedY.substring(0, formattedY.length - 2);
                 }
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'Regenwahrscheinlichkeit',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      ),
-                      const Text(
-                        '────────────────',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: chartColor,
-                            ),
-                          ),
-                          Text(
-                            '  ${data.x} : '
-                            '$formattedY%',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                // return Container(
+                //   padding: const EdgeInsets.all(10),
+                //   decoration: BoxDecoration(
+                //     color: Colors.black,
+                //     borderRadius: BorderRadius.circular(5),
+                //   ),
+                //   child: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: const [
+                //           Text(
+                //             'Regenwahrscheinlichkeit',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //       const Text(
+                //         '────────────────',
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Container(
+                //             width: 10,
+                //             height: 10,
+                //             decoration: BoxDecoration(
+                //               shape: BoxShape.circle,
+                //               color: chartColor,
+                //             ),
+                //           ),
+                //           Text(
+                //             '  ${data.x} : '
+                //                 '$formattedY%',
+                //             style: const TextStyle(color: Colors.white),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // );
               }
               return Container();
             },
@@ -527,28 +436,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             },
                           ),
                         ],
-                      ),
-                    ),
-                  ),
-
-                  /// Button
-                  Visibility(
-                    visible: visitorVisible,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: SwitchListTile(
-                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
-                        // Lighter green tone
-                        activeTrackColor: primaryAppLightGreen,
-                        title: Text(
-                          rainLineChart ? rainTextVisible : rainTextHidden,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                        value: rainLineChart,
-                        onChanged: handleToggle,
                       ),
                     ),
                   ),
