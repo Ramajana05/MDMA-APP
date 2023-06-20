@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
-const primaryBackgroundColor = Color.fromARGB(255, 255, 255, 255);
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
 const primaryTempColor = Colors.red;
 const primaryHumidityColor = Colors.blue;
-const primarySignalStrength = Colors.black;
 
 ///Colors of the map
 const primaryVisitorLowCountColor = Color.fromARGB(255, 170, 169, 169);
@@ -28,3 +26,17 @@ const primaryOrange = Colors.orange;
 const primaryred = Colors.red;
 
 const primarygrey = Color.fromARGB(255, 134, 134, 134);
+
+// Light-Dark Mode Colors------------------------------
+// Shared Colors
+var primarybackgroundColor = Colors.white;
+
+// dashboard screens Colors:
+var dashboard_background_Color = Colors.white;
+var dashboard_text_Color = Colors.black;
+
+// ScanScreen  Colors
+
+// other screens
+
+//-----

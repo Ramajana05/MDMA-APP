@@ -99,13 +99,9 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: primaryBackgroundColor,
+      color: Color.fromARGB(249, 255, 255, 255),
       elevation: 6,
       shadowColor: Colors.black54,
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(12.0), // Adjust the border radius as needed
-      ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 11),
         child: Column(
@@ -131,8 +127,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? primaryAppLightGreen
+
+                                    ? primaryGreen
                                     : primarygrey,
+
                               ),
                               SizedBox(width: 4),
                               Text(
@@ -151,10 +149,11 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           child: Row(
                             children: [
                               SizedBox(height: 4),
+                              SizedBox(width: 4),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
                                 style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -189,80 +188,37 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      'Aktuelle Werte:',
+                      'Sensor Werte:',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.thermostat_outlined,
-                          color: primaryTempColor, // Adjust the color as needed
-                          size: 20,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Temperatur: ${widget.temperature}°C',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 6),
+                    Text(
+                      'Aktuelle Temperatur: ${widget.temperature}°C',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.water_drop_outlined,
-                          color:
-                              primaryHumidityColor, // Adjust the color as needed
-                          size: 20,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Luftfeuchtigkeit: ${widget.airPressure}%',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.signal_cellular_alt_outlined,
-                          color:
-                              primarySignalStrength, // Adjust the color as needed
-                          size: 20,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Signalstärke: ${widget.signalStrength}',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Aktuelle Signal Stärke: ${widget.signalStrength}',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.battery_full_outlined,
-                          color: const Color.fromARGB(
-                              255, 0, 0, 0), // Adjust the color as needed
-                          size: 20,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Akkustand: ${widget.chargerInfo}%',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Aktueller Akku Stand: ${widget.chargerInfo}%',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     SizedBox(height: 12),
                   ],
