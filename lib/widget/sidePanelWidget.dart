@@ -29,143 +29,119 @@ class _SidePanel extends State<SidePanel> {
     bool isScrollable = isSmallScreen;
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isScreenBig = screenHeight >= 600; // Adjust the threshold as needed
+    final drawerHeight = isScreenBig ? screenHeight / 2.8 : 0;
+
     return Drawer(
-      backgroundColor: background,
-      child: Container(
-        height: MediaQuery.of(context).size.height / 1,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return SingleChildScrollView(
-              physics: isScrollable
-                  ? const AlwaysScrollableScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              topGreen,
-                              primaryAppLightGreen,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: DrawerHeader(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.person,
-                          size: 28,
-                        ),
-                        title: Text(
-                          'Profil',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: textColor,
-                          ),
-                        ),
-                        iconColor: primaryAppLightGreen,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.public,
-                          size: 28,
-                        ),
-                        title: Text(
-                          'Startseite',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: textColor,
-                          ),
-                        ),
-                        iconColor: blue,
-                        onTap: () async {
-                          const url = 'https://mdma.haveachin.de/';
-                          if (await canLaunch(url)) {
-                            await launch(url);
-                          } else {
-                            throw 'Konnte diese Website nicht laden $url';
-                          }
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.help_outline_outlined,
-                          size: 28,
-                        ),
-                        iconColor: textColor,
-                        title: Text(
-                          'Hilfe',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: textColor,
-                          ),
-                        ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => InstructionsScreen()),
-                        ),
-                      ),
-                      ListTile(
-                          leading: Icon(
-                            themeProvider.isNightMode
-                                ? Icons.dark_mode_outlined
-                                : Icons.light_mode_outlined,
-                            size: 28,
-                          ),
-                          iconColor: iconColour,
-                          title: Text(
-                            themeProvider.isNightMode
-                                ? 'Dunkler Modus'
-                                : 'Heller Modus',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: textColor,
-                            ),
-                          ),
-                          onTap: () => themeProvider.toggleNightMode()),
-                      const Spacer(),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.logout,
-                          size: 28,
-                        ),
-                        title: Text(
-                          'Ausloggen',
-                          style: TextStyle(fontSize: 18, color: textColor),
-                        ),
-                        iconColor: red,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const LogoutDialog(),
-                          );
-                        },
-                      ),
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height / 1,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 86, 252, 108),
+                      Color.fromARGB(255, 40, 233, 127),
                     ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: DrawerHeader(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                   ),
                 ),
               ),
-            );
-          },
+              ListTile(
+                leading: const Icon(
+                  Icons.person,
+                  size: 28,
+                ), // Add leading icon
+                title: const Text(
+                  'Profil',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                iconColor: const Color.fromARGB(255, 40, 233, 127),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.public,
+                  size: 28,
+                ), // Add leading icon
+                title: const Text(
+                  'Startseite',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+
+                iconColor: Colors.blue,
+                onTap: () async {
+                  const url = 'https://mdma.haveachin.de/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Konnte diese Website nicht laden $url';
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.dark_mode_outlined,
+                  size: 28,
+                ), //
+                iconColor: const Color.fromARGB(255, 7, 19, 29),
+                title: const Text(
+                  'Nacht modus',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.help_outline_outlined,
+                  size: 28,
+                ), // Add leading icon
+                title: const Text(
+                  'Hilfe',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
+                ),
+              ),
+              const Spacer(),
+              const ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  size: 28,
+                ), // Add leading icon
+                title: Text('Ausloggen',
+                    style: TextStyle(
+                      fontSize: 18,
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );
