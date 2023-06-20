@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forestapp/screen/splashScreen.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:forestapp/screen/splashScreen.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:forestapp/db/databaseInitializer.dart';
