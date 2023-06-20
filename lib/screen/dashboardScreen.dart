@@ -91,8 +91,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final temperature = (weatherData['temp_c'] as num?)?.toDouble() ?? 0.0;
 
         for (final forecastDay in forecastData) {
-          final avgAirHumidityValue =
-              (forecastDay['day']['avghumidity'] as num?)?.toDouble() ?? 0.0;
           final maxTempValue =
               (forecastDay['day']['maxtemp_c'] as num?)?.toDouble() ?? 0.0;
 
