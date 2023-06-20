@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../Model/ChartData.dart';
@@ -28,22 +30,21 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var daily = "Tägliche";
   var weekly = "Wöchentliche";
 
-
   double dailyMax = 5;
-  double weeklyMax = 6;
+  double weeklyMax = 4;
   double monthlyMax = 3;
 
-   List<ChartData> visitorChartDaily=[];
-   List<ChartData> visitorChartWeekly=[];
-   List<ChartData> visitorChartMonthly=[];
+  List<ChartData> visitorChartDaily = [];
+  List<ChartData> visitorChartWeekly = [];
+  List<ChartData> visitorChartMonthly = [];
 
-   List<ChartData> tempChartDaily=[];
-   List<ChartData> tempChartWeekly=[];
-   List<ChartData> tempChartMonthly=[];
+  List<ChartData> tempChartDaily = [];
+  List<ChartData> tempChartWeekly = [];
+  List<ChartData> tempChartMonthly = [];
 
-   List<ChartData> airHumidityChartDaily=[];
-   List<ChartData> airHumidityChartWeekly=[];
-   List<ChartData> airHumidityChartMonthly=[];
+  List<ChartData> airHumidityChartDaily = [];
+  List<ChartData> airHumidityChartWeekly = [];
+  List<ChartData> airHumidityChartMonthly = [];
 
   bool visitorVisible = true;
   bool tempVisible = true;
@@ -57,9 +58,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
   final temperatureChartShadow =
-  buildChartBoxDecoration(primaryTempShadowColor);
+      buildChartBoxDecoration(primaryTempShadowColor);
   final airHumidityChartShadow =
-  buildChartBoxDecoration(primaryHumidityShadowColor);
+      buildChartBoxDecoration(primaryHumidityShadowColor);
 
   TabController? _tabController;
   int _selectedTabIndex = 0;
@@ -71,58 +72,54 @@ class _StatisticsScreen extends State<StatisticsScreen>
     _tabController = TabController(length: 3, vsync: this);
   }
 
-
-
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
 
     //get the statistics data hourly
     final fetchStatisticsDataHourVisitor =
-    await loginService.fetchStatisticDataHourFromDatabase('Visitor');
+        await loginService.fetchStatisticDataHourFromDatabase('Visitor');
 
     final fetchStatisticsDataHourTemp =
-    await loginService.fetchStatisticDataHourFromDatabase('Temperatur');
+        await loginService.fetchStatisticDataHourFromDatabase('Temperatur');
 
     final fetchStatisticsDataHourHumidity =
-    await loginService.fetchStatisticDataHourFromDatabase('AirHumidity');
+        await loginService.fetchStatisticDataHourFromDatabase('AirHumidity');
 
     //get the statistics data daily for a week
     final fetchStatisticsDataWeekVisitor =
-    await loginService.fetchStatisticDataWeekFromDatabase('Visitor');
+        await loginService.fetchStatisticDataWeekFromDatabase('Visitor');
 
     final fetchStatisticsDataWeekTemperatur =
-    await loginService.fetchStatisticDataWeekFromDatabase('Temperatur');
+        await loginService.fetchStatisticDataWeekFromDatabase('Temperatur');
 
     final fetchStatisticsDataWeekHumidity =
-    await loginService.fetchStatisticDataWeekFromDatabase('AirHumidity');
+        await loginService.fetchStatisticDataWeekFromDatabase('AirHumidity');
 
     //get the statistics data daily for a month
     final fetchStatisticsDataMonthVisitor =
-    await loginService.fetchStatisticDataMonthFromDatabase('Visitor');
+        await loginService.fetchStatisticDataMonthFromDatabase('Visitor');
 
     final fetchStatisticsDataMonthTemperatur =
-    await loginService.fetchStatisticDataMonthFromDatabase('Temperatur');
+        await loginService.fetchStatisticDataMonthFromDatabase('Temperatur');
 
     final fetchStatisticsDataMonthHumidity =
-    await loginService.fetchStatisticDataMonthFromDatabase('AirHumidity');
-
+        await loginService.fetchStatisticDataMonthFromDatabase('AirHumidity');
 
     setState(() {
       //day charts
       visitorChartDaily = fetchStatisticsDataHourVisitor;
-      tempChartDaily=fetchStatisticsDataHourTemp;
-      airHumidityChartDaily=fetchStatisticsDataHourHumidity;
+      tempChartDaily = fetchStatisticsDataHourTemp;
+      airHumidityChartDaily = fetchStatisticsDataHourHumidity;
 
       //week charts
-      visitorChartWeekly=fetchStatisticsDataWeekVisitor;
-      tempChartWeekly=fetchStatisticsDataWeekTemperatur;
-      airHumidityChartWeekly=fetchStatisticsDataWeekHumidity;
+      visitorChartWeekly = fetchStatisticsDataWeekVisitor;
+      tempChartWeekly = fetchStatisticsDataWeekTemperatur;
+      airHumidityChartWeekly = fetchStatisticsDataWeekHumidity;
 
       //month chart
-      visitorChartMonthly=fetchStatisticsDataMonthVisitor;
+      visitorChartMonthly = fetchStatisticsDataMonthVisitor;
       tempChartMonthly = fetchStatisticsDataMonthTemperatur;
-      airHumidityChartMonthly=fetchStatisticsDataMonthHumidity;
-
+      airHumidityChartMonthly = fetchStatisticsDataMonthHumidity;
     });
   }
 
@@ -146,7 +143,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
       ],
     );
   }
-
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,20 +200,23 @@ class _StatisticsScreen extends State<StatisticsScreen>
       xAxisTitle = 'Uhrzeit';
     }
 
+   // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == visitorChartMonthly ||
         chartData == visitorChartWeekly) {
       yAxisTitle = 'Anzahl';
     }
+    // String locale = Localizations.localeOf(context).languageCode;
+    // DateTime now = new DateTime.now();
+    // String dayOfWeek = DateFormat.EEEE(locale).format(now);
+    // String dayMonth = DateFormat.MMMMd(locale).format(now);
+    // String year = DateFormat.y(locale).format(now);
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height / 3,
+        height: MediaQuery.of(context).size.height / 3,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
@@ -233,20 +232,20 @@ class _StatisticsScreen extends State<StatisticsScreen>
           ),
           primaryYAxis: NumericAxis(
             labelFormat: (chartData == airHumidityChartDaily ||
-                chartData == airHumidityChartWeekly ||
-                chartData == airHumidityChartMonthly)
+                    chartData == airHumidityChartWeekly ||
+                    chartData == airHumidityChartMonthly)
                 ? '{value}%'
                 : (chartData == tempChartDaily ||
-                chartData == tempChartWeekly ||
-                chartData == tempChartMonthly)
-                ? '{value}°C'
-                : '',
+                        chartData == tempChartWeekly ||
+                        chartData == tempChartMonthly)
+                    ? '{value}°C'
+                    : '',
             title: AxisTitle(
               text: yAxisTitle,
               textStyle: const TextStyle(fontWeight: FontWeight.w700),
             ),
             majorTickLines:
-            const MajorTickLines(size: 6, width: 2, color: Colors.black),
+                const MajorTickLines(size: 6, width: 2, color: Colors.black),
             axisLine: const AxisLine(color: Colors.black, width: 1.5),
             labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
           ),
@@ -257,7 +256,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
               dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
+              xValueMapper: (ChartData data, _) =>data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
                 borderColor: Colors.deepPurple,
@@ -267,9 +266,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
               color: chartColor,
               dataLabelMapper: (ChartData data, _) => '${data.x}',
-            )           ],
+            )
+          ],
           tooltipBehavior: TooltipBehavior(
-            animationDuration:1,
+            animationDuration: 1,
             enable: true,
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
@@ -317,7 +317,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           ),
                           Text(
                             '  ${data.x} : '
-                                '$formattedYWithUnit',
+                            '$formattedYWithUnit',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ],
@@ -394,7 +394,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -589,7 +588,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -770,7 +768,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           /// Visitor
           Padding(
             padding: const EdgeInsets.all(8.0),
