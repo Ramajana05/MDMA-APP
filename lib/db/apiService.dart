@@ -118,26 +118,30 @@ class ApiService {
 
 class User {
   final int id;
-  final String createdAt;
-  final String updatedAt;
   final String username;
   final int roleId;
+  final String password;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   User({
     required this.id,
-    required this.createdAt,
-    required this.updatedAt,
     required this.username,
     required this.roleId,
+    required this.password,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
+
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
       username: json['username'] ?? '',
       roleId: json['roleId'] ?? 0,
+
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
 
+import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
 
 class MapScreen extends StatefulWidget {
@@ -182,11 +183,11 @@ class _MapScreen extends State<MapScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${circle.center.latitude.toStringAsFixed(3)},  ',
+                                        '${circle.center.latitude}, ',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '${circle.center.longitude.toStringAsFixed(3)}',
+                                        '${circle.center.longitude}',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       const SizedBox(width: 8),
@@ -199,15 +200,16 @@ class _MapScreen extends State<MapScreen> {
                                           size: 16,
                                         ),
                                       ),
-                                      const SizedBox(width: 1),
+                                      const SizedBox(width: 2),
                                       Icon(
                                         Icons.battery_6_bar_outlined,
                                         color: getBatteryColor(batteryLevel),
                                       ),
+                                      const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
                                         style: const TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -322,7 +324,7 @@ class _MapScreen extends State<MapScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${polygon.polygonId.value}',
+                                    'Standort: ${polygon.polygonId.value}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -456,7 +458,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: mapScreen_background_Color,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {

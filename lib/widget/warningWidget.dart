@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/service/loginService.dart';
-import '../colors/appColors.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
@@ -16,7 +15,7 @@ class WarningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = primaryBackgroundColor;
+    Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
 
     Color textColor = const Color.fromARGB(255, 0, 0, 0);
     Color titleColor = isWarnung ? Colors.orange : Colors.blue;
@@ -41,7 +40,7 @@ class WarningWidget extends StatelessWidget {
           await loginService.deleteAlertEntry(message);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: primaryBackgroundColor,
+              backgroundColor: Colors.white,
               content: Text(
                 'Neuigkeit gelöscht',
                 style: TextStyle(color: Colors.black),

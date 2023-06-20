@@ -96,30 +96,11 @@ class _ScanScreen extends State<ScanScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.warning,
-                    color: Colors.orange,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('Hinweis'),
-                ],
-              ),
+              title: Text('Sensor existiert bereits'),
               content: Text('Dieser Sensor wurde bereits angelegt.'),
               actions: [
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary:
-                        Colors.white, // Set the background color of the button
-                  ),
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(
-                      color:
-                          Colors.orange, // Set the text color of the "OK" text
-                    ),
-                  ),
+                  child: const Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     _resetScanner();
@@ -144,7 +125,7 @@ class _ScanScreen extends State<ScanScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Neuen Sensor hinzufügen',
+                            'Sensor hinzufügen',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -279,37 +260,18 @@ class _ScanScreen extends State<ScanScreen> {
                                           context: errorDialogContext,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.error,
-                                                    color: Colors.red,
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  const Text(
-                                                    'Fehler',
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                              title: const Text('Fehler'),
                                               content: const Text(
-                                                  'Der Sensor Name darf nicht leer sein.'),
+                                                  'Sensor Name darf nicht leer sein.'),
                                               actions: [
                                                 ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors
-                                                        .white, // Set the background color of the button
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                primaryGreen),
                                                   ),
-                                                  child: const Text(
-                                                    'OK',
-                                                    style: TextStyle(
-                                                      color: Colors
-                                                          .red, // Set the text color of the "OK" text
-                                                    ),
-                                                  ),
+                                                  child: const Text('OK'),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                   },
@@ -381,27 +343,22 @@ class _ScanScreen extends State<ScanScreen> {
           return AlertDialog(
             title: Row(
               children: [
+                Text('Sensor existiert nicht'),
+                SizedBox(width: 8),
                 Icon(
                   Icons.warning_amber,
                   color: Colors.red,
                 ),
-                const SizedBox(width: 8),
-                Text('Fehler'),
               ],
             ),
             content: Text('Der Sensor existiert nicht.'),
             actions: [
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary:
-                      Colors.white, // Set the background color of the button
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(primaryGreen),
                 ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                    color: Colors.red, // Set the text color of the "OK" text
-                  ),
-                ),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _resetScanner();

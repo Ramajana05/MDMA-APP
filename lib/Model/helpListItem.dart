@@ -7,9 +7,8 @@ class HelpListItemWidget extends StatefulWidget {
   final VoidCallback onTap;
   final bool alignLeft;
   final String description;
-  final String section;
   final IconData icon;
-  final Color iconColor;
+  final Color iconColor; // New property for icon color
 
   HelpListItemWidget({
     required this.title,
@@ -17,9 +16,8 @@ class HelpListItemWidget extends StatefulWidget {
     required this.onTap,
     required this.alignLeft,
     required this.description,
-    required this.section,
     required this.icon,
-    required this.iconColor,
+    required this.iconColor, // Initialize icon color
   });
 
   @override
@@ -27,14 +25,6 @@ class HelpListItemWidget extends StatefulWidget {
 }
 
 class _HelpListItemWidgetState extends State<HelpListItemWidget> {
-  bool _expanded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _expanded = widget.expanded;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -45,23 +35,12 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       elevation: 6,
       shadowColor: Colors.black54,
       child: InkWell(
-        onTap: () {
-          setState(() {
-            _expanded = !_expanded;
-          });
-          widget.onTap(); // Call the onTap callback provided by the parent
-        },
+        onTap: widget.onTap, // Pass the onTap callback to the InkWell
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              onTap: () {
-                setState(() {
-                  _expanded = !_expanded;
-                });
-                widget
-                    .onTap(); // Call the onTap callback provided by the parent
-              },
+              onTap: widget.onTap,
               title: Row(
                 children: [
                   Expanded(
@@ -76,7 +55,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                               Icon(
                                 widget.icon,
                                 size: 30,
-                                color: widget.iconColor,
+                                color: widget.iconColor, // Set icon color
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -98,7 +77,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Icon(
-                          _expanded
+                          widget.expanded
                               ? Icons.arrow_drop_up
                               : Icons.arrow_drop_down,
                           size: 36,
@@ -111,20 +90,20 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                 ],
               ),
             ),
-            if (_expanded)
+            if (widget.expanded)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 16),
                     Text(
                       widget.description,
                       style: const TextStyle(
-                        fontSize: 21,
+                        fontSize: 22,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),

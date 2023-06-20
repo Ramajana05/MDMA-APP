@@ -29,7 +29,7 @@ class ProblemDialog extends StatelessWidget {
             'Zurück',
             style: TextStyle(
               color: Colors.grey,
-              fontSize: 16.0,
+              fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
           ),
