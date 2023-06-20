@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:forestapp/widget/warningWidget.dart';
 
-import '../Model/dateHelper.dart';
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
@@ -18,6 +18,8 @@ import '../widget/bottomNavBar.dart';
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -64,6 +66,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   late List<Statistic> _statistics;
   bool hasLoadedAlerts = false;
+  bool isMapDataLoaded =
+      false; // Add a boolean variable to track if map data is loaded
 
   List<WeatherItem> weatherForecast = [];
 
@@ -76,7 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<Marker> _markers = {}; // Define the markers set
   Set<Circle> _circles = {}; // Define the circles set
   Set<Polygon> _polygons = {}; // Define the polygons set
-  //late GoogleMapController _mapController;
+  late GoogleMapController _mapController;
   List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
@@ -137,7 +141,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return [];
   }
 
-
+  String getGermanWeekday(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return 'Montag';
+      case DateTime.tuesday:
+        return 'Dienstag';
+      case DateTime.wednesday:
+        return 'Mittwoch';
+      case DateTime.thursday:
+        return 'Donnerstag';
+      case DateTime.friday:
+        return 'Freitag';
+      case DateTime.saturday:
+        return 'Samstag';
+      case DateTime.sunday:
+        return 'Sonntag';
+      default:
+        return '';
+    }
+  }
 
   void _handleUserScroll() {
     setState(() {
@@ -154,6 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     fetchWeatherData();
     loadAlerts();
+
     updateSensorCounts();
 
     _statistics = [
@@ -168,7 +192,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     super.initState();
 
-    // Initialize _markers set
     _markers = {};
     _circles = Set<Circle>();
     _polygons = Set<Polygon>();
@@ -187,7 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-   // _mapController.dispose();
+    _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
 
@@ -221,11 +244,137 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  Future<void> loadMapData() async {
+    _markers = {}; // Initialize the markers set
+    _circles = Set<Circle>(); // Initialize the circles set
+    _polygons = Set<Polygon>(); // Initialize the polygons set
+
+    await Future.wait([
+      MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
+        setState(() {
+          _polygons = polygons;
+        });
+      }),
+      MapObjects().getCircles(_handleCircleTap).then((circles) {
+        setState(() {
+          _circles = circles;
+        });
+      }),
+    ]);
+
+    setState(() {
+      isMapDataLoaded =
+          true; // Set the flag to indicate that map data is loaded
+    });
+  }
+
+  //News
+  Widget buildNewsSection() {
+    if (alertWidgets.isNotEmpty) {
+      return InkWell(
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Neuigkeiten",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showWarningWidget = !showWarningWidget;
+                          loadAlerts();
+                        });
+                      },
+                      icon: Icon(
+                        showWarningWidget
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: showWarningWidget,
+              child: Column(
+                children: alertWidgets.toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox.shrink(); // Return an empty widget if no news alerts
+    }
+  }
+
+  //MAP
+  Widget buildMapSection() {
+    return Visibility(
+      visible: showMap &&
+          isMapDataLoaded, // Show the map only if showMap is true and the map data is loaded
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {},
+              child: GoogleMap(
+                mapType: MapType.normal,
+                initialCameraPosition: _kGooglePlex,
+                zoomControlsEnabled: false,
+                markers: _markers,
+                circles: _circles,
+                polygons: _polygons,
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController = controller;
+                },
+                onCameraMove: (CameraPosition position) {
+                  // Handle camera movements if needed
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: dashboard_background_Color,
+      backgroundColor: Colors.white,
       appBar: const TopNavBar(
         title: 'DASHBOARD',
       ),
@@ -263,8 +412,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryVisitorColor
-                                            .withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -319,11 +467,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: primaryAppWhiteColor,
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryGreen.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -387,7 +535,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.red.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -400,8 +548,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        primaryTempShadowColor,
-                                        primaryTempColor,
+                                        const Color.fromARGB(
+                                            255, 255, 199, 199),
+                                        Colors.red,
                                         maxTemperature,
                                         currentTemperature.toInt(),
                                         [
@@ -447,7 +596,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.blue.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -460,8 +609,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        primaryHumidityShadowColor,
-                                        primaryHumidityColor,
+                                        const Color.fromARGB(
+                                            255, 196, 236, 255),
+                                        Colors.blue,
                                         avgAirHumidity,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
@@ -490,137 +640,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 15.0),
                   // News
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CustomBottomTabBar(trans_index: 4),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 40,
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Neuigkeiten",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: showWarningWidget,
-                          child: Column(
-                            children: alertWidgets,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  buildNewsSection(),
 
                   const SizedBox(height: 15.0),
-                  //Map
-                  Container(
-                    height: 40,
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 0.15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CustomBottomTabBar(trans_index: 2)));
-                            },
-                            child: const Text(
-                              "Karte",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                showMap = !showMap;
-                              });
-                            },
-                            icon: Icon(
-                              showMap
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                              color: Colors.black,
-                              size: 30.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showMap,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {},
-                            child: GoogleMap(
-                              mapType: MapType.normal,
-                              initialCameraPosition: _kGooglePlex,
-                              zoomControlsEnabled: false,
-                              markers: _markers,
-                              circles: _circles,
-                              polygons: _polygons,
-                              onMapCreated: (GoogleMapController controller) {
-                                _controller.complete(controller);
-                              },
-                              onCameraMove: (CameraPosition position) {
-                                // Handle camera movements if needed
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15.0),
+
                   // Statistics
                   Container(
                     height: 40,
@@ -1098,12 +1121,12 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: primarybackgroundColor,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
           color: chartColor,
-          spreadRadius: 3,
+          spreadRadius: 2,
           blurRadius: 4,
           offset: const Offset(0, 2),
         ),

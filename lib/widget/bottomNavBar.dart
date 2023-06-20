@@ -4,8 +4,8 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
-import '../colors/appColors.dart';
 import '../screen/statisticScreen.dart';
+import '../colors/appColors.dart';
 
 class CustomBottomTabBar extends StatefulWidget {
   int index = 0;
@@ -28,11 +28,11 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   ];
 
   final List<Color> tabColors = [
-    Color.fromARGB(204, 0, 165, 22), // Dashboard
-    Colors.blue, // Statistics
-    Colors.red, // Map
-    Colors.blue, // QR Code
-    Color.fromARGB(204, 0, 165, 22), // Sensors
+    primaryAppLightGreen, // Dashboard
+    primaryAppLightGreen, // Statistics
+    primaryAppLightGreen, // Map
+    primaryAppLightGreen, // QR Code
+    primaryAppLightGreen, // Sensors
   ];
 
   void updateSelectedIndex(int newIndex) {
@@ -58,22 +58,22 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 253, 253, 253),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
+              icon: Icon(Icons.dashboard_outlined),
               label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_outlined),
+              icon: Icon(Icons.line_axis_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              icon: Icon(Icons.pin_drop_outlined),
               label: 'Karte',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner),
+              icon: Icon(Icons.qr_code),
               label: 'QR Code',
             ),
             BottomNavigationBarItem(
@@ -84,7 +84,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           selectedLabelStyle: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 16,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,16 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 
-import 'bottomNavBar.dart';
-
-class SidePanel extends StatefulWidget {
-  const SidePanel({Key? key}) : super(key: key);
-
-  @override
-  State<SidePanel> createState() => _SidePanel();
-}
-
-class _SidePanel extends State<SidePanel> {
+class SidePanel extends StatelessWidget {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context);
     final loggedInUsername = userProvider.loggedInUsername;
@@ -26,34 +16,8 @@ class _SidePanel extends State<SidePanel> {
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
-  bool _lightMode = false; //( true-->Light mode  /  false-->Dark mode )
-  changeThemeMode() {
-    setState(() {
-      if (_lightMode) {
-        // colors of Light Mode
-        primarybackgroundColor = Colors.white;
-        dashboard_background_Color = Colors.white;
-        mapScreen_background_Color = Colors.white;
-        sensorListScreen_background_Color = Colors.white;
-        topNavBar_background_Color = Colors.white;
-        profileScreen_background_Color = Colors.white;
-        helpScreen_background_Color = Colors.white;
-
-        _lightMode = false;
-      } else {
-        // colors of Dark Mode
-        primarybackgroundColor = Colors.black;
-        dashboard_background_Color = Colors.black;
-        mapScreen_background_Color = Colors.black;
-        sensorListScreen_background_Color = Colors.black;
-        topNavBar_background_Color = Colors.black;
-        profileScreen_background_Color = Colors.black;
-        helpScreen_background_Color = Colors.black;
-
-        _lightMode = true;
-      }
-    });
-  }
+  bool isNightMode = false;
+  late final Function(bool) onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +30,7 @@ class _SidePanel extends State<SidePanel> {
               gradient: LinearGradient(
                 colors: [
                   const Color.fromARGB(255, 86, 252, 108),
-                  primarybackgroundColor,
+                  primaryAppLightGreen,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -86,7 +50,7 @@ class _SidePanel extends State<SidePanel> {
             title: const Text(
               'Profil',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
             iconColor: primaryAppLightGreen,
@@ -103,10 +67,10 @@ class _SidePanel extends State<SidePanel> {
             title: const Text(
               'Startseite',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
-            iconColor: Colors.blue,
+            iconColor: primaryHumidityColor,
             onTap: () async {
               const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
@@ -117,25 +81,22 @@ class _SidePanel extends State<SidePanel> {
             },
           ),
           ListTile(
-              leading: const Icon(
-                Icons.dark_mode_outlined,
-                size: 28,
-              ), //
-              iconColor: const Color.fromARGB(255, 7, 19, 29),
-              title: Text(
-                _lightMode ? 'Light mode' : 'Dark mode',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+            leading: const Icon(
+              Icons.dark_mode_outlined,
+              size: 28,
+            ), //
+            iconColor: const Color.fromARGB(255, 7, 19, 29),
+            title: const Text(
+              'Nacht modus',
+              style: TextStyle(
+                fontSize: 20,
               ),
-              onTap: () => {
-                    changeThemeMode(),
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => CustomBottomTabBar()),
-                    // ),
-                  }),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
+          ),
           ListTile(
             leading: const Icon(
               Icons.help_outline_outlined,
@@ -144,7 +105,7 @@ class _SidePanel extends State<SidePanel> {
             title: const Text(
               'Hilfe',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
             onTap: () => Navigator.push(
@@ -161,10 +122,10 @@ class _SidePanel extends State<SidePanel> {
             title: const Text(
               'Ausloggen',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
-            iconColor: Colors.red,
+            iconColor: primaryTempColor,
             onTap: () {
               showDialog(
                 context: context,
