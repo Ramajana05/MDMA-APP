@@ -71,16 +71,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<WeatherItem> weatherForecast = [];
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 14.5,
-  );
-  Set<Marker> _markers = {}; // Define the markers set
-  Set<Circle> _circles = {}; // Define the circles set
-  Set<Polygon> _polygons = {}; // Define the polygons set
-  late GoogleMapController _mapController;
   List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
@@ -191,26 +181,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     generateData();
 
     super.initState();
-
-    _markers = {};
-    _circles = Set<Circle>();
-    _polygons = Set<Polygon>();
-
-    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
-      setState(() {
-        _polygons = polygons;
-      });
-    });
-    MapObjects().getCircles(_handleCircleTap).then((circles) {
-      setState(() {
-        _circles = circles;
-      });
-    });
   }
 
   @override
   void dispose() {
-    _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
 
@@ -242,30 +216,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {
       print('Error updating sensor counts: $e');
     }
-  }
-
-  Future<void> loadMapData() async {
-    _markers = {}; // Initialize the markers set
-    _circles = Set<Circle>(); // Initialize the circles set
-    _polygons = Set<Polygon>(); // Initialize the polygons set
-
-    await Future.wait([
-      MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
-        setState(() {
-          _polygons = polygons;
-        });
-      }),
-      MapObjects().getCircles(_handleCircleTap).then((circles) {
-        setState(() {
-          _circles = circles;
-        });
-      }),
-    ]);
-
-    setState(() {
-      isMapDataLoaded =
-          true; // Set the flag to indicate that map data is loaded
-    });
   }
 
   //News
@@ -321,53 +271,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else {
       return SizedBox.shrink(); // Return an empty widget if no news alerts
     }
-  }
-
-  //MAP
-  Widget buildMapSection() {
-    return Visibility(
-      visible: showMap &&
-          isMapDataLoaded, // Show the map only if showMap is true and the map data is loaded
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: Container(
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () {},
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: _kGooglePlex,
-                zoomControlsEnabled: false,
-                markers: _markers,
-                circles: _circles,
-                polygons: _polygons,
-                onMapCreated: (GoogleMapController controller) {
-                  _mapController = controller;
-                },
-                onCameraMove: (CameraPosition position) {
-                  // Handle camera movements if needed
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   @override
