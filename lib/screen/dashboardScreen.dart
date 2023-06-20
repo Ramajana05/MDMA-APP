@@ -41,7 +41,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var maxTemperature = 0.0;
 
   var airHumidity = 0.0;
-  var avgAirHumidity = 0.0;
 
   bool showWarningWidget = true;
   bool showMap = true;
@@ -97,7 +96,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final maxTempValue =
               (forecastDay['day']['maxtemp_c'] as num?)?.toDouble() ?? 0.0;
 
-          avgAirHumidity = avgAirHumidityValue;
           maxTemperature = maxTempValue;
         }
 
@@ -446,7 +444,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Colors.transparent,
                                         lightBlue,
                                         Colors.blue,
-                                        avgAirHumidity,
+                                        100,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
