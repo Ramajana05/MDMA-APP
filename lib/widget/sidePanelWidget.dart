@@ -21,116 +21,119 @@ class SidePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height / 1,
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 86, 252, 108),
-                      Color.fromARGB(255, 40, 233, 127),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: DrawerHeader(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.person,
-                  size: 28,
-                ), // Add leading icon
-                title: const Text(
-                  'Profil',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                iconColor: const Color.fromARGB(255, 40, 233, 127),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.public,
-                  size: 28,
-                ), // Add leading icon
-                title: const Text(
-                  'Startseite',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isScreenBig = screenHeight >= 600; // Adjust the threshold as needed
+    final drawerHeight = isScreenBig ? screenHeight / 2.8 : 0;
 
-                iconColor: Colors.blue,
-                onTap: () async {
-                  const url = 'https://mdma.haveachin.de/';
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Konnte diese Website nicht laden $url';
-                  }
-                },
+    return Drawer(
+      child: ListView(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 86, 252, 108),
+                  Color.fromARGB(255, 40, 233, 127),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              ListTile(
-                leading: const Icon(
-                  Icons.dark_mode_outlined,
-                  size: 28,
-                ), //
-                iconColor: const Color.fromARGB(255, 7, 19, 29),
-                title: const Text(
-                  'Nacht modus',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
-                ),
+            ),
+            child: DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
               ),
-              ListTile(
-                leading: const Icon(
-                  Icons.help_outline_outlined,
-                  size: 28,
-                ), // Add leading icon
-                title: const Text(
-                  'Hilfe',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => InstructionsScreen()),
-                ),
-              ),
-              const Spacer(),
-              const ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  size: 28,
-                ), // Add leading icon
-                title: Text('Ausloggen',
-                    style: TextStyle(
-                      fontSize: 18,
-                    )),
-              ),
-            ],
+            ),
           ),
-        ),
+          ListTile(
+            leading: const Icon(
+              Icons.person,
+              size: 28,
+            ),
+            title: const Text(
+              'Profil',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            iconColor: const Color.fromARGB(255, 40, 233, 127),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.public,
+              size: 28,
+            ),
+            title: const Text(
+              'Startseite',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            iconColor: Colors.blue,
+            onTap: () async {
+              const url = 'https://mdma.haveachin.de/';
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Die Website $url konnte nicht geladen werden';
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.dark_mode_outlined,
+              size: 28,
+            ),
+            iconColor: const Color.fromARGB(255, 7, 19, 29),
+            title: const Text(
+              'Nacht Modus',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.help_outline_outlined,
+              size: 28,
+            ),
+            title: const Text(
+              'Hilfe',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InstructionsScreen()),
+            ),
+          ),
+          SizedBox(height: isScreenBig ? screenHeight / 2.8 : 0),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              size: 28,
+            ),
+            title: const Text('Ausloggen',
+                style: TextStyle(
+                  fontSize: 18,
+                )),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const LogoutDialog(),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

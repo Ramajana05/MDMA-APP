@@ -18,7 +18,7 @@ class ProblemDialog extends StatelessWidget {
         child: Row(
           children: const [
             SizedBox(width: 8.0),
-            Text('Wenden Sie sich an den Support'),
+            Text('Wenden Sie sich an den Support.'),
           ],
         ),
       ),

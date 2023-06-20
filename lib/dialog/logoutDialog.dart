@@ -24,7 +24,7 @@ class LogoutDialog extends StatelessWidget {
               //Icon(Icons.warning, color: Colors.orange),
               SizedBox(width: 8.0),
               Text(
-                'Wirklich ausloggen?',
+                'Wollen Sie wirklich ausloggen?',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
