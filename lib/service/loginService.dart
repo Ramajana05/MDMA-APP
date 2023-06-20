@@ -328,7 +328,6 @@ class LoginService {
     }
   }
 
-
   Future<int> countAllSensorsWithName() async {
     try {
       // Open the database
@@ -527,7 +526,8 @@ class LoginService {
     DateTime lastDayOfYear = DateTime(year, 12, 31);
     int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
     if (weekNumberLastDay == 1) {
-      return int.parse(DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
+      return int.parse(
+          DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
     } else {
       return weekNumberLastDay;
     }
@@ -544,17 +544,17 @@ class LoginService {
     return woy;
   }
 
-
-  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(String type) async {
+  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
+      String type) async {
     DateTime now = DateTime.now();
     DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
     DateTime lastDayOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
 
     DateFormat dateFormat = DateFormat('yyyyMMdd');
     String firstDayOfCurrentMonthFormatted =
-    dateFormat.format(firstDayOfCurrentMonth);
+        dateFormat.format(firstDayOfCurrentMonth);
     String lastDayOfCurrentMonthFormatted =
-    dateFormat.format(lastDayOfCurrentMonth);
+        dateFormat.format(lastDayOfCurrentMonth);
 
     try {
       final database = await _initDatabase();
@@ -583,7 +583,8 @@ class LoginService {
     }
   }
 
-  Future<List<String>> fetchPreviousWeekDatesFromDatabase(Database database) async {
+  Future<List<String>> fetchPreviousWeekDatesFromDatabase(
+      Database database) async {
     final DateFormat dateFormat = DateFormat('dd.MM.yyyy');
 
     DateTime now = DateTime.now();
@@ -591,17 +592,17 @@ class LoginService {
 
     List<String> previousWeekDates = [];
     for (int i = 1; i <= 4; i++) {
-      DateTime previousWeekStart = now.subtract(Duration(days: (currentWeek - i) * 7));
+      DateTime previousWeekStart =
+          now.subtract(Duration(days: (currentWeek - i) * 7));
       DateTime previousWeekEnd = previousWeekStart.add(Duration(days: 6));
 
       String previousWeekStartFormatted = dateFormat.format(previousWeekStart);
       String previousWeekEndFormatted = dateFormat.format(previousWeekEnd);
 
-      previousWeekDates.add('$previousWeekStartFormatted - $previousWeekEndFormatted');
+      previousWeekDates
+          .add('$previousWeekStartFormatted - $previousWeekEndFormatted');
     }
 
     return previousWeekDates;
   }
-
-
 }
