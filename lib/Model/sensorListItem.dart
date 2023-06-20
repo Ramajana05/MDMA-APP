@@ -42,7 +42,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_full,
         size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 75) {
       return const Icon(
@@ -99,7 +99,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: Color.fromARGB(249, 255, 255, 255),
+      color: Colors.white,
       elevation: 6,
       shadowColor: Colors.black54,
       child: Padding(
@@ -127,7 +127,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? Color.fromARGB(255, 64, 236, 73)
+                                    ? onlineColor
                                     : Colors.red,
                               ),
                               SizedBox(width: 4),

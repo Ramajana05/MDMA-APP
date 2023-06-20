@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/tabBarWidget.dart';
@@ -117,13 +118,11 @@ class _MapScreen extends State<MapScreen> {
 
         return WillPopScope(
           onWillPop: () async {
-
             return true;
 
             /// Allow back button to close the bottom sheet
           },
           child: GestureDetector(
-
             /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
               child: Container(
@@ -141,10 +140,7 @@ class _MapScreen extends State<MapScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-
                           padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
-
-
                         ),
                         Row(
                           children: [
@@ -154,7 +150,7 @@ class _MapScreen extends State<MapScreen> {
                                   width: 40,
                                   height: 40,
                                   decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -162,7 +158,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.sensors,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
@@ -244,8 +240,7 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: Colors.white.withOpacity(0.3),
                           ),
                           child: const Icon(
                             Icons.close,
@@ -313,7 +308,7 @@ class _MapScreen extends State<MapScreen> {
                                   width: 40,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -321,7 +316,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.place,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
@@ -376,8 +371,7 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: Colors.white.withOpacity(0.3),
                           ),
                           child: Icon(
                             Icons.close,
@@ -463,7 +457,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {
@@ -505,7 +499,7 @@ class _MapScreen extends State<MapScreen> {
                   children: const [
                     Icon(
                       Icons.battery_full,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -552,7 +546,7 @@ class _MapScreen extends State<MapScreen> {
                   children: const [
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -563,7 +557,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 128, 197, 130),
+                      color: primaryVisitorModerateCountColor,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -574,7 +568,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 170, 169, 169),
+                      color: primaryVisitorLowCountColor,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -597,10 +591,10 @@ class _MapScreen extends State<MapScreen> {
                   builder: (context) => InformationDialog(),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.info_outline,
                 size: 30,
-                color: const Color.fromARGB(255, 0, 112, 204),
+                color: mapBlue,
               ),
             ),
           ),

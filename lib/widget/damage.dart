@@ -7,7 +7,7 @@ Widget DamagesListItemWidget(String damageTitle, String damageDescription,
   Color createDateColor = getCreateDateColor(createDate);
 
   return Card(
-    color: Color.fromARGB(249, 255, 255, 255),
+    color: Colors.white,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

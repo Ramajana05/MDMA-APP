@@ -245,8 +245,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -306,7 +305,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -323,8 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 194, 255, 241),
+                                        lightGreen,
                                         primaryGreen,
                                         maxSensors.toDouble(),
                                         currentSensors.toInt(),
@@ -370,7 +368,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -387,8 +385,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 255, 199, 199),
+                                        lightRed,
                                         Colors.red,
                                         maxTemperature,
                                         currentTemperature.toInt(),
@@ -430,8 +427,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -448,8 +444,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       _buildCircularChart(
                                         context,
                                         Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 196, 236, 255),
+                                        lightBlue,
                                         Colors.blue,
                                         avgAirHumidity,
                                         airHumidity.toInt(),
@@ -616,7 +611,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       message:
                           'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
                       isWarnung: false,
-                      iconColor: const Color.fromARGB(255, 37, 70, 255),
+                      iconColor: darkBlue,
                     ),
                   ),
                   Visibility(
@@ -624,7 +619,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: WarningWidget(
                       message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
                       isWarnung: true,
-                      iconColor: const Color.fromARGB(255, 255, 106, 37),
+                      iconColor: darkRed,
                     ),
                   ),
                   const SizedBox(height: 15.0),

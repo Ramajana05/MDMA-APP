@@ -97,8 +97,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurecurrentPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: dialogIconColor,
                       ),
                       onPressed: () {
                         setState(() {
@@ -149,8 +148,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurenewPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: dialogIconColor,
                       ),
                       onPressed: () {
                         setState(() {
@@ -200,8 +198,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       _obscurenewPassword
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Color.fromARGB(
-                          255, 173, 173, 173), // Set the color of the icon
+                      color: dialogIconColor,
                     ),
                     onPressed: () {
                       setState(() {

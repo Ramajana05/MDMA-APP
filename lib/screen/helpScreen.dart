@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 import 'dart:math';
@@ -80,9 +81,9 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     Colors.green,
     Colors.green,
     Colors.blue,
-    const Color.fromARGB(255, 127, 127, 128),
-    Color.fromARGB(255, 255, 2, 2),
-    const Color.fromARGB(255, 58, 243, 33),
+    grey,
+    red,
+    green
   ];
 
   @override

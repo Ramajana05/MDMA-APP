@@ -75,7 +75,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'SENSOREN',
         onMenuPressed: () {

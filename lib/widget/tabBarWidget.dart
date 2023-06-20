@@ -61,7 +61,7 @@ class _TabBarWidgetState extends State<TabBarWidget>
       elevation: 2, // Apply desired elevation for shadow effect
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: Colors.white,
         ),
         child: TabBar(
           controller: _tabController,

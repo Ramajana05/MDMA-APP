@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -105,12 +106,11 @@ class _LoginPageState extends State<LoginPage> {
           width: MediaQuery.of(context).size.width * 0.97,
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 254, 254),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
-                color:
-                    const Color.fromARGB(255, 158, 158, 158).withOpacity(0.5),
+                color: boxshadowColor,
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(0, 3),
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                       fontSize: 30.0,
                       fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 40, 233, 127),
+                      color: primaryAppLightGreen,
                     ),
                   ),
                 ),
@@ -171,14 +171,14 @@ class _LoginPageState extends State<LoginPage> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                             borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 40, 233, 127),
+                              color: primaryAppLightGreen,
                               width: 2.0,
                             ),
                           ),
                           labelStyle: const TextStyle(
                             color: Colors.grey,
                           ),
-                          focusColor: const Color.fromARGB(255, 40, 233, 127),
+                          focusColor: primaryAppLightGreen,
                         ),
                         style: const TextStyle(
                           fontSize: 16.0,
@@ -211,22 +211,20 @@ class _LoginPageState extends State<LoginPage> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                             borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 40, 233, 127),
+                              color: primaryAppLightGreen,
                               width: 2.0,
                             ),
                           ),
                           labelStyle: const TextStyle(
                             color: Colors.grey,
                           ),
-                          focusColor: const Color.fromARGB(255, 40, 233, 127),
+                          focusColor: primaryAppLightGreen,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: const Color.fromARGB(255, 154, 155,
-                                  154), // Set the color of the icon
-                            ),
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: iconColor),
                             onPressed: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;

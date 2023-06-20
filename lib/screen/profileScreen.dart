@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
@@ -249,14 +250,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? profileBlack,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColor ?? Colors.black,
         ),
       ),
     );

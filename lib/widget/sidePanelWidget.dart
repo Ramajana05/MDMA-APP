@@ -31,10 +31,7 @@ class SidePanel extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 86, 252, 108),
-                  Color.fromARGB(255, 40, 233, 127),
-                ],
+                colors: gradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -56,7 +53,7 @@ class SidePanel extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            iconColor: const Color.fromARGB(255, 40, 233, 127),
+            iconColor: primaryAppLightGreen,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -88,7 +85,7 @@ class SidePanel extends StatelessWidget {
               Icons.dark_mode_outlined,
               size: 28,
             ),
-            iconColor: const Color.fromARGB(255, 7, 19, 29),
+            iconColor: blue,
             title: const Text(
               'Nacht Modus',
               style: TextStyle(
