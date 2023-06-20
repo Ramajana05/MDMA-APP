@@ -96,8 +96,8 @@ class _SensorListScreenState extends State<SensorListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const SidePanel(),
-      backgroundColor: background,
+      drawer: SidePanel(),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: TopNavBar(
         title: 'SENSOREN',
         onMenuPressed: () {

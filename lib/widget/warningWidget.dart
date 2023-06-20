@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/service/loginService.dart';
 
+import '../colors/appColors.dart';
+
+import '../colors/appColors.dart';
+
 class WarningWidget extends StatelessWidget {
   final String message;
   final bool isWarnung;
@@ -16,7 +20,10 @@ class WarningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color titleColor = isWarnung ? orange : blue;
+    Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
+
+    Color textColor = const Color.fromARGB(255, 0, 0, 0);
+    Color titleColor = isWarnung ? Colors.orange : Colors.blue;
 
     IconData iconData =
         isWarnung ? Icons.warning : Icons.notifications_active_outlined;
@@ -54,7 +61,7 @@ class WarningWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: warningGrey.withOpacity(0.5),
+                color: Color.fromARGB(255, 170, 170, 170).withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: const Offset(0, 2),

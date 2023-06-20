@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
@@ -11,7 +12,6 @@ import '../colors/appColors.dart';
 class CustomBottomTabBar extends StatefulWidget {
   int index = 0;
 
-  CustomBottomTabBar({int trans_index = 0}) {
   CustomBottomTabBar({int trans_index = 0}) {
     index = trans_index;
   }
@@ -30,11 +30,11 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   ];
 
   final List<Color> tabColors = [
-    Color.fromARGB(204, 0, 165, 22), // Dashboard
+    darkGreen, // Dashboard
     Colors.blue, // Statistics
     Colors.red, // Map
     Colors.blue, // QR Code
-    Color.fromARGB(204, 0, 165, 22), // Sensors
+    sensorGreen, // Sensors
   ];
 
   void updateSelectedIndex(int newIndex) {
@@ -60,7 +60,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 253, 253, 253),
+          backgroundColor: Colors.white,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard),

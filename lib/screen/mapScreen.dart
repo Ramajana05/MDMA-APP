@@ -148,8 +148,8 @@ class _MapScreen extends State<MapScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: BoxDecoration(
-                                    color: background,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -157,7 +157,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.sensors,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
@@ -239,7 +239,8 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: white.withOpacity(0.3),
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
                           ),
                           child: const Icon(
                             Icons.close,
@@ -305,8 +306,8 @@ class _MapScreen extends State<MapScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: const BoxDecoration(
-                                    color: white,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -314,7 +315,7 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.place,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
@@ -369,7 +370,8 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: white.withOpacity(0.3),
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
                           ),
                           child: const Icon(
                             Icons.close,
@@ -458,7 +460,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: background,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {
@@ -500,7 +502,7 @@ class _MapScreen extends State<MapScreen> {
                   children: const [
                     Icon(
                       Icons.battery_full,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -547,7 +549,7 @@ class _MapScreen extends State<MapScreen> {
                   children: const [
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -558,7 +560,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 128, 197, 130),
+                      color: primaryVisitorModerateCountColor,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -569,7 +571,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 170, 169, 169),
+                      color: primaryVisitorLowCountColor,
                       size: 20,
                     ),
                     SizedBox(width: 8),

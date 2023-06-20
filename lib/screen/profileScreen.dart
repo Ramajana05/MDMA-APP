@@ -269,14 +269,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? textColour,
+        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColour ?? textColour,
+          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
         ),
       ),
     );

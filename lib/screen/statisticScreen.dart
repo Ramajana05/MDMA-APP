@@ -50,10 +50,16 @@ class _StatisticsScreen extends State<StatisticsScreen>
   bool tempVisible = true;
   bool airVisible = true;
 
+  void handleToggle(bool value) {
+    setState(() {
+      rainLineChart = value;
+    });
+  }
+
   ///linechart color
   var visitorColor = primaryVisitorColor;
-  var temperatureColor = red;
-  var airHumidityColor = blue;
+  var temperatureColor = primaryTempColor;
+  var airHumidityColor = primaryHumidityColor;
 
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
@@ -330,7 +336,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 color: deepOrange,
                 shape: DataMarkerType.circle,
               ),
-              color: Color.fromARGB(255, 56, 162, 197),
+              color: const Color.fromARGB(255, 56, 162, 197),
             ),
           ],
           tooltipBehavior: TooltipBehavior(
@@ -529,7 +535,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: SwitchListTile(
-                        activeColor: Color.fromRGBO(38, 158, 38, 0.2),
+                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
                         // Lighter green tone
                         activeTrackColor: primaryAppLightGreen,
                         title: Text(
@@ -551,7 +557,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Container(
                       child: buildChartWidget(
                         visitorChartDaily,
-                        visitorColor,
+                        primaryVisitorColor,
                         dailyMax,
                         '$daily $visitor',
                       ),
@@ -614,7 +620,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: tempVisible,
                     child: buildChartWidget(
                       tempChartDaily,
-                      temperatureColor,
+                      primaryTempColor,
                       dailyMax,
                       '$daily $temperature',
                     ),
@@ -676,7 +682,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: airVisible,
                     child: buildChartWidget(
                       airHumidityChartDaily,
-                      airHumidityColor,
+                      primaryHumidityColor,
                       dailyMax,
                       '$daily $airHumidity',
                     ),
@@ -745,8 +751,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
-                    child: buildChartWidget(visitorChartWeekly, visitorColor,
-                        weeklyMax, '$weekly $visitor'),
+                    child: buildChartWidget(visitorChartWeekly,
+                        primaryVisitorColor, weeklyMax, '$weekly $visitor'),
                   ),
                 ],
               ),
@@ -803,7 +809,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartWeekly, temperatureColor,
+                    child: buildChartWidget(tempChartWeekly, primaryTempColor,
                         weeklyMax, '$weekly $temperature'),
                   ),
                 ],
@@ -861,8 +867,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(airHumidityChartWeekly,
-                        airHumidityColor, weeklyMax, '$weekly $airHumidity'),
+                    child: buildChartWidget(
+                        airHumidityChartWeekly,
+                        primaryHumidityColor,
+                        weeklyMax,
+                        '$weekly $airHumidity'),
                   ),
                 ],
               ),
@@ -928,8 +937,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
-                      child: buildChartWidget(visitorChartMonthly, visitorColor,
-                          monthlyMax, '$monthly $visitor')),
+                      child: buildChartWidget(
+                          visitorChartMonthly,
+                          primaryVisitorColor,
+                          monthlyMax,
+                          '$monthly $visitor')),
                 ],
               ),
             ),
@@ -985,7 +997,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartMonthly, temperatureColor,
+                    child: buildChartWidget(tempChartMonthly, primaryTempColor,
                         monthlyMax, '$monthly $temperature'),
                   ),
                 ],
@@ -1043,8 +1055,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(airHumidityChartMonthly,
-                        airHumidityColor, monthlyMax, '$monthly $airHumidity'),
+                    child: buildChartWidget(
+                        airHumidityChartMonthly,
+                        primaryHumidityColor,
+                        monthlyMax,
+                        '$monthly $airHumidity'),
                   ),
                 ],
               ),

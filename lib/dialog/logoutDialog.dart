@@ -3,6 +3,8 @@ import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
+import '../colors/appColors.dart';
+
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({Key? key}) : super(key: key);
 

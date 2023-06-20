@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
-import 'package:forestapp/colors/appColors.dart';
-import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 
@@ -72,6 +69,20 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     super.initState();
     expansionStates = List<bool>.filled(instructionsList.length, false);
   }
+
+  final List<Color> colorsList = [
+    Colors.green,
+    Colors.black,
+    Colors.red,
+    Colors.black,
+    Colors.green,
+    Colors.green,
+    Colors.green,
+    Colors.blue,
+    const Color.fromARGB(255, 127, 127, 128),
+    Color.fromARGB(255, 255, 2, 2),
+    const Color.fromARGB(255, 58, 243, 33),
+  ];
 
   @override
   Widget build(BuildContext context) {

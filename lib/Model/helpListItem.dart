@@ -41,7 +41,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      color: background,
+      color: const Color.fromARGB(249, 255, 255, 255),
       elevation: 6,
       shadowColor: black54,
       child: InkWell(
