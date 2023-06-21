@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
@@ -15,7 +16,8 @@ class LogoutDialog extends StatelessWidget {
       child: AlertDialog(
         title: Text(
           'Ausloggen',
-          style: LogOutDecoration.getTitleTextStyle().copyWith(fontSize: 24.0),
+          style: LogOutDecoration.getTitleTextStyle()
+              .copyWith(fontSize: 24.0, color: textColor),
         ),
         content: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -25,9 +27,7 @@ class LogoutDialog extends StatelessWidget {
               SizedBox(width: 8.0),
               Text(
                 'Wirklich ausloggen?',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
+                style: TextStyle(fontSize: 20.0, color: textColor),
               ),
             ],
           ),
@@ -40,7 +40,7 @@ class LogoutDialog extends StatelessWidget {
             child: Text(
               'Abbrechen',
               style: TextStyle(
-                color: Colors.grey,
+                color: buttonTextColor,
                 fontSize: 20.0,
                 fontWeight: FontWeight.w500,
               ),
@@ -53,7 +53,8 @@ class LogoutDialog extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
-            child: Text('Ausloggen', style: TextStyle(fontSize: 20.0)),
+            child: Text('Ausloggen',
+                style: TextStyle(fontSize: 20.0, color: lighterBackground)),
             style: ElevatedButton.styleFrom(
               primary: Color.fromARGB(255, 40, 233, 127),
               shape: RoundedRectangleBorder(
@@ -65,7 +66,7 @@ class LogoutDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(9.0),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: background,
         elevation: 8.0,
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16.0,

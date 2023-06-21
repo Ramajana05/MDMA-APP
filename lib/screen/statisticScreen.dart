@@ -14,7 +14,7 @@ import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
 
 class StatisticsScreen extends StatefulWidget {
-  const StatisticsScreen({Key? key}) : super(key: key);
+  StatisticsScreen({Key? key}) : super(key: key);
 
   @override
   State<StatisticsScreen> createState() => _StatisticsScreen();
@@ -52,8 +52,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
-  var temperatureColor = primaryTempColor;
-  var airHumidityColor = primaryHumidityColor;
+  var temperatureColor = red;
+  var airHumidityColor = blue;
 
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
@@ -64,6 +64,55 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   TabController? _tabController;
   int _selectedTabIndex = 0;
+
+  String getWeekOfPreviousMonth(int weekNumber) {
+    final now = DateTime.now();
+    final firstDayOfPreviousMonth = DateTime(now.year, now.month - 1, 1);
+    final lastDayOfPreviousMonth = DateTime(now.year, now.month, 0);
+
+    final weekStartDate = firstDayOfPreviousMonth
+        .subtract(Duration(days: firstDayOfPreviousMonth.weekday - 1))
+        .add(Duration(days: (weekNumber - 1) * 7));
+
+    DateTime weekEndDate;
+    if (weekNumber == 4) {
+      weekEndDate = lastDayOfPreviousMonth;
+    } else {
+      weekEndDate = weekStartDate.add(Duration(days: 6));
+    }
+
+    final weekStartDay = weekStartDate.day.toString().padLeft(2, '0');
+    final weekEndDay = weekEndDate.day.toString().padLeft(2, '0');
+    final month = firstDayOfPreviousMonth.month.toString().padLeft(2, '0');
+
+    return '$weekStartDay.$month. - $weekEndDay.$month.';
+  }
+
+  String getHours(int hour) {
+    String hourString = hour.toString().padLeft(2, '0');
+    return '$hourString:00';
+  }
+
+  String getWeekday(int day) {
+    switch (day) {
+      case 1:
+        return 'Mo';
+      case 2:
+        return 'Di';
+      case 3:
+        return 'Mi';
+      case 4:
+        return 'Do';
+      case 5:
+        return 'Fr';
+      case 6:
+        return 'Sa';
+      case 7:
+        return 'So';
+      default:
+        throw Exception('Invalid day: $day');
+    }
+  }
 
   @override
   void initState() {
@@ -131,14 +180,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   static buildChartBoxDecoration(Color boxShadowColor) {
     return BoxDecoration(
-      color: Colors.white,
+      color: background,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
           color: boxShadowColor,
           spreadRadius: 3,
           blurRadius: 4,
-          offset: const Offset(0, 2),
+          offset: Offset(0, 2),
         ),
       ],
     );
@@ -147,7 +196,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: primarybackgroundColor,
+      backgroundColor: Colors.white,
       appBar: TopNavBar(
         title: 'STATISTIK',
         onMenuPressed: () {},
@@ -160,7 +209,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               child: Column(
                 children: [
                   TabBarWidget(
-                    tabTexts: const ['Tag', 'Woche', 'Monat'],
+                    tabTexts: ['Tag', 'Woche', 'Monat'],
                     onTabSelected: (int index) {
                       setState(() {
                         _selectedTabIndex = index;
@@ -200,7 +249,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       xAxisTitle = 'Uhrzeit';
     }
 
-   // initializeDateFormatting('de_DE','');
+    // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == visitorChartMonthly ||
@@ -214,20 +263,21 @@ class _StatisticsScreen extends State<StatisticsScreen>
     // String year = DateFormat.y(locale).format(now);
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0),
       child: SizedBox(
         height: MediaQuery.of(context).size.height / 3,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-            axisLine: const AxisLine(color: Colors.black, width: 1.5),
-            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
             visibleMaximum: visibleMaximum,
             placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
-              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+              textStyle:
+                  TextStyle(fontWeight: FontWeight.w700, color: textColor),
             ),
           ),
           primaryYAxis: NumericAxis(
@@ -242,12 +292,12 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     : '',
             title: AxisTitle(
               text: yAxisTitle,
-              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+              textStyle:
+                  TextStyle(fontWeight: FontWeight.w700, color: textColor),
             ),
-            majorTickLines:
-                const MajorTickLines(size: 6, width: 2, color: Colors.black),
-            axisLine: const AxisLine(color: Colors.black, width: 1.5),
-            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
           ),
           //Scroll enabling
           zoomPanBehavior: ZoomPanBehavior(
@@ -256,17 +306,32 @@ class _StatisticsScreen extends State<StatisticsScreen>
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
               dataSource: chartData,
-              xValueMapper: (ChartData data, _) =>data.x,
+              xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              markerSettings: const MarkerSettings(
+              markerSettings: MarkerSettings(
                 borderColor: Colors.deepPurple,
                 isVisible: true,
-                color: Colors.grey,
+                color: grey,
                 shape: DataMarkerType.circle,
               ),
               color: chartColor,
-              dataLabelMapper: (ChartData data, _) => '${data.x}',
-            )
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+            LineSeries<ChartData, String>(
+              dataSource: rainPercentChartDaily,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              isVisible: rainLineChart == true && chartData == visitorChartDaily
+                  ? true
+                  : false,
+              markerSettings: const MarkerSettings(
+                borderColor: Color(0xFF800080),
+                isVisible: true,
+                color: Colors.deepOrange,
+                shape: DataMarkerType.circle,
+              ),
+              color: const Color.fromARGB(255, 56, 162, 197),
+            ),
           ],
           tooltipBehavior: TooltipBehavior(
             animationDuration: 1,
@@ -294,15 +359,32 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 }
 
                 return Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: textColor,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       chartName,
+                      //       style: const TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
+                      // const Text(
+                      //   '────────────────',
+                      //   style: TextStyle(color: Colors.white),
+                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -318,7 +400,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             '  ${data.x} : '
                             '$formattedYWithUnit',
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: textInverted),
                           ),
                         ],
                       ),
@@ -331,55 +413,55 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 if (formattedY.endsWith('.0')) {
                   formattedY = formattedY.substring(0, formattedY.length - 2);
                 }
-                // return Container(
-                //   padding: const EdgeInsets.all(10),
-                //   decoration: BoxDecoration(
-                //     color: Colors.black,
-                //     borderRadius: BorderRadius.circular(5),
-                //   ),
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.min,
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: const [
-                //           Text(
-                //             'Regenwahrscheinlichkeit',
-                //             style: TextStyle(
-                //               color: Colors.white,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           )
-                //         ],
-                //       ),
-                //       const Text(
-                //         '────────────────',
-                //         style: TextStyle(color: Colors.white),
-                //       ),
-                //       Row(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           Container(
-                //             width: 10,
-                //             height: 10,
-                //             decoration: BoxDecoration(
-                //               shape: BoxShape.circle,
-                //               color: chartColor,
-                //             ),
-                //           ),
-                //           Text(
-                //             '  ${data.x} : '
-                //                 '$formattedY%',
-                //             style: const TextStyle(color: Colors.white),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // );
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            'Regenwahrscheinlichkeit',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Text(
+                        '────────────────',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: chartColor,
+                            ),
+                          ),
+                          Text(
+                            '  ${data.x} : '
+                            '$formattedY%',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               }
               return Container();
             },
@@ -396,7 +478,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
         children: [
           /// Visitor
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: visitorChartShadow,
               child: Column(
@@ -413,13 +495,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -436,6 +518,28 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             },
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+
+                  /// Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
+                        // Lighter green tone
+                        activeTrackColor: primaryAppLightGreen,
+                        title: Text(
+                          rainLineChart ? rainTextVisible : rainTextHidden,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: rainLineChart,
+                        onChanged: handleToggle,
                       ),
                     ),
                   ),
@@ -459,7 +563,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           /// Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: temperatureChartShadow,
               child: Column(
@@ -476,13 +580,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -520,7 +624,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           /// Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: airHumidityChartShadow,
               child: Column(
@@ -537,13 +641,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -590,7 +694,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
         children: [
           /// Visitor
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: visitorChartShadow,
               child: Column(
@@ -607,13 +711,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -647,7 +751,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           /// Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: temperatureChartShadow,
               child: Column(
@@ -664,13 +768,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -704,7 +808,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           // Air Humidity
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: airHumidityChartShadow,
               child: Column(
@@ -721,13 +825,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -770,7 +874,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
         children: [
           /// Visitor
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: visitorChartShadow,
               child: Column(
@@ -787,13 +891,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -826,7 +930,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           // Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: temperatureChartShadow,
               child: Column(
@@ -843,13 +947,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -883,7 +987,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           /// Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: airHumidityChartShadow,
               child: Column(
@@ -900,13 +1004,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            padding: EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../colors/appColors.dart';
 
 class topNavBarDecoration {
-  static const Color startGradientColor = Color.fromARGB(255, 86, 252, 108);
+  static const Color startGradientColor = topGreen;
   static const Color endGradientColor = primaryAppLightGreen;
 
   static BoxDecoration getBoxDecoration() {
@@ -15,7 +15,7 @@ class topNavBarDecoration {
       ),
       border: Border(
         bottom: BorderSide(
-          color: Color.fromARGB(6, 95, 247, 115),
+          color: topBorderGreen,
           width: 4.0,
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,7 +9,14 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 
-class SidePanel extends StatelessWidget {
+class SidePanel extends StatefulWidget {
+  const SidePanel({Key? key}) : super(key: key);
+
+  @override
+  State<SidePanel> createState() => _SidePanel();
+}
+
+class _SidePanel extends State<SidePanel> {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context);
     final loggedInUsername = userProvider.loggedInUsername;
@@ -16,12 +24,10 @@ class SidePanel extends StatelessWidget {
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
-  bool isNightMode = false;
-  late final Function(bool) onToggle;
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: background,
       child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height / 1,
@@ -50,10 +56,11 @@ class SidePanel extends StatelessWidget {
                   Icons.person,
                   size: 28,
                 ), // Add leading icon
-                title: const Text(
+                title: Text(
                   'Profil',
                   style: TextStyle(
                     fontSize: 18,
+                    color: getTextColor(),
                   ),
                 ),
                 iconColor: Color.fromARGB(255, 40, 233, 127),
@@ -67,10 +74,11 @@ class SidePanel extends StatelessWidget {
                   Icons.public,
                   size: 28,
                 ), // Add leading icon
-                title: const Text(
+                title: Text(
                   'Startseite',
                   style: TextStyle(
                     fontSize: 18,
+                    color: getTextColor(),
                   ),
                 ),
                 iconColor: Colors.blue,
@@ -87,11 +95,13 @@ class SidePanel extends StatelessWidget {
                 leading: const Icon(
                   Icons.help_outline_outlined,
                   size: 28,
-                ), // Add leading icon
-                title: const Text(
+                ),
+                iconColor: getTextColor(),
+                title: Text(
                   'Hilfe',
                   style: TextStyle(
                     fontSize: 18,
+                    color: getTextColor(),
                   ),
                 ),
                 onTap: () => Navigator.push(
@@ -99,17 +109,33 @@ class SidePanel extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => InstructionsScreen()),
                 ),
               ),
+              ListTile(
+                  leading: Icon(
+                    isNightMode
+                        ? Icons.dark_mode_outlined
+                        : Icons.light_mode_outlined,
+                    size: 28,
+                  ), //
+                  iconColor: iconColor(),
+                  title: Text(
+                    isNightMode ? 'Dunkler Modus' : 'Heller Modus',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: getTextColor(),
+                    ),
+                  ),
+                  onTap: () => setState(() {
+                        toggleNightMode();
+                      })),
               const Spacer(),
               ListTile(
                 leading: const Icon(
                   Icons.logout,
                   size: 28,
                 ), // Add leading icon
-                title: const Text(
+                title: Text(
                   'Ausloggen',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                  style: TextStyle(fontSize: 18, color: textColor),
                 ),
                 iconColor: Colors.red,
                 onTap: () {

@@ -57,43 +57,41 @@ class _PasswordDialogState extends State<PasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: background,
       title: Text(
         'Passwort Ändern',
-        style: TextStyle(
-          fontSize: 24, // Hier kannst du die gewünschte Schriftgröße einstellen
-        ),
+        style: TextStyle(color: textColor),
       ),
       content: SingleChildScrollView(
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.99,
+          width: MediaQuery.of(context).size.width * 0.9,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.only(bottom: 10.0),
                 child: TextFormField(
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
                     labelText: 'Aktuelles Passwort',
+                    labelStyle: TextStyle(color: buttonTextColor),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: changeBackgroundLighter(),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                      borderSide: const BorderSide(
+                        color: grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: primaryAppLightGreen,
                         width: 2.0,
                       ),
                     ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     focusColor: primaryAppLightGreen,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 16.0,
                     ),
@@ -102,8 +100,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurecurrentPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: buttonTextColor, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -122,30 +119,31 @@ class _PasswordDialogState extends State<PasswordDialog> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.only(bottom: 10.0),
                 child: TextFormField(
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
                     labelText: 'Neues Passwort',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: changeBackgroundLighter(),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                      borderSide: const BorderSide(
+                        color: grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: primaryAppLightGreen,
                         width: 2.0,
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: buttonTextColor,
                     ),
                     focusColor: primaryAppLightGreen,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 16.0,
                     ),
@@ -154,8 +152,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurenewPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: buttonTextColor, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -175,28 +172,29 @@ class _PasswordDialogState extends State<PasswordDialog> {
               ),
 
               TextFormField(
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   labelText: 'Neues Passwort bestätigen',
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: changeBackgroundLighter(),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
+                    borderSide: const BorderSide(
+                      color: grey,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: primaryAppLightGreen,
                       width: 2.0,
                     ),
                   ),
                   labelStyle: TextStyle(
-                    color: Colors.grey,
+                    color: buttonTextColor,
                   ),
                   focusColor: primaryAppLightGreen,
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                     vertical: 12.0,
                     horizontal: 16.0,
                   ),
@@ -205,8 +203,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       _obscurenewPassword
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Color.fromARGB(
-                          255, 173, 173, 173), // Set the color of the icon
+                      color: buttonTextColor, // Set the color of the icon
                     ),
                     onPressed: () {
                       setState(() {
@@ -225,17 +222,17 @@ class _PasswordDialogState extends State<PasswordDialog> {
               ),
 
               if (isLoading)
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: CircularProgressIndicator(),
                 ), // Show CircularProgressIndicator when isLoading is true
               if (errorMessage.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
                     errorMessage,
-                    style: TextStyle(
-                      color: Colors.red,
+                    style: const TextStyle(
+                      color: red,
                     ),
                   ),
                 ),
@@ -253,13 +250,13 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   onPressed: widget.onCancelPressed,
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 20.0),
+                      const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                     foregroundColor: MaterialStateProperty.all<Color>(
-                      Colors.grey,
+                      grey.shade600,
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 255, 255),
+                      white,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -276,16 +273,16 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   ),
                 ),
               ),
-              SizedBox(width: 16.0),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: ElevatedButton(
                   onPressed: widget.onConfirmPressed,
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 20.0),
+                      const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                     foregroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 255, 255),
+                      getButtonTexInversedColor(),
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
                       primaryAppLightGreen,
@@ -297,7 +294,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     ),
                   ),
                   child: isLoading
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : const Text(
                           'Bestätigen',
                           style: TextStyle(

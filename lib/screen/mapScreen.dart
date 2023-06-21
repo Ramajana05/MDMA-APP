@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/tabBarWidget.dart';
@@ -121,11 +122,12 @@ class _MapScreen extends State<MapScreen> {
             return true;
           },
           child: GestureDetector(
+            /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: background,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
@@ -146,8 +148,8 @@ class _MapScreen extends State<MapScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  decoration: BoxDecoration(
+                                    color: background,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -194,9 +196,9 @@ class _MapScreen extends State<MapScreen> {
                                       Container(
                                         width: 24,
                                         height: 24,
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.battery_full,
-                                          color: Colors.white,
+                                          color: invertedColor,
                                           size: 16,
                                         ),
                                       ),
@@ -208,10 +210,10 @@ class _MapScreen extends State<MapScreen> {
                                       const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                     ],
                                   ),
@@ -243,7 +245,7 @@ class _MapScreen extends State<MapScreen> {
                           child: const Icon(
                             Icons.close,
                             size: 24,
-                            color: Colors.grey,
+                            color: grey,
                           ),
                         ),
                       ),
@@ -305,7 +307,7 @@ class _MapScreen extends State<MapScreen> {
                                   width: 40,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: white,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -326,9 +328,9 @@ class _MapScreen extends State<MapScreen> {
                                   Text(
                                     'Standort: ${polygon.polygonId.value}',
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor),
                                   ),
                                   SizedBox(height: 8),
                                   Row(
@@ -340,9 +342,9 @@ class _MapScreen extends State<MapScreen> {
                                       Text(
                                         '${polygon.visitors.toString()} Besucher',
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                     ],
                                   ),
@@ -374,7 +376,7 @@ class _MapScreen extends State<MapScreen> {
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: Colors.grey,
+                            color: grey,
                           ),
                         ),
                       ),
@@ -458,7 +460,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: mapScreen_background_Color,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {

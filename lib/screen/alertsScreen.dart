@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/warningWidget.dart';
 
@@ -13,7 +14,7 @@ class _AlertScreen extends State<AlertScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 227, 227, 227),
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'Alert',
         onMenuPressed: () {

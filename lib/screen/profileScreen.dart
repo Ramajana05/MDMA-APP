@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
@@ -63,17 +64,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
-              child: Text(
-                'Persönliche Daten',
-                style: TextStyle(
-                  color: primaryAppLightGreen,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          color: background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+                child: Text(
+                  'Persönliche Daten',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
               ),
             ),
@@ -112,73 +116,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Kontoaktionen',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Card(
-                elevation: 2.0,
-                color:
-                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return PasswordDialog(
-                              onCurrentPasswordChanged: (value) {
-                                currentPassword = value;
-                              },
-                              onNewPasswordChanged: (value) {
-                                newPassword = value;
-                              },
-                              onConfirmPasswordChanged: (value) {
-                                confirmPassword = value;
-                              },
-                              onConfirmPressed: () async {
-                                final userProvider = Provider.of<UserProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                                final loggedInUsername =
-                                    userProvider.loggedInUsername;
-
-                                final loginService = LoginService();
-                                final currentPassword = await loginService
-                                    .fetchPasswordFromDatabase(
-                                  loggedInUsername!,
-                                );
-
-                                // Retrieve the entered values for current password, new password, and confirm password
-                                final enteredCurrentPassword =
-                                    getCurrentPasswordValue();
-                                final enteredNewPassword =
-                                    getNewPasswordValue();
-                                final enteredConfirmPassword =
-                                    getConfirmPasswordValue();
-
-                                // Compare the entered values with the current password and each other
-                                if (enteredCurrentPassword == currentPassword &&
-                                    enteredNewPassword ==
-                                        enteredConfirmPassword) {
-                                  // Passwords match, perform the password change in the database
-                                  await loginService.changePasswordInDatabase(
-                                    loggedInUsername,
-                                    enteredNewPassword,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Card(
+                  elevation: 2.0,
+                  color: changeBackgroundLighter(), // Soft grey color
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PasswordDialog(
+                                onCurrentPasswordChanged: (value) {
+                                  currentPassword = value;
+                                },
+                                onNewPasswordChanged: (value) {
+                                  newPassword = value;
+                                },
+                                onConfirmPasswordChanged: (value) {
+                                  confirmPassword = value;
+                                },
+                                onConfirmPressed: () async {
+                                  final userProvider =
+                                      Provider.of<UserProvider>(
+                                    context,
+                                    listen: false,
                                   );
-                                  print('Password changed successfully');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Password changed successfully'),
-                                    ),
+                                  final loggedInUsername =
+                                      userProvider.loggedInUsername;
+
+                                  final loginService = LoginService();
+                                  final currentPassword = await loginService
+                                      .fetchPasswordFromDatabase(
+                                    loggedInUsername!,
                                   );
+
+                                  // Retrieve the entered values for current password, new password, and confirm password
+                                  final enteredCurrentPassword =
+                                      getCurrentPasswordValue();
+                                  final enteredNewPassword =
+                                      getNewPasswordValue();
+                                  final enteredConfirmPassword =
+                                      getConfirmPasswordValue();
+
+                                  // Compare the entered values with the current password and each other
+                                  if (enteredCurrentPassword ==
+                                          currentPassword &&
+                                      enteredNewPassword ==
+                                          enteredConfirmPassword) {
+                                    // Passwords match, perform the password change in the database
+                                    await loginService.changePasswordInDatabase(
+                                      loggedInUsername,
+                                      enteredNewPassword,
+                                    );
+                                    print('Password changed successfully');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Passwort konnte erfolgreich geändert werden.',
+                                            style: TextStyle(color: textColor)),
+                                      ),
+                                    );
 
                                   Navigator.of(context).pop();
                                 } else {
@@ -214,12 +218,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Powered by',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
                   fontSize: 24.0,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -250,19 +253,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     IconData iconData,
     String text, {
     Color? iconColor,
-    Color? textColor,
+    Color? textColour,
   }) {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? textColour,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColour ?? textColour,
         ),
       ),
     );

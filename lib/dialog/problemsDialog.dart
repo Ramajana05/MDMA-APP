@@ -16,19 +16,22 @@ class ProblemDialog extends StatelessWidget {
       content: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: const [
+          children: [
             SizedBox(width: 8.0),
-            Text('Wenden Sie sich an den Support'),
+            Text(
+              'Wenden Sie sich an den Support',
+              style: TextStyle(color: textColor),
+            ),
           ],
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text(
+          child: Text(
             'Zurück',
             style: TextStyle(
-              color: Colors.grey,
+              color: invertedColor,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
@@ -48,7 +51,7 @@ class ProblemDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(9.0),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: textInverted,
       elevation: 8.0,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16.0,

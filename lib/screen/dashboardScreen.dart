@@ -277,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Colors.white,
+      backgroundColor: background,
       appBar: const TopNavBar(
         title: 'DASHBOARD',
       ),
@@ -310,8 +310,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -338,14 +337,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Besucher',
                                           style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor),
                                         ),
                                       ),
                                     ],
@@ -370,7 +369,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -398,14 +397,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Sensoren',
                                           style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor),
                                         ),
                                       ),
                                     ],
@@ -434,11 +433,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: Colors.red.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -453,8 +452,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Colors.transparent,
                                         const Color.fromARGB(
                                             255, 255, 199, 199),
-                                        Colors.red,
-                                        maxTemperature,
+                                        red,
+                                        40,
                                         currentTemperature.toInt(),
                                         [
                                           Icons.thermostat,
@@ -462,14 +461,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "°C",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Temperatur',
                                           style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor),
                                         ),
                                       ),
                                     ],
@@ -494,12 +493,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: Colors.blue.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -514,21 +512,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Colors.transparent,
                                         const Color.fromARGB(
                                             255, 196, 236, 255),
-                                        Colors.blue,
-                                        avgAirHumidity,
+                                        blue,
+                                        100,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Luftfeuchtigkeit',
                                           style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor),
                                         ),
                                       ),
                                     ],
@@ -543,12 +541,71 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 15.0),
                   // News
-                  buildNewsSection(),
-
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CustomBottomTabBar(trans_index: 4)));
+                    },
+                    child: Container(
+                      height: 40,
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Neuigkeiten",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  showWarningWidget = !showWarningWidget;
+                                });
+                              },
+                              icon: Icon(
+                                showWarningWidget
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: Colors.black,
+                                size: 30.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: showWarningWidget,
+                    child: WarningWidget(
+                      message:
+                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
+                      isWarnung: false,
+                      iconColor: const Color.fromARGB(255, 37, 70, 255),
+                    ),
+                  ),
+                  Visibility(
+                    visible: showWarningWidget,
+                    child: WarningWidget(
+                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
+                      isWarnung: true,
+                      iconColor: const Color.fromARGB(255, 255, 106, 37),
+                    ),
+                  ),
                   const SizedBox(height: 15.0),
 
                   // Statistics
                   Container(
+                    color: background,
                     height: 40,
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -564,12 +621,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       builder: (context) =>
                                           CustomBottomTabBar(trans_index: 1)));
                             },
-                            child: const Text(
+                            child: Text(
                               "Statistiken",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -583,7 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               showStatistics
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: textColor,
                               size: 30.0,
                             ),
                           ),
@@ -602,7 +659,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Visibility(
                       visible: showStatistics,
                       child: Container(
-                        color: Colors.white,
+                        color: background,
                         height: 250,
                         child: Stack(
                           children: [
@@ -652,19 +709,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Wettervorhersage",
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor),
                             ),
                             Icon(
                               showWeatherForecast
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: textColor,
                               size: 30.0,
                             ),
                           ],
@@ -753,10 +809,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return '';
   }
 
-  void _handleCircleTap(CircleData circle) {
-    int batteryLevel = circle.battery;
-  }
-
   Widget _buildIndicator() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -781,14 +833,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<ChartData> chartData,
     Color chartColor,
   ) {
-    return SizedBox(
+    return Container(
+      color: background,
       height: MediaQuery.of(context).size.height / 5,
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(
           crossesAt: 0,
           placeLabelsNearAxisLine: false,
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          axisLine: AxisLine(color: textColor, width: 1.5),
+          labelStyle: TextStyle(fontSize: 15, color: textColor),
           desiredIntervals: 12,
         ),
         primaryYAxis: NumericAxis(
@@ -797,10 +850,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               : (chartData == tempChartDaily)
                   ? '{value}°C'
                   : '',
-          majorTickLines:
-              const MajorTickLines(size: 6, width: 2, color: Colors.black),
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
+          axisLine: AxisLine(color: textColor, width: 1.5),
+          labelStyle: TextStyle(fontSize: 15, color: textColor),
         ),
         series: <ChartSeries>[
           LineSeries<ChartData, String>(
@@ -810,7 +862,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             markerSettings: const MarkerSettings(
               borderColor: Colors.deepPurple,
               isVisible: true,
-              color: Colors.grey,
+              color: grey,
               shape: DataMarkerType.circle,
             ),
             color: chartColor,
@@ -822,7 +874,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildStatisticItem(Statistic statistic) {
-    Widget chartWidget = Container();
+    Widget chartWidget = Container(
+      color: background,
+    );
 
     List<Map<String, dynamic>> statistics = [
       {
@@ -833,12 +887,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {
         'title': dailyTemps,
         'chartData': tempChartDaily,
-        'chartColor': primaryTempColor,
+        'chartColor': red,
       },
       {
         'title': dailyAir,
         'chartData': airHumidityChartDaily,
-        'chartColor': primaryHumidityColor,
+        'chartColor': blue,
       },
     ];
 
@@ -855,11 +909,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: background,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: textColor.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -872,10 +926,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               statistic.title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: Colors.black,
+                color: textColor,
               ),
             ),
             const SizedBox(height: 10),
@@ -914,6 +968,7 @@ class WeatherItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: background,
       elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius:
@@ -922,11 +977,11 @@ class WeatherItemCard extends StatelessWidget {
       child: Container(
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: background,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: textColor.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -939,24 +994,18 @@ class WeatherItemCard extends StatelessWidget {
             // Display the weekday
             Text(
               weatherData.weekday,
-              style: const TextStyle(
-                fontSize: 15,
-              ),
+              style: TextStyle(fontSize: 15, color: textColor),
             ),
             // Display the date
             Text(
               DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
-              style: const TextStyle(
-                fontSize: 14,
-              ),
+              style: TextStyle(fontSize: 14, color: textColor),
             ),
             // Display the temperature
             Text(
               '${weatherData.temperature}°C',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 20, color: textColor),
             ),
             // Display the weather icon
             Image.network(
@@ -972,7 +1021,7 @@ class WeatherItemCard extends StatelessWidget {
                 const Icon(Icons.water_drop, size: 20, color: Colors.blue),
                 Text(
                   '${weatherData.rainPercentage}%',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: textColor),
                 ),
               ],
             ),
@@ -983,7 +1032,7 @@ class WeatherItemCard extends StatelessWidget {
                 const Icon(Icons.air, size: 24, color: Colors.grey),
                 Text(
                   '${weatherData.windSpeed} km/h',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: textColor),
                 ),
               ],
             ),
@@ -1024,7 +1073,7 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: primarybackgroundColor,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(

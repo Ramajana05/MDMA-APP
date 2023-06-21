@@ -118,7 +118,7 @@ class _LoadingDialogState extends State<LoadingDialog>
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
+          color: background,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -137,22 +137,13 @@ class _LoadingDialogState extends State<LoadingDialog>
               },
             ),
             const SizedBox(height: 16.0),
-            if (_errorMessage != null) // Display error message if available
-              Text(
-                _errorMessage!,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.red,
-                ),
-              ),
-            if (_errorMessage == null) // Display dialog text if no error
-              Text(
-                dialogTexts[_currentIndex],
-                style: TextStyle(
+            Text(
+              dialogTexts[_currentIndex],
+              style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
+                  color: textColor),
+            ),
           ],
         ),
       ),
@@ -161,7 +152,6 @@ class _LoadingDialogState extends State<LoadingDialog>
 }
 
 void main() {
-
   final apiService = ApiService();
 
   // Wrap the LoadingDialog widget with MaterialApp
