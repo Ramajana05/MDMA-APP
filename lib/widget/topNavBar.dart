@@ -58,7 +58,7 @@ class _TopNavBarState extends State<TopNavBar>
         widget.title,
         style: topNavBarDecoration.getTitleTextStyle().copyWith(fontSize: 27),
       ),
-      backgroundColor: Color.fromARGB(146, 255, 255, 255),
+      backgroundColor: background,
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(

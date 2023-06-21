@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 BoxDecoration bottomNavBarDecoration2 = BoxDecoration(
-  border: Border(
+  border: const Border(
     top: BorderSide(
-      color: Color.fromARGB(255, 41, 235, 15),
+      color: bottomGreen,
       width: 4.0,
     ),
   ),
-  gradient: LinearGradient(
-    colors: [
-      Color(0xFF2DFFD9),
-      Color(0xFF00FF57),
-    ],
+  gradient: const LinearGradient(
+    colors: bottomGradient,
     begin: Alignment.bottomLeft,
     end: Alignment.bottomRight,
   ),

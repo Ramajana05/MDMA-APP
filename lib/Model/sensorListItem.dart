@@ -99,7 +99,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: Color.fromARGB(249, 255, 255, 255),
+      color: background,
       elevation: 6,
       shadowColor: Colors.black54,
       child: Padding(
@@ -128,15 +128,15 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                                 Icons.sensors,
                                 color: widget.status == 'Online'
                                     ? Color.fromARGB(255, 64, 236, 73)
-                                    : Colors.red,
+                                    : red,
                               ),
                               SizedBox(width: 4),
                               Text(
                                 widget.sensorTitle,
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
                               ),
                             ],
                           ),
@@ -146,13 +146,14 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           alignment: Alignment.centerLeft,
                           child: Row(
                             children: [
-                              SizedBox(height: 4),
-                              SizedBox(width: 4),
+                              SizedBox(
+                                height: 4,
+                                width: 4,
+                              ),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                                style:
+                                    TextStyle(fontSize: 16, color: textColor),
                               ),
                             ],
                           ),
@@ -168,7 +169,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                         Icon(
                           Icons.arrow_drop_down,
                           size: 30,
-                          color: Colors.black,
+                          color: textColor,
                         ),
                         SizedBox(height: 6),
                         _buildBatteryIcon(widget.chargerInfo),
@@ -187,36 +188,30 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     SizedBox(height: 10),
                     Text(
                       'Sensor Werte:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
                     ),
                     SizedBox(height: 6),
                     Text(
                       'Aktuelle Temperatur: ${widget.temperature}°C',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(height: 6),
                     Text(
                       'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(height: 6),
                     Text(
                       'Aktuelle Signal Stärke: ${widget.signalStrength}',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(height: 6),
                     Text(
                       'Aktueller Akku Stand: ${widget.chargerInfo}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(height: 12),
                   ],

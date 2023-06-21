@@ -71,7 +71,7 @@ class _LoadingDialogState extends State<LoadingDialog>
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
+          color: background,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -92,10 +92,10 @@ class _LoadingDialogState extends State<LoadingDialog>
             const SizedBox(height: 16.0),
             Text(
               dialogTexts[_currentIndex],
-              style: const TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: textColor),
             ),
           ],
         ),

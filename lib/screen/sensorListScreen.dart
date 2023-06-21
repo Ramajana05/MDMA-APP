@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
@@ -75,7 +76,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
         onMenuPressed: () {

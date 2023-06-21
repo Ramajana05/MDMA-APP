@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
@@ -13,10 +14,7 @@ class WarningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
-
-    Color textColor = const Color.fromARGB(255, 0, 0, 0);
-    Color titleColor = isWarnung ? Colors.orange : Colors.blue;
+    Color titleColor = isWarnung ? orange : blue;
 
     IconData iconData =
         isWarnung ? Icons.warning : Icons.notifications_active_outlined;
@@ -29,18 +27,17 @@ class WarningWidget extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0),
         child: const Icon(
           Icons.delete_outline,
-          color: Colors.red,
+          color: red,
           size: 32.0,
         ),
       ),
       onDismissed: (direction) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.white, // Set the background color to white
+          SnackBar(
+            backgroundColor: background,
             content: Text(
               'Neuigkeit gelöscht',
-              style:
-                  TextStyle(color: Colors.black), // Set the text color to black
+              style: TextStyle(color: textColor),
             ),
           ),
         );
@@ -50,7 +47,7 @@ class WarningWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: background, // Set the background color
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
@@ -70,7 +67,6 @@ class WarningWidget extends StatelessWidget {
               ),
               const SizedBox(width: 16.0),
               Expanded(
-                // Wrap the message text in an Expanded widget
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

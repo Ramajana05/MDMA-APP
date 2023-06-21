@@ -4,12 +4,13 @@ import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
+import '../colors/appColors.dart';
 import '../screen/statisticScreen.dart';
 
 class CustomBottomTabBar extends StatefulWidget {
   int index = 0;
 
-  CustomBottomTabBar({int trans_index=0}) {
+  CustomBottomTabBar({int trans_index = 0}) {
     index = trans_index;
   }
 
@@ -19,19 +20,11 @@ class CustomBottomTabBar extends StatefulWidget {
 
 class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   final screens = [
-    DashboardScreen(),
+    const DashboardScreen(),
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    SensorListScreen(),
-  ];
-
-  final List<Color> tabColors = [
-    Color.fromARGB(204, 0, 165, 22), // Dashboard
-    Colors.blue, // Statistics
-    Colors.red, // Map
-    Colors.blue, // QR Code
-    Color.fromARGB(204, 0, 165, 22), // Sensors
+    const SensorListScreen(),
   ];
 
   void updateSelectedIndex(int newIndex) {
@@ -48,7 +41,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           type: BottomNavigationBarType.shifting,
           currentIndex: widget.index,
           showUnselectedLabels: false,
-          unselectedItemColor: Colors.black,
+          unselectedItemColor: bottomNavSelectColor,
           selectedItemColor: tabColors[widget.index],
           // Use the respective color for the selected tab
 
@@ -57,25 +50,26 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 253, 253, 253),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
+              backgroundColor: background,
+              icon: const Icon(Icons.dashboard),
               label: 'Dashbaord',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              backgroundColor: background,
+              icon: const Icon(Icons.pin_drop),
               label: 'Karte',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.qr_code_scanner),
               label: 'QR Code',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.sensors),
               label: 'Sensoren',
             ),

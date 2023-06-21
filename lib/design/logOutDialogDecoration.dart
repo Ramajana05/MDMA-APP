@@ -5,11 +5,11 @@ import '../colors/appColors.dart';
 class LogOutDecoration {
   static BoxDecoration getBoxDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: white,
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
         BoxShadow(
-          color: Colors.black26,
+          color: logoutBlack,
           blurRadius: 8.0,
           offset: Offset(0.0, 4.0),
         ),

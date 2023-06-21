@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 
 class HelpListItemWidget extends StatefulWidget {
@@ -31,7 +32,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      color: const Color.fromARGB(249, 255, 255, 255),
+      color: background,
       elevation: 6,
       shadowColor: Colors.black54,
       child: InkWell(
@@ -60,10 +61,10 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                               const SizedBox(width: 8),
                               Text(
                                 widget.title,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
                               ),
                             ],
                           ),
@@ -81,7 +82,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                               ? Icons.arrow_drop_up
                               : Icons.arrow_drop_down,
                           size: 36,
-                          color: Colors.black,
+                          color: textInverted,
                         ),
                         const SizedBox(height: 6),
                       ],
@@ -99,9 +100,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                     const SizedBox(height: 16),
                     Text(
                       widget.description,
-                      style: const TextStyle(
-                        fontSize: 22,
-                      ),
+                      style: TextStyle(fontSize: 22, color: textColor),
                     ),
                     const SizedBox(height: 8),
                   ],

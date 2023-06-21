@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 import 'dart:math';
@@ -25,7 +26,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
 
   final Map<String, String> instructionDescriptions = {
     'Dashboard':
-        'Das Dashboard bietet eine umfassende Übersicht über aktuelle Besucherzahlen, online verfügbare Sensoren sowie die genaue Temperatur und Luftfeuchtigkeit. Darüber hinaus werden auf dem Dashboard eine interaktive Karte mit den eingetragenen Standorten und Sensoren sowie aktuelle Neuigkeiten angezeigt, die auch wichtige Warnungen und eine präzise Wettervorhersage enthalten.',
+        'Das Dashboard bietet eine umfassende Übersicht über aktuelle Besucherzahlen, online verfügbare Sensoren sowie die genaue Temperatur und Luftfeuchtigkeit. Darüber hinaus werden auf dem Dashboard Statistiken und Sensoren, sowie aktuelle Neuigkeiten angezeigt, die auch wichtige Warnungen und eine präzise Wettervorhersage enthalten.',
     'Statistik':
         'Die Statistik präsentiert detaillierte Daten zu Besucherzahlen, Temperatur und Luftfeuchtigkeit. Hier finden Sie separate Statistiken für den aktuellen Tag mit stündlichen Werten, den laufenden Monat mit täglichen Werten und den aktuellen Monat mit wöchentlichen Werten. Diese Informationen helfen Ihnen dabei, wichtige Trends und Muster zu erkennen.',
     'Karte':
@@ -96,70 +97,74 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
         },
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Anleitung',
-                style: TextStyle(
-                  fontSize: 26.0,
-                  fontWeight: FontWeight.bold,
+        child: Container(
+          color: background,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Anleitung',
+                  style: TextStyle(
+                      fontSize: 26.0,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
               ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: instructionsList.length,
-              itemBuilder: (context, index) {
-                final instruction = instructionsList[index];
-                if (instruction == 'Dashboard' ||
-                    instruction == 'Statistik' ||
-                    instruction == 'Karte' ||
-                    instruction == 'QR Scanner' ||
-                    instruction == 'Sensoren Liste' ||
-                    instruction == 'Menu' ||
-                    instruction == 'Profil' ||
-                    instruction == 'Website' ||
-                    instruction == 'Hilfe' ||
-                    instruction == 'Ausloggen' ||
-                    instruction == 'Neu Laden') {
-                  final IconData icon =
-                      instructionIcons[instruction] ?? Icons.help;
-                  final Color iconColor = colorsList[index % colorsList.length];
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        expansionStates[index] = !expansionStates[index];
-                      });
-                    },
-                    child: HelpListItemWidget(
-                      title: instruction,
-                      expanded: expansionStates[index],
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: instructionsList.length,
+                itemBuilder: (context, index) {
+                  final instruction = instructionsList[index];
+                  if (instruction == 'Dashboard' ||
+                      instruction == 'Statistik' ||
+                      instruction == 'Karte' ||
+                      instruction == 'QR Scanner' ||
+                      instruction == 'Sensoren Liste' ||
+                      instruction == 'Menu' ||
+                      instruction == 'Profil' ||
+                      instruction == 'Website' ||
+                      instruction == 'Hilfe' ||
+                      instruction == 'Ausloggen' ||
+                      instruction == 'Neu Laden') {
+                    final IconData icon =
+                        instructionIcons[instruction] ?? Icons.help;
+                    final Color iconColor =
+                        colorsList[index % colorsList.length];
+                    return GestureDetector(
                       onTap: () {
                         setState(() {
                           expansionStates[index] = !expansionStates[index];
                         });
                       },
-                      alignLeft:
-                          index % 2 == 0, // Align left for even index items
-                      description: instructionDescriptions[instruction] ?? '',
-                      icon: icon,
-                      iconColor: iconColor, // Pass the random color
-                    ),
-                  );
-                } else {
-                  return ListTile(
-                    title: Text(
-                      instruction,
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
+                      child: HelpListItemWidget(
+                        title: instruction,
+                        expanded: expansionStates[index],
+                        onTap: () {
+                          setState(() {
+                            expansionStates[index] = !expansionStates[index];
+                          });
+                        },
+                        alignLeft:
+                            index % 2 == 0, // Align left for even index items
+                        description: instructionDescriptions[instruction] ?? '',
+                        icon: icon,
+                        iconColor: iconColor, // Pass the random color
+                      ),
+                    );
+                  } else {
+                    return ListTile(
+                      title: Text(
+                        instruction,
+                        style: TextStyle(fontSize: 16.0, color: textColor),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

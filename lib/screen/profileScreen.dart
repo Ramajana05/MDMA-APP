@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
 import 'package:forestapp/screen/loginScreen.dart';
@@ -60,160 +61,172 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
-              child: Text(
-                'Persönliche Daten',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          color: background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+                child: Text(
+                  'Persönliche Daten',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Card(
-                elevation: 1.0,
-                color: Colors.grey[150], // Soft grey color
-                child: Column(
-                  children: [
-                    buildProfileItem(Icons.person, loggedInUsername ?? ''),
-                    const Divider(),
-                    buildProfileItem(Icons.phone_android, 'Förster'),
-                    const Divider(),
-                    FutureBuilder<String>(
-                      future: getLocationName(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return buildProfileItem(
-                            Icons.location_on,
-                            snapshot.data ?? '',
-                          );
-                        } else if (snapshot.hasError) {
-                          return buildProfileItem(Icons.location_off, 'Error');
-                        }
-                        return buildProfileItem(
-                            Icons.location_on, 'Loading...');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
-              child: Text(
-                'Kontoaktionen',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Card(
-                elevation: 2.0,
-                color:
-                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return PasswordDialog(
-                              onCurrentPasswordChanged: (value) {
-                                currentPassword = value;
-                              },
-                              onNewPasswordChanged: (value) {
-                                newPassword = value;
-                              },
-                              onConfirmPasswordChanged: (value) {
-                                confirmPassword = value;
-                              },
-                              onConfirmPressed: () async {
-                                final userProvider = Provider.of<UserProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                                final loggedInUsername =
-                                    userProvider.loggedInUsername;
-
-                                final loginService = LoginService();
-                                final currentPassword = await loginService
-                                    .fetchPasswordFromDatabase(
-                                  loggedInUsername!,
-                                );
-
-                                // Retrieve the entered values for current password, new password, and confirm password
-                                final enteredCurrentPassword =
-                                    getCurrentPasswordValue();
-                                final enteredNewPassword =
-                                    getNewPasswordValue();
-                                final enteredConfirmPassword =
-                                    getConfirmPasswordValue();
-
-                                // Compare the entered values with the current password and each other
-                                if (enteredCurrentPassword == currentPassword &&
-                                    enteredNewPassword ==
-                                        enteredConfirmPassword) {
-                                  // Passwords match, perform the password change in the database
-                                  await loginService.changePasswordInDatabase(
-                                    loggedInUsername,
-                                    enteredNewPassword,
-                                  );
-                                  print('Password changed successfully');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Password changed successfully'),
-                                    ),
-                                  );
-
-                                  Navigator.of(context).pop();
-                                } else {
-                                  // Passwords do not match or current password is incorrect
-                                  print('Password change failed');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Passwort konnte nicht geändert werden.'),
-                                    ),
-                                  );
-                                }
-                              },
-                              onCancelPressed: () {
-                                // Handle cancel button press
-                                Navigator.of(context).pop();
-                              },
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Card(
+                  elevation: 1.0,
+                  color: changeBackgroundLighter(), // Soft grey color
+                  child: Column(
+                    children: [
+                      buildProfileItem(Icons.person, loggedInUsername ?? '',
+                          textColour: textColor),
+                      const Divider(),
+                      buildProfileItem(Icons.phone_android, 'Förster',
+                          textColour: textColor),
+                      const Divider(),
+                      FutureBuilder<String>(
+                        future: getLocationName(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return buildProfileItem(
+                              Icons.location_on,
+                              snapshot.data ?? '',
+                              textColour: textColor,
                             );
-                          },
-                        );
-                      },
-                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
-                          iconColor: Colors.red, textColor: Colors.red),
-                    ),
-                  ],
+                          } else if (snapshot.hasError) {
+                            return buildProfileItem(Icons.location_off, 'Error',
+                                textColour: textColor);
+                          }
+                          return buildProfileItem(
+                              Icons.location_on, 'Loading...',
+                              textColour: textColor);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 13),
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text(
-                'Powered by',
-                style: TextStyle(
-                  fontSize: 24.0,
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+                child: Text(
+                  'Privatsphäre',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Card(
+                  elevation: 2.0,
+                  color: changeBackgroundLighter(), // Soft grey color
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PasswordDialog(
+                                onCurrentPasswordChanged: (value) {
+                                  currentPassword = value;
+                                },
+                                onNewPasswordChanged: (value) {
+                                  newPassword = value;
+                                },
+                                onConfirmPasswordChanged: (value) {
+                                  confirmPassword = value;
+                                },
+                                onConfirmPressed: () async {
+                                  final userProvider =
+                                      Provider.of<UserProvider>(
+                                    context,
+                                    listen: false,
+                                  );
+                                  final loggedInUsername =
+                                      userProvider.loggedInUsername;
+
+                                  final loginService = LoginService();
+                                  final currentPassword = await loginService
+                                      .fetchPasswordFromDatabase(
+                                    loggedInUsername!,
+                                  );
+
+                                  // Retrieve the entered values for current password, new password, and confirm password
+                                  final enteredCurrentPassword =
+                                      getCurrentPasswordValue();
+                                  final enteredNewPassword =
+                                      getNewPasswordValue();
+                                  final enteredConfirmPassword =
+                                      getConfirmPasswordValue();
+
+                                  // Compare the entered values with the current password and each other
+                                  if (enteredCurrentPassword ==
+                                          currentPassword &&
+                                      enteredNewPassword ==
+                                          enteredConfirmPassword) {
+                                    // Passwords match, perform the password change in the database
+                                    await loginService.changePasswordInDatabase(
+                                      loggedInUsername,
+                                      enteredNewPassword,
+                                    );
+                                    print('Password changed successfully');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Passwort konnte erfolgreich geändert werden.',
+                                            style: TextStyle(color: textColor)),
+                                      ),
+                                    );
+
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    // Passwords do not match or current password is incorrect
+                                    print('Password change failed');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Passwort konnte nicht geändert werden.',
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                onCancelPressed: () {
+                                  // Handle cancel button press
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                          );
+                        },
+                        child: buildProfileItem(Icons.lock, 'Passwort Ändern',
+                            iconColor: passwordIconColor(),
+                            textColour: passwordChangeColor()),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 13),
+              Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Text(
+                  'Powered by',
+                  style: TextStyle(fontSize: 24.0, color: textColor),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -244,19 +257,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     IconData iconData,
     String text, {
     Color? iconColor,
-    Color? textColor,
+    Color? textColour,
   }) {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? textColour,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColour ?? textColour,
         ),
       ),
     );
