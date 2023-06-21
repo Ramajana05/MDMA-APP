@@ -197,12 +197,12 @@ const gradient = [
 ];
 const blue = Color.fromARGB(255, 7, 19, 29);
 
-///Dashboard Color
-const lightGreen = Color.fromARGB(255, 194, 255, 241);
-const lightRed = Color.fromARGB(255, 255, 199, 199);
-const lightBlue = Color.fromARGB(255, 196, 236, 255);
-const darkBlue = Color.fromARGB(255, 37, 70, 255);
-const darkRed = Color.fromARGB(255, 255, 106, 37);
+const primaryWarningOrange = Color.fromARGB(255, 255, 106, 37);
+const primaryNewsBlue = Color.fromARGB(255, 37, 70, 255);
+const primarySignalStrength = Colors.black;
+// Light-Dark Mode Colors------------------------------
+// Shared Colors
+var primarybackgroundColor = Colors.white;
 
 /// Help
 const grey = Color.fromARGB(255, 127, 127, 128);
