@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/colors/appColors.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -22,13 +21,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final LoginService _loginService = LoginService();
   String loggedInUsername = "";
-  bool _obscurePassword = true;
 
   late Database _database;
 
   final gradientColors = [
-    const Color.fromARGB(255, 86, 252, 108),
-    const Color.fromARGB(255, 40, 233, 127)
+    Color.fromARGB(255, 86, 252, 108),
+    Color.fromARGB(255, 40, 233, 127)
   ];
 
   @override
@@ -85,12 +83,13 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => CustomBottomTabBar()),
+          MaterialPageRoute(
+              builder: (context) => CustomBottomTabBar(trans_index: 0)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ungültiger Benutzername oder Passwort.'),
+          SnackBar(
+            content: Text('Ungültige E-Mail oder Passwort.'),
           ),
         );
       }
@@ -100,26 +99,29 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.65,
-          width: MediaQuery.of(context).size.width * 0.97,
-          padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-            boxShadow: [
-              BoxShadow(
-                color: boxshadowColor,
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Center(
-            child: ListView(shrinkWrap: true, children: <Widget>[
-              const Padding(
+        body: Container(
+            child: Center(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.65,
+        width: MediaQuery.of(context).size.width * 0.97,
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 254, 254),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 158, 158, 158).withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
                 padding: EdgeInsets.only(top: 2.0),
                 child: Center(
                   child: Text(
@@ -132,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
                 child: Center(
                   child: Text(
@@ -140,12 +142,12 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                       fontSize: 30.0,
                       fontWeight: FontWeight.w400,
-                      color: primaryAppLightGreen,
+                      color: Color.fromARGB(255, 40, 233, 127),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10.0),
+              SizedBox(height: 10.0),
               Form(
                 key: _formKey,
                 autovalidateMode: AutovalidateMode
@@ -155,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -164,23 +166,23 @@ class _LoginPageState extends State<LoginPage> {
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.grey,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            borderSide: const BorderSide(
-                              color: primaryAppLightGreen,
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 40, 233, 127),
                               width: 2.0,
                             ),
                           ),
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.grey,
                           ),
-                          focusColor: primaryAppLightGreen,
+                          focusColor: Color.fromARGB(255, 40, 233, 127),
                         ),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16.0,
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -193,9 +195,9 @@ class _LoginPageState extends State<LoginPage> {
                         onSaved: (value) => _email = value?.trim(),
                       ),
                     ),
-                    const SizedBox(height: 16.0),
+                    SizedBox(height: 16.0),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
@@ -204,54 +206,35 @@ class _LoginPageState extends State<LoginPage> {
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.grey,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            borderSide: const BorderSide(
-                              color: primaryAppLightGreen,
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 40, 233, 127),
                               width: 2.0,
                             ),
                           ),
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.grey,
                           ),
-                          focusColor: primaryAppLightGreen,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: iconColor),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
+                          focusColor: Color.fromARGB(255, 40, 233, 127),
                         ),
-                        obscureText: _obscurePassword,
-                        onChanged: (value) {
-                          setState(() {
-                            _password = value.trim();
-                          });
-                        },
+                        obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Bitte geben Sie Ihr Passwort ein';
+                            return 'Bitte geben Sie ihr Passwort ein';
                           }
                           return null;
                         },
-                        onSaved: (value) {
-                          _password = value?.trim();
-                        },
+                        onSaved: (value) => _password = value?.trim(),
                       ),
                     ),
-                    const SizedBox(height: 16.0),
+                    SizedBox(height: 16.0),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Row(
                         children: [
                           Expanded(
@@ -261,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                                  EdgeInsets.symmetric(horizontal: 20.0),
                                 ),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
@@ -269,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 255, 255, 255),
+                                  Color.fromARGB(255, 255, 255, 255),
                                 ),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
@@ -287,21 +270,21 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16.0),
+                          SizedBox(width: 16.0),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () => _handleLogin(context),
                               style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                                  EdgeInsets.symmetric(horizontal: 20.0),
                                 ),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 255, 255, 255),
+                                  Color.fromARGB(255, 255, 255, 255),
                                 ),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 40, 233, 127),
+                                  Color.fromARGB(255, 40, 233, 127),
                                 ),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
@@ -322,15 +305,15 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10.0),
+                    SizedBox(height: 10.0),
                     GestureDetector(
                       onTap: () {
                         showDialog(
                           context: context,
-                          builder: (context) => const ProblemDialog(),
+                          builder: (context) => ProblemDialog(),
                         );
                       },
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.only(top: 15.0),
                         child: Center(
                           child: Text(
@@ -348,9 +331,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ]),
-          ),
-        ),
       ),
-    );
+    )));
   }
 }

@@ -57,10 +57,15 @@ class _PasswordDialogState extends State<PasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Passwort Ändern'),
+      title: Text(
+        'Passwort Ändern',
+        style: TextStyle(
+          fontSize: 24, // Hier kannst du die gewünschte Schriftgröße einstellen
+        ),
+      ),
       content: SingleChildScrollView(
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
+          width: MediaQuery.of(context).size.width * 0.99,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -262,7 +267,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   child: const Text(
                     'Abbrechen',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 17.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -293,7 +298,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       : const Text(
                           'Bestätigen',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 17.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
