@@ -112,11 +112,10 @@ Color invertedColour() {
 bool isNightMode = true;
 
 void toggleNightMode() {
-  isNightMode = !isNightMode; // Toggle the value of isNightMode
-  textColor = getTextColor(); // Update text color based on isNightMode
+  isNightMode = !isNightMode;
+  textColor = getTextColor();
   invertedColor = invertedColour();
-  background =
-      changeBackground(); // Update background color based on isNightMode
+  background = changeBackground();
   lighterBackground = changeBackgroundLighter();
   textInverted = getInvertedTextColor();
   iconLightRed = passwordIconColor();
