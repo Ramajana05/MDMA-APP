@@ -75,11 +75,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Aktuelles Passwort',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: white,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -90,7 +90,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: grey,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
@@ -126,11 +126,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Neues Passwort',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: white,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -141,7 +141,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: grey,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
@@ -176,11 +176,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                 decoration: InputDecoration(
                   labelText: 'Neues Passwort bestätigen',
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: white,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: Colors.grey,
+                      color: grey,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -191,7 +191,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     ),
                   ),
                   labelStyle: TextStyle(
-                    color: Colors.grey,
+                    color: grey,
                   ),
                   focusColor: primaryAppLightGreen,
                   contentPadding: EdgeInsets.symmetric(
@@ -232,7 +232,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   child: Text(
                     errorMessage,
                     style: TextStyle(
-                      color: Colors.red,
+                      color: red,
                     ),
                   ),
                 ),
@@ -253,10 +253,10 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                     foregroundColor: MaterialStateProperty.all<Color>(
-                      Colors.grey,
+                      grey,
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 255, 255),
+                      white,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -282,7 +282,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                     foregroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 255, 255),
+                      white,
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
                       primaryAppLightGreen,

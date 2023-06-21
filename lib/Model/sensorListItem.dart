@@ -72,19 +72,19 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_2_bar,
         size: 30,
-        color: primaryTempColor,
+        color: red,
       );
     } else if (batteryLevel >= 5) {
       return const Icon(
         Icons.battery_1_bar,
         size: 30,
-        color: primaryTempColor,
+        color: red,
       );
     } else {
       return const Icon(
         Icons.battery_0_bar,
         size: 30,
-        color: primaryTempColor,
+        color: red,
       );
     }
   }
@@ -99,7 +99,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: primarybackgroundColor,
+      color: lightBackgroundColor,
       elevation: 6,
       shadowColor: Colors.black54,
       shape: RoundedRectangleBorder(
@@ -198,7 +198,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.thermostat_outlined,
-                          color: primaryTempColor, // Adjust the color as needed
+                          color: red, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),
@@ -233,8 +233,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.signal_cellular_alt_outlined,
-                          color:
-                              primarySignalStrength, // Adjust the color as needed
+                          color: black, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),
@@ -251,8 +250,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.battery_full_outlined,
-                          color: const Color.fromARGB(
-                              255, 0, 0, 0), // Adjust the color as needed
+                          color: black, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),

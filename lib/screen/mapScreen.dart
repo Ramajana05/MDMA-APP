@@ -458,7 +458,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: mapScreen_background_Color,
+      backgroundColor: lightBackgroundColor,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {

@@ -28,7 +28,7 @@ class ProblemDialog extends StatelessWidget {
           child: const Text(
             'Zurück',
             style: TextStyle(
-              color: Colors.grey,
+              color: grey,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
@@ -48,7 +48,7 @@ class ProblemDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(9.0),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: white,
       elevation: 8.0,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16.0,

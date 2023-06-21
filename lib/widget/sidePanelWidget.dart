@@ -26,29 +26,20 @@ class _SidePanel extends State<SidePanel> {
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
 
-  bool _lightMode = false; //( true-->Light mode  /  false-->Dark mode )
+  bool _lightMode = false;
+  var black = Colors.black;
+  var white = Colors.white;
   changeThemeMode() {
     setState(() {
       if (_lightMode) {
         // colors of Light Mode
-        primarybackgroundColor = Colors.white;
-        dashboard_background_Color = Colors.white;
-        mapScreen_background_Color = Colors.white;
-        sensorListScreen_background_Color = Colors.white;
-        topNavBar_background_Color = Colors.white;
-        profileScreen_background_Color = Colors.white;
-        helpScreen_background_Color = Colors.white;
-
+        black = white;
+        lightBackgroundColor;
         _lightMode = false;
       } else {
         // colors of Dark Mode
-        primarybackgroundColor = Colors.black;
-        dashboard_background_Color = Colors.black;
-        mapScreen_background_Color = Colors.black;
-        sensorListScreen_background_Color = Colors.black;
-        topNavBar_background_Color = Colors.black;
-        profileScreen_background_Color = Colors.black;
-        helpScreen_background_Color = Colors.black;
+        darkBackgroundColor;
+        white = black;
 
         _lightMode = true;
       }
@@ -65,8 +56,8 @@ class _SidePanel extends State<SidePanel> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromARGB(255, 86, 252, 108),
-                  primarybackgroundColor,
+                  sidePanelGreen,
+                  lightBackgroundColor,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -106,7 +97,7 @@ class _SidePanel extends State<SidePanel> {
                 fontSize: 20,
               ),
             ),
-            iconColor: Colors.blue,
+            iconColor: blue,
             onTap: () async {
               const url = 'https://mdma.haveachin.de/';
               if (await canLaunch(url)) {
@@ -121,7 +112,7 @@ class _SidePanel extends State<SidePanel> {
                 Icons.dark_mode_outlined,
                 size: 28,
               ), //
-              iconColor: const Color.fromARGB(255, 7, 19, 29),
+              iconColor: sidePanelBlue,
               title: Text(
                 _lightMode ? 'Light mode' : 'Dark mode',
                 style: TextStyle(
@@ -164,7 +155,7 @@ class _SidePanel extends State<SidePanel> {
                 fontSize: 20,
               ),
             ),
-            iconColor: primaryTempColor,
+            iconColor: red,
             onTap: () {
               showDialog(
                 context: context,

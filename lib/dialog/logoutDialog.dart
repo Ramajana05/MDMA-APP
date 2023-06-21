@@ -23,7 +23,7 @@ class LogoutDialog extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 16.0),
           child: Row(
             children: [
-              //Icon(Icons.warning, color: Colors.orange),
+              //Icon(Icons.warning, color: orange),
               SizedBox(width: 8.0),
               Text(
                 'Wollen Sie wirklich ausloggen?',
@@ -42,7 +42,7 @@ class LogoutDialog extends StatelessWidget {
             child: Text(
               'Abbrechen',
               style: TextStyle(
-                color: Colors.grey,
+                color: grey,
                 fontSize: 20.0,
                 fontWeight: FontWeight.w500,
               ),
@@ -67,7 +67,7 @@ class LogoutDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(9.0),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: white,
         elevation: 8.0,
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16.0,

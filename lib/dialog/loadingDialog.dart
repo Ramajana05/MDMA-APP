@@ -17,7 +17,7 @@ class _LoadingDialogState extends State<LoadingDialog>
   final List<String> dialogTexts = [
     'Verbindung wird hergestellt...',
     'Änderungen werden hochgeladen...',
-    'Herunterladen von neuen Daten...',
+    'Neue Daten werden heruntergeladen...',
     'Fertig',
   ];
 
@@ -118,7 +118,7 @@ class _LoadingDialogState extends State<LoadingDialog>
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
+          color: white,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -142,7 +142,7 @@ class _LoadingDialogState extends State<LoadingDialog>
                 _errorMessage!,
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.red,
+                  color: red,
                 ),
               ),
             if (_errorMessage == null) // Display dialog text if no error
@@ -161,7 +161,6 @@ class _LoadingDialogState extends State<LoadingDialog>
 }
 
 void main() {
-
   final apiService = ApiService();
 
   // Wrap the LoadingDialog widget with MaterialApp

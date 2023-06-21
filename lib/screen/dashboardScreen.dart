@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
@@ -16,10 +16,6 @@ import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
 import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -39,10 +35,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var maxSensors = 0;
 
   var currentTemperature = 0.0;
-  var maxTemperature = 0.0;
+  var maxTemperature = 40.0;
 
   var airHumidity = 0.0;
-  var avgAirHumidity = 0.0;
 
   bool showWarningWidget = true;
   bool showMap = true;
@@ -86,16 +81,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final airWHumidity =
             (weatherData['humidity'] as num?)?.toDouble() ?? 0.0;
         final temperature = (weatherData['temp_c'] as num?)?.toDouble() ?? 0.0;
-
-        for (final forecastDay in forecastData) {
-          final avgAirHumidityValue =
-              (forecastDay['day']['avghumidity'] as num?)?.toDouble() ?? 0.0;
-          final maxTempValue =
-              (forecastDay['day']['maxtemp_c'] as num?)?.toDouble() ?? 0.0;
-
-          avgAirHumidity = avgAirHumidityValue;
-          maxTemperature = maxTempValue;
-        }
 
         List<WeatherItem> weatherItems =
             forecastData.skip(1).map<WeatherItem>((item) {
@@ -237,7 +222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: black,
                       ),
                     ),
                     IconButton(
@@ -251,7 +236,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         showWarningWidget
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
-                        color: Colors.black,
+                        color: black,
                         size: 30.0,
                       ),
                     )
@@ -277,7 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Colors.white,
+      backgroundColor: white,
       appBar: const TopNavBar(
         title: 'DASHBOARD',
       ),
@@ -310,12 +295,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: opacityGray,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -327,7 +311,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
+                                        transparent,
                                         primaryVisitorShadowColor,
                                         primaryVisitorColor,
                                         maxVisitors.toDouble(),
@@ -370,11 +354,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: opacityGray,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -386,9 +370,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 194, 255, 241),
+                                        transparent,
+                                        lightTurquoiuse,
                                         primaryGreen,
                                         maxSensors.toDouble(),
                                         currentSensors.toInt(),
@@ -434,11 +417,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: opacityGray,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -450,10 +433,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 255, 199, 199),
-                                        Colors.red,
+                                        transparent,
+                                        lightRed,
+                                        red,
                                         maxTemperature,
                                         currentTemperature.toInt(),
                                         [
@@ -494,12 +476,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: white,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: opacityGray,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -511,11 +492,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 196, 236, 255),
-                                        Colors.blue,
-                                        avgAirHumidity,
+                                        transparent,
+                                        lightBlue,
+                                        blue,
+                                        100,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
@@ -569,7 +549,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                           ),
@@ -583,7 +563,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               showStatistics
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: black,
                               size: 30.0,
                             ),
                           ),
@@ -602,7 +582,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Visibility(
                       visible: showStatistics,
                       child: Container(
-                        color: Colors.white,
+                        color: white,
                         height: 250,
                         child: Stack(
                           children: [
@@ -657,14 +637,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                             Icon(
                               showWeatherForecast
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: black,
                               size: 30.0,
                             ),
                           ],
@@ -769,7 +749,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _currentPage == index ? Colors.blue : Colors.grey,
+              color: _currentPage == index ? blue : grey,
             ),
           );
         }),
@@ -787,8 +767,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         primaryXAxis: CategoryAxis(
           crossesAt: 0,
           placeLabelsNearAxisLine: false,
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          axisLine: const AxisLine(color: black, width: 1.5),
+          labelStyle: const TextStyle(fontSize: 15, color: black),
           desiredIntervals: 12,
         ),
         primaryYAxis: NumericAxis(
@@ -797,10 +777,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               : (chartData == tempChartDaily)
                   ? '{value}°C'
                   : '',
-          majorTickLines:
-              const MajorTickLines(size: 6, width: 2, color: Colors.black),
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          majorTickLines: const MajorTickLines(size: 6, width: 2, color: black),
+          axisLine: const AxisLine(color: black, width: 1.5),
+          labelStyle: const TextStyle(fontSize: 15, color: black),
         ),
         series: <ChartSeries>[
           LineSeries<ChartData, String>(
@@ -808,9 +787,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             markerSettings: const MarkerSettings(
-              borderColor: Colors.deepPurple,
+              borderColor: deepPurple,
               isVisible: true,
-              color: Colors.grey,
+              color: grey,
               shape: DataMarkerType.circle,
             ),
             color: chartColor,
@@ -833,7 +812,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {
         'title': dailyTemps,
         'chartData': tempChartDaily,
-        'chartColor': primaryTempColor,
+        'chartColor': red,
       },
       {
         'title': dailyAir,
@@ -855,11 +834,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: opacityBlack,
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -875,7 +854,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: Colors.black,
+                color: black,
               ),
             ),
             const SizedBox(height: 10),
@@ -922,11 +901,11 @@ class WeatherItemCard extends StatelessWidget {
       child: Container(
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: opacityBlack,
               spreadRadius: 2,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -969,7 +948,7 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.water_drop, size: 20, color: Colors.blue),
+                const Icon(Icons.water_drop, size: 20, color: blue),
                 Text(
                   '${weatherData.rainPercentage}%',
                   style: const TextStyle(fontSize: 16),
@@ -980,7 +959,7 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.air, size: 24, color: Colors.grey),
+                const Icon(Icons.air, size: 24, color: grey),
                 Text(
                   '${weatherData.windSpeed} km/h',
                   style: const TextStyle(fontSize: 16),
@@ -1024,7 +1003,7 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: primarybackgroundColor,
+      color: white,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(

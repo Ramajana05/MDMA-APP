@@ -52,7 +52,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
-  var temperatureColor = primaryTempColor;
+  var temperatureColor = red;
   var airHumidityColor = primaryHumidityColor;
 
   ///box shadow color
@@ -147,7 +147,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: primarybackgroundColor,
+      backgroundColor: lightBackgroundColor,
       appBar: TopNavBar(
         title: 'STATISTIK',
         onMenuPressed: () {},
@@ -200,7 +200,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       xAxisTitle = 'Uhrzeit';
     }
 
-   // initializeDateFormatting('de_DE','');
+    // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == visitorChartMonthly ||
@@ -256,7 +256,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
               dataSource: chartData,
-              xValueMapper: (ChartData data, _) =>data.x,
+              xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
                 borderColor: Colors.deepPurple,

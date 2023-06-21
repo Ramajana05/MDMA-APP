@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 
+import '../colors/appColors.dart';
+
 class HelpListItemWidget extends StatefulWidget {
   final String title;
   final bool expanded;
@@ -41,7 +43,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      color: Colors.white,
+      color: white,
       elevation: 6,
       shadowColor: Colors.black54,
       child: InkWell(

@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
-const primaryAppWhiteColor = Color.fromARGB(255, 255, 255, 255);
+const black = Colors.black;
+const white = Colors.white;
+const blue = Colors.blue;
+const transparent = Colors.transparent;
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
-const primaryTempColor = Colors.red;
 const primaryHumidityColor = Colors.blue;
 
 ///Colors of the map
@@ -24,14 +26,12 @@ const primaryHumidityShadowColor = Color.fromARGB(255, 196, 236, 255);
 ///Battery green color
 const primaryGreen = Color.fromARGB(255, 46, 202, 51);
 const primaryOrange = Colors.orange;
-const primaryred = Colors.red;
-
+const red = Colors.red;
 const primarygrey = Color.fromARGB(255, 134, 134, 134);
-
 const primaryWarningOrange = Color.fromARGB(255, 255, 106, 37);
 const primaryNewsBlue = Color.fromARGB(255, 37, 70, 255);
-const primarySignalStrength = Colors.black;
 const onlineColor = Color.fromARGB(255, 64, 236, 73);
+const lightOrange = Colors.orangeAccent;
 
 ///Box Shadow Color
 var boxshadowColor = Color.fromARGB(255, 158, 158, 158).withOpacity(0.5);
@@ -48,18 +48,22 @@ const gradient = [
   Color.fromARGB(255, 86, 252, 108),
   Color.fromARGB(255, 40, 233, 127)
 ];
-const blue = Color.fromARGB(255, 7, 19, 29);
+const sidePanelBlue = Color.fromARGB(255, 7, 19, 29);
+const sidePanelGreen = Color.fromARGB(255, 86, 252, 108);
 
 ///Dashboard Color
 const lightGreen = Color.fromARGB(255, 194, 255, 241);
 const lightRed = Color.fromARGB(255, 255, 199, 199);
 const lightBlue = Color.fromARGB(255, 196, 236, 255);
+const lightTurquoiuse = Color.fromARGB(255, 194, 255, 241);
 const darkBlue = Color.fromARGB(255, 37, 70, 255);
 const darkRed = Color.fromARGB(255, 255, 106, 37);
+const deepPurple = Colors.deepPurple;
+var opacityBlack = black.withOpacity(0.2);
+var greyOpacity = primarygrey.withOpacity(0.5);
 
 /// Help
 const grey = Color.fromARGB(255, 127, 127, 128);
-const red = Color.fromARGB(255, 255, 2, 2);
 const green = Color.fromARGB(255, 58, 243, 33);
 
 /// Map
@@ -67,36 +71,18 @@ const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
 
 /// Profile
-const profileBlack = Color.fromARGB(255, 24, 23, 23);
+var profileGrey = Colors.grey[150];
 
 ///Statistic
 const statColor = Color.fromRGBO(38, 158, 38, 0.2);
 
 /// Bottom Nav
 const darkGreen = Color.fromARGB(204, 0, 165, 22);
-const sensorGreen = Color.fromARGB(204, 0, 165, 22);
 
 ///Warning Widet
-const backgroundColor = Color.fromARGB(255, 248, 250, 253);
+const backgroundColor = white;
 var opacityGray = const Color.fromARGB(255, 170, 170, 170).withOpacity(0.5);
-// Light-Dark Mode Colors------------------------------
-// Shared Colors
-var primarybackgroundColor = Colors.white;
 
-// dashboard screens Colors:
-var dashboard_background_Color = Colors.white;
-
-// MapScreen  Colors
-var mapScreen_background_Color = Colors.white;
-
-// SensorListScreen  Colors
-var sensorListScreen_background_Color = Colors.white;
-
-// SensorListScreen  Colors
-var profileScreen_background_Color = Colors.white;
-
-// HelpScreen  Colors
-var helpScreen_background_Color = Colors.white;
-
-// topNavBar  Colors
-var topNavBar_background_Color = Colors.white;
+// Light-Dark Mode Colors
+var lightBackgroundColor = Colors.white;
+var darkBackgroundColor = Colors.black38;

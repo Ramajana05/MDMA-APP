@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
-      backgroundColor: profileScreen_background_Color,
+      backgroundColor: lightBackgroundColor,
       appBar: TopNavBarBasic(
         title: 'Mein Profil ',
         returnStatus: true,
@@ -82,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 1.0,
-                color: Colors.grey[150], // Soft grey color
+                color: profileGrey,
                 child: Column(
                   children: [
                     buildProfileItem(Icons.person, loggedInUsername ?? ''),
@@ -123,8 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 2.0,
-                color:
-                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
+                color: white,
                 child: Column(
                   children: [
                     GestureDetector(
@@ -256,14 +255,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? profileBlack,
+        color: iconColor ?? black,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? Colors.black,
+          color: textColor ?? black,
         ),
       ),
     );

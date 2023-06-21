@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class ConfirmDialog extends StatelessWidget {
   String title;
   String content;
@@ -8,7 +10,7 @@ class ConfirmDialog extends StatelessWidget {
 
   ConfirmDialog(this.title, this.content, this.continueCallBack, {super.key});
 
-  TextStyle textStyle = const TextStyle(color: Colors.black);
+  TextStyle textStyle = const TextStyle(color: black);
 
   @override
   Widget build(BuildContext context) {

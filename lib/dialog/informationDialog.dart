@@ -12,7 +12,7 @@ class InformationDialog extends StatelessWidget {
         "Information",
         style: TextStyle(fontSize: 22), // Increase the font size as desired
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: white,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -48,7 +48,7 @@ class InformationDialog extends StatelessWidget {
             children: const [
               Icon(
                 Icons.battery_5_bar,
-                color: Colors.orange,
+                color: primaryOrange,
                 size: 22,
               ),
               SizedBox(width: 8),
@@ -63,7 +63,7 @@ class InformationDialog extends StatelessWidget {
             children: const [
               Icon(
                 Icons.battery_2_bar,
-                color: Colors.red,
+                color: red,
                 size: 22,
               ),
               SizedBox(width: 8),
