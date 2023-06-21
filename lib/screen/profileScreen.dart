@@ -1,256 +1,262 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/widget/TopNavBarBasic.dart';
+import 'package:forestapp/widget/topNavBarBasic.dart';
+import 'package:forestapp/dialog/changePasswordDialog.dart';
+import 'package:forestapp/screen/loginScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:forestapp/provider/userProvider.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:forestapp/service/LoginService.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String? currentUsername;
+
+  ProfileScreen({
+    this.currentUsername,
+  });
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _username = 'MDMA';
-  String _tempUsername = '';
+  String currentPassword = '';
+  String newPassword = '';
+  String confirmPassword = '';
 
-  Color greenColor = const Color.fromARGB(255, 71, 209, 89);
-  Color black = Colors.black;
-  Color white = Colors.white;
+  void changePassword() {
+    // Implement the logic to change the password
+    // Validate the input and perform the necessary actions
+    // For demonstration purposes, let's print the new password
+    print('New Password: $newPassword');
+  }
 
-  final List<String> _imageURLs = [
-    'https://cdn-icons-png.flaticon.com/512/1158/1158504.png',
-    'https://cdn-icons-png.flaticon.com/512/7411/7411997.png',
-    'https://cdn-icons-png.flaticon.com/512/1604/1604458.png',
-    'https://cdn-icons-png.flaticon.com/512/189/189494.png',
-    'https://cdn-icons-png.flaticon.com/512/1464/1464856.png',
-    'https://cdn-icons-png.flaticon.com/512/2108/2108337.png',
-    'https://cdn-icons-png.flaticon.com/512/141/141793.png',
-    'https://cdn-icons-png.flaticon.com/512/5904/5904002.png',
-    'https://cdn-icons-png.flaticon.com/512/3940/3940403.png',
-    'https://cdn-icons-png.flaticon.com/512/424/424782.png'
-  ];
-  int _selectedIndex = 0;
+  String getCurrentPasswordValue() {
+    return currentPassword;
+  }
 
-  final List<String> _imageNames = [
-    'Igel',
-    'Tiger',
-    'Koala',
-    'Eichhörnchen',
-    'Hirsch',
-    'Fuchs',
-    'Hase',
-    'Frosch',
-    'Bär',
-    'Wolf',
-  ];
+  String getNewPasswordValue() {
+    return newPassword;
+  }
+
+  String getConfirmPasswordValue() {
+    return confirmPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final loggedInUsername = userProvider.loggedInUsername;
+    final role = userProvider.role;
     final screenHeight = MediaQuery.of(context).size.height;
+    final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
-      backgroundColor: white,
-      appBar: const TopNavBarBasic(
-        title: 'PROFIL',
+      appBar: TopNavBarBasic(
+        title: 'Mein Profil',
         returnStatus: true,
+        onMenuPressed: () {
+          // Add your side panel logic here
+        },
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: white,
-              backgroundImage: NetworkImage(_imageURLs[_selectedIndex]),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              _username,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: greenColor,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text(
-                      'Profilbild auswählen',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    content: SizedBox(
-                      height: screenHeight * 0.3,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: _imageURLs
-                              .asMap()
-                              .entries
-                              .map(
-                                (entry) => ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: white,
-                                    backgroundImage: NetworkImage(entry.value),
-                                  ),
-                                  title: Text(_imageNames[entry.key]),
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedIndex = entry.key;
-                                    });
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                    actions: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'Abbrechen',
-                              style: TextStyle(color: greenColor),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'Speichern',
-                              style: TextStyle(color: greenColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Profilbild ändern',
-                style: TextStyle(color: black),
+                'Persönliche Daten',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: greenColor,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      'Benutzername ändern',
-                      style: TextStyle(color: black, fontSize: 18),
-                    ),
-                    content: TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _tempUsername = value; // Update temporary username
-                        });
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Card(
+                elevation: 1.0,
+                color: Colors.grey[150], // Soft grey color
+                child: Column(
+                  children: [
+                    buildProfileItem(Icons.person, loggedInUsername ?? ''),
+                    const Divider(),
+                    buildProfileItem(Icons.phone_android, 'Förster'),
+                    const Divider(),
+                    FutureBuilder<String>(
+                      future: getLocationName(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildProfileItem(
+                            Icons.location_on,
+                            snapshot.data ?? '',
+                          );
+                        } else if (snapshot.hasError) {
+                          return buildProfileItem(Icons.location_off, 'Error');
+                        }
+                        return buildProfileItem(
+                            Icons.location_on, 'Loading...');
                       },
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: greenColor),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: greenColor, width: 2.0),
-                          ),
-                          labelText: 'Neuer Benutzername',
-                          labelStyle:
-                              TextStyle(color: greenColor, fontSize: 14),
-                          helperStyle: TextStyle(color: greenColor)),
                     ),
-                    actions: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _tempUsername = _username;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'Abbrechen',
-                              style: TextStyle(color: greenColor),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              String errorMessage = '';
-
-                              if (_tempUsername.trim().isEmpty) {
-                                errorMessage =
-                                    'Benutzername darf nicht leer sein.';
-                              } else if (_tempUsername.length < 3) {
-                                errorMessage =
-                                    'Benutzername muss mindestens 3 Zeichen lang sein.';
-                              } else if (_tempUsername.length > 20) {
-                                errorMessage =
-                                    'Benutzername darf maximal 20 Zeichen lang sein.';
-                              } else if (RegExp(r'[!@#$%^&*(),.?":/\{`=+}|<>]')
-                                  .hasMatch(_tempUsername)) {
-                                errorMessage =
-                                    'Benutzername darf nur Buchstaben und Zahlen enthalten.';
-                              }
-
-                              if (errorMessage.isNotEmpty) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title:
-                                        const Text('Ungültiger Benutzername'),
-                                    content: Text(errorMessage),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          'OK',
-                                          style: TextStyle(color: greenColor),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                // Username is valid, update the actual username
-                                setState(() {
-                                  _username = _tempUsername;
-                                });
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            child: Text(
-                              'Speichern',
-                              style: TextStyle(color: greenColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
+                  ],
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Benutzername ändern',
-                style: TextStyle(color: black),
+                'Kontoaktionen',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Card(
+                elevation: 2.0,
+                color:
+                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PasswordDialog(
+                              onCurrentPasswordChanged: (value) {
+                                currentPassword = value;
+                              },
+                              onNewPasswordChanged: (value) {
+                                newPassword = value;
+                              },
+                              onConfirmPasswordChanged: (value) {
+                                confirmPassword = value;
+                              },
+                              onConfirmPressed: () async {
+                                final userProvider = Provider.of<UserProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                                final loggedInUsername =
+                                    userProvider.loggedInUsername;
+
+                                final loginService = LoginService();
+                                final currentPassword = await loginService
+                                    .fetchPasswordFromDatabase(
+                                  loggedInUsername!,
+                                );
+
+                                // Retrieve the entered values for current password, new password, and confirm password
+                                final enteredCurrentPassword =
+                                    getCurrentPasswordValue();
+                                final enteredNewPassword =
+                                    getNewPasswordValue();
+                                final enteredConfirmPassword =
+                                    getConfirmPasswordValue();
+
+                                // Compare the entered values with the current password and each other
+                                if (enteredCurrentPassword == currentPassword &&
+                                    enteredNewPassword ==
+                                        enteredConfirmPassword) {
+                                  // Passwords match, perform the password change in the database
+                                  await loginService.changePasswordInDatabase(
+                                    loggedInUsername,
+                                    enteredNewPassword,
+                                  );
+                                  print('Password changed successfully');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Password changed successfully'),
+                                    ),
+                                  );
+
+                                  Navigator.of(context).pop();
+                                } else {
+                                  // Passwords do not match or current password is incorrect
+                                  print('Password change failed');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Passwort konnte nicht geändert werden.'),
+                                    ),
+                                  );
+                                }
+                              },
+                              onCancelPressed: () {
+                                // Handle cancel button press
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
+                          iconColor: Colors.red, textColor: Colors.red),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 13),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                'Powered by',
+                style: TextStyle(
+                  fontSize: 24.0,
+                ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Future<String> getLocationName() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks.first;
+        String city = placemark.locality ?? '';
+        String country = placemark.country ?? '';
+        return '$city, $country';
+      }
+    } catch (e) {
+      print('Error retrieving location: $e');
+    }
+    return '';
+  }
+
+  Widget buildProfileItem(
+    IconData iconData,
+    String text, {
+    Color? iconColor,
+    Color? textColor,
+  }) {
+    return ListTile(
+      leading: Icon(
+        iconData,
+        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        size: 24.0,
+      ),
+      title: Text(
+        text,
+        style: TextStyle(
+          fontSize: 19.0,
+          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
         ),
       ),
     );

@@ -9,7 +9,7 @@ Widget customStatisticContainer(IntervalType type) {
     margin: EdgeInsets.all(10),
     padding: const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
     width: 330,
-    height: 300,
+    height: 350,
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: const BorderRadius.all(Radius.circular(10)),

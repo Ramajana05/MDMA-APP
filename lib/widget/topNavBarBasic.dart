@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
+import 'package:forestapp/dialog/logoutDialog.dart';
+
+import '../colors/appColors.dart';
 
 class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -14,7 +17,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +25,11 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: returnStatus,
       title: Text(
         title,
-        style: topNavBarDecoration.getTitleTextStyle(),
+        style: topNavBarDecoration
+            .getTitleTextStyle()
+            .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
-      backgroundColor: Color.fromARGB(255, 248, 245, 245),
+      backgroundColor: Color.fromARGB(146, 255, 255, 255),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -34,21 +39,19 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
           height: 4.0,
         ),
       ),
-      leading: returnStatus
-          ? IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          : IconButton(
-              icon: Icon(Icons.menu),
-              onPressed:
-                  onMenuPressed, // Call the callback function when the menu button is pressed
-            ),
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back,
+          size: 35,
+          color: primaryAppLightGreen
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      iconTheme: IconThemeData(
+        color: primaryAppLightGreen,
+      ),
     );
   }
 }

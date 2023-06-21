@@ -6,8 +6,23 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
+import 'package:forestapp/Model/sensorListItem.dart';
+import 'package:forestapp/provider/userProvider.dart';
+import 'package:provider/provider.dart';
 
 class LoginService {
+  void main() async {
+    final userProvider = UserProvider(); // Create an instance of UserProvider
+    final loggedInUsername = userProvider.loggedInUsername;
+    final loginService = LoginService();
+    final password =
+        await loginService.fetchPasswordFromDatabase(loggedInUsername!);
+
+    print('Password: $password'); // Print the fetched password
+  }
+
   Future<Database> _initDatabase() async {
     try {
       final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -75,4 +90,230 @@ class LoginService {
       rethrow;
     }
   }
+
+  Future<List<CircleData>> fetchCirclesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final circles = await database.query('Sensor',
+          where:
+              'Name IS NOT NULL'); // Add the condition to filter null values for the "Name" column
+      await database.close();
+
+      print('Fetched circles: $circles');
+
+      return List.generate(circles.length, (index) {
+        return CircleData.fromMap(circles[index]);
+      });
+    } catch (e) {
+      print('Error fetching circles from database: $e');
+      return [];
+    }
+  }
+
+  Future<List<PolygonData>> fetchPolygonsFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final maps = await database.query('Location');
+      await database.close();
+
+      print(
+          'Fetched polygons: $maps'); // Print the fetched polygons for debugging
+
+      return List.generate(maps.length, (index) {
+        return PolygonData.fromMap(maps[index]);
+      });
+    } catch (e) {
+      // Handle the exception here
+      print('Error fetching polygons from database: $e');
+      return []; // Return an empty list or null, depending on your preference
+    }
+  }
+
+  Future<List<Damage>> fetchSensorsFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final sensors = await database.query('Sensor',
+          where:
+              'Name IS NOT NULL'); // Add the condition to filter null values for the "Name" column
+      await database.close();
+
+      print('Fetched Sensors: $sensors');
+
+      return List.generate(sensors.length, (index) {
+        final sensor = sensors[index];
+        return Damage(
+          sensorName: sensor['Name'] as String,
+          latitude: (sensor['Latitude'] as num?)?.toDouble() ?? 0.0,
+          longitude: (sensor['Longitude'] as num?)?.toDouble() ?? 0.0,
+          status: sensor['Available'] as String,
+          createDate: sensor['CreationDate'] as String,
+          signalStrength: sensor['SignalStrength'] as String,
+          chargerInfo: sensor['Battery']?.toString() ?? '0',
+          temperatur: (sensor['Temperature'] as num?)?.toDouble() ?? 0.0,
+          airPressure: (sensor['Humidity'] as int?) ?? 0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching sensors from database: $e');
+      return [];
+    }
+  }
+
+  Future<String?> fetchPasswordFromDatabase(String loggedInUsername) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT Password FROM User WHERE Username = ?',
+        [loggedInUsername],
+      );
+
+      await database.close();
+
+      if (result.isNotEmpty) {
+        final currentPassword = result.first['Password'] as String?;
+        print(
+            'Fetched password: $currentPassword'); // Print the fetched password for testing
+        return currentPassword;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching password from database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> changePasswordInDatabase(
+      String loggedInUsername, String newPassword) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.update(
+        'User',
+        {'Password': newPassword},
+        where: 'Username = ?',
+        whereArgs: [loggedInUsername],
+      );
+
+      await database.close();
+
+      print('Password changed successfully');
+    } catch (e) {
+      print('Error updating password in database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateSensorNameInDatabase(
+      String uuid, String newName, double latitude, double longitude) async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Check if the sensor with the given UUID exists in the database
+      final result = await database.rawQuery(
+        'SELECT * FROM Sensor WHERE Uuid = ?',
+        [uuid],
+      );
+
+      if (result.isNotEmpty) {
+        // Update the sensor name, latitude, and longitude in the database
+        await database.update(
+          'Sensor',
+          {
+            'Name': newName,
+            'Latitude': latitude,
+            'Longitude': longitude,
+          },
+          where: 'Uuid = ?',
+          whereArgs: [uuid],
+        );
+
+        print('Sensor name, latitude, and longitude updated successfully');
+      } else {
+        print('Sensor with UUID $uuid not found in the database');
+      }
+
+      // Close the database
+      await database.close();
+    } catch (e) {
+      print(
+          'Error updating sensor name, latitude, and longitude in database: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> isSensorNameNull(String uuid) async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Check if the sensor with the given UUID exists in the database
+      final result = await database.rawQuery(
+        'SELECT Name FROM Sensor WHERE Uuid = ?',
+        [uuid],
+      );
+
+      // Check if the sensor name is null
+      bool isNull = result.isEmpty || result.first['Name'] == null;
+
+      // Close the database
+      await database.close();
+
+      return isNull;
+    } catch (e) {
+      print('Error retrieving sensor name from database: $e');
+      rethrow;
+    }
+  }
+
+/*
+  Future<Sensor?> fetchSensorFromDatabase(String uuid) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT * FROM Sensors WHERE UUID = ?',
+        [uuid],
+      );
+
+      await database.close();
+
+      if (result.isNotEmpty) {
+        final sensorData = result.first;
+        final sensor = Sensor.fromMap(sensorData);
+        return sensor;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching sensor from database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateSensorNameInDatabase(String uuid, String newName) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.update(
+        'Sensors',
+        {'Name': newName},
+        where: 'UUID = ?',
+        whereArgs: [uuid],
+      );
+
+      await database.close();
+
+      print('Sensor name updated successfully');
+    } catch (e) {
+      print('Error updating sensor name in database: $e');
+      rethrow;
+    }
+  }
+  */
 }

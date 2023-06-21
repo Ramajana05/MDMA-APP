@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 
+import '../colors/appColors.dart';
+
 class ProblemDialog extends StatelessWidget {
   const ProblemDialog({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -13,7 +16,7 @@ class ProblemDialog extends StatelessWidget {
       content: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: [
+          children: const [
             SizedBox(width: 8.0),
             Text('Wenden Sie sich an den Support'),
           ],
@@ -22,7 +25,7 @@ class ProblemDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(
+          child: const Text(
             'Zurück',
             style: TextStyle(
               color: Colors.grey,
@@ -33,13 +36,13 @@ class ProblemDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Ok'),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 40, 233, 127),
+            primary: primaryAppLightGreen,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
           ),
+          child: const Text('Ok'),
         ),
       ],
       shape: RoundedRectangleBorder(
@@ -47,7 +50,7 @@ class ProblemDialog extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 8.0,
-      contentPadding: EdgeInsets.symmetric(
+      contentPadding: const EdgeInsets.symmetric(
         horizontal: 16.0,
         vertical: 8.0,
       ),
