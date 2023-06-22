@@ -4,12 +4,6 @@ import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
 
-import 'dart:async';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:forestapp/widget/mapObjects.dart';
-
-import 'package:flutter/material.dart';
-import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/colors/appColors.dart';
 

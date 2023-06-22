@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../colors/appColors.dart';
+import '../provider/ThemeProvider.dart';
 
 class PasswordDialog extends StatefulWidget {
   final ValueChanged<String> onCurrentPasswordChanged;
@@ -76,7 +77,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     labelText: 'Aktuelles Passwort',
                     labelStyle: TextStyle(color: buttonTextColor),
                     filled: true,
-                    fillColor: changeBackgroundLighter(),
+                    fillColor: lighterBackground,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: const BorderSide(
@@ -125,7 +126,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Neues Passwort',
                     filled: true,
-                    fillColor: changeBackgroundLighter(),
+                    fillColor: lighterBackground,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: const BorderSide(
@@ -176,7 +177,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                 decoration: InputDecoration(
                   labelText: 'Neues Passwort bestätigen',
                   filled: true,
-                  fillColor: changeBackgroundLighter(),
+                  fillColor: lighterBackground,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: const BorderSide(
@@ -282,7 +283,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                     foregroundColor: MaterialStateProperty.all<Color>(
-                      getButtonTexInversedColor(),
+                      buttonTextInversedColor,
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
                       primaryAppLightGreen,

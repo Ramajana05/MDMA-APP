@@ -1,14 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:forestapp/screen/splashScreen.dart';
-import 'package:wakelock/wakelock.dart';
-
-import 'package:forestapp/db/databaseInitializer.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/splashScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'colors/appColors.dart';
+import 'db/databaseInitializer.dart';
+import 'provider/ThemeProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +18,11 @@ void main() async {
   await databaseInitializer.initDatabase();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
         statusBarColor: white, systemNavigationBarColor: white));
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),

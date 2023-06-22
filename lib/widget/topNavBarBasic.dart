@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:forestapp/dialog/logoutDialog.dart';
-
 import '../colors/appColors.dart';
 
 class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
@@ -46,7 +44,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
           Navigator.of(context).pop();
         },
       ),
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: primaryAppLightGreen,
       ),
     );

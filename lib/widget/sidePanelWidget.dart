@@ -1,13 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../colors/appColors.dart';
 import '../dialog/logoutDialog.dart';
 import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
+import 'package:forestapp/provider/ThemeProvider.dart';
 
 class SidePanel extends StatefulWidget {
   const SidePanel({Key? key}) : super(key: key);
@@ -28,6 +27,8 @@ class _SidePanel extends State<SidePanel> {
   Widget build(BuildContext context) {
     bool isSmallScreen = MediaQuery.of(context).size.width <= 600;
     bool isScrollable = isSmallScreen;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Drawer(
       backgroundColor: background,
       child: Container(
@@ -72,7 +73,7 @@ class _SidePanel extends State<SidePanel> {
                           'Profil',
                           style: TextStyle(
                             fontSize: 18,
-                            color: getTextColor(),
+                            color: textColor,
                           ),
                         ),
                         iconColor: primaryAppLightGreen,
@@ -91,7 +92,7 @@ class _SidePanel extends State<SidePanel> {
                           'Startseite',
                           style: TextStyle(
                             fontSize: 18,
-                            color: getTextColor(),
+                            color: textColor,
                           ),
                         ),
                         iconColor: blue,
@@ -109,12 +110,12 @@ class _SidePanel extends State<SidePanel> {
                           Icons.help_outline_outlined,
                           size: 28,
                         ),
-                        iconColor: getTextColor(),
+                        iconColor: textColor,
                         title: Text(
                           'Hilfe',
                           style: TextStyle(
                             fontSize: 18,
-                            color: getTextColor(),
+                            color: textColor,
                           ),
                         ),
                         onTap: () => Navigator.push(
@@ -124,24 +125,23 @@ class _SidePanel extends State<SidePanel> {
                         ),
                       ),
                       ListTile(
-                        leading: Icon(
-                          isNightMode
-                              ? Icons.dark_mode_outlined
-                              : Icons.light_mode_outlined,
-                          size: 28,
-                        ),
-                        iconColor: iconColor(),
-                        title: Text(
-                          isNightMode ? 'Dunkler Modus' : 'Heller Modus',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: getTextColor(),
+                          leading: Icon(
+                            themeProvider.isNightMode
+                                ? Icons.dark_mode_outlined
+                                : Icons.light_mode_outlined,
+                            size: 28,
                           ),
-                        ),
-                        onTap: () => setState(() {
-                          toggleNightMode();
-                        }),
-                      ),
+                          iconColor: iconColour,
+                          title: Text(
+                            themeProvider.isNightMode
+                                ? 'Dunkler Modus'
+                                : 'Heller Modus',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: textColor,
+                            ),
+                          ),
+                          onTap: () => themeProvider.toggleNightMode()),
                       const Spacer(),
                       ListTile(
                         leading: const Icon(

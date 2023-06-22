@@ -3,7 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/widget/bottomNavBar.dart';
-import 'package:forestapp/widget/TopNavBarBasic.dart';
 import 'package:forestapp/dialog/problemsDialog.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:provider/provider.dart';
@@ -121,252 +120,254 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 2.0),
-                        child: Center(
-                          child: Text(
-                            'Willkommen bei der',
-                            style: TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.w300,
-                              color: textColor,
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.0),
+                          child: Center(
+                            child: Text(
+                              'Willkommen bei der',
+                              style: TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.w300,
+                                color: textColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 10.0),
-                        child: Center(
-                          child: Text(
-                            'Forest App',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w400,
-                              color: primaryAppLightGreen,
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: Center(
+                            child: Text(
+                              'Forest App',
+                              style: TextStyle(
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.w400,
+                                color: primaryAppLightGreen,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction, // Enable auto validation
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: TextFormField(
-                                controller: _usernameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Benutzername',
-                                  filled: true,
-                                  fillColor: background,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: const BorderSide(
-                                      color: grey,
+                        const SizedBox(height: 10.0),
+                        Form(
+                          key: _formKey,
+                          autovalidateMode: AutovalidateMode
+                              .onUserInteraction, // Enable auto validation
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: TextFormField(
+                                  controller: _usernameController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Benutzername',
+                                    filled: true,
+                                    fillColor: background,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: const BorderSide(
+                                        color: grey,
+                                      ),
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: const BorderSide(
-                                      color: primaryAppLightGreen,
-                                      width: 2.0,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: const BorderSide(
+                                        color: primaryAppLightGreen,
+                                        width: 2.0,
+                                      ),
                                     ),
+                                    labelStyle: TextStyle(
+                                      color: buttonTextColor,
+                                    ),
+                                    focusColor: primaryAppLightGreen,
                                   ),
-                                  labelStyle: TextStyle(
-                                    color: buttonTextColor,
-                                  ),
-                                  focusColor: primaryAppLightGreen,
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: textColor),
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Bitte geben Sie Ihren Benutzername ein';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) => _email = value?.trim(),
                                 ),
-                                style:
-                                    TextStyle(fontSize: 16.0, color: textColor),
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Bitte geben Sie Ihren Benutzername ein';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) => _email = value?.trim(),
                               ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: TextFormField(
-                                style:
-                                    TextStyle(fontSize: 16.0, color: textColor),
-                                controller: _passwordController,
-                                decoration: InputDecoration(
-                                  labelText: 'Passwort',
-                                  filled: true,
-                                  fillColor: background,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: const BorderSide(
-                                      color: grey,
+                              const SizedBox(height: 16.0),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: textColor),
+                                  controller: _passwordController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Passwort',
+                                    filled: true,
+                                    fillColor: background,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: const BorderSide(
+                                        color: grey,
+                                      ),
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: const BorderSide(
-                                      color: primaryAppLightGreen,
-                                      width: 2.0,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: const BorderSide(
+                                        color: primaryAppLightGreen,
+                                        width: 2.0,
+                                      ),
                                     ),
-                                  ),
-                                  labelStyle: TextStyle(
-                                    color: buttonTextColor,
-                                  ),
-                                  focusColor: primaryAppLightGreen,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color:
-                                          buttonTextColor, // Set the color of the icon
+                                    labelStyle: TextStyle(
+                                      color: buttonTextColor,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _obscurePassword = !_obscurePassword;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                obscureText: _obscurePassword,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _password = value.trim();
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Bitte geben Sie Ihr Passwort ein';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _password = value?.trim();
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
+                                    focusColor: primaryAppLightGreen,
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color:
+                                            buttonTextColor, // Set the color of the icon
+                                      ),
                                       onPressed: () {
-                                        FocusScope.of(context).unfocus();
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
                                       },
-                                      style: ButtonStyle(
-                                        padding: MaterialStateProperty.all<
-                                            EdgeInsets>(
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0),
-                                        ),
-                                        foregroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          textColor,
-                                        ),
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          white,
-                                        ),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        'Abbrechen',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
-                                            color: grey.shade600),
-                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () => _handleLogin(context),
-                                      style: ButtonStyle(
-                                        padding: MaterialStateProperty.all<
-                                            EdgeInsets>(
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0),
-                                        ),
-                                        foregroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          invertedColor,
-                                        ),
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          primaryAppLightGreen,
-                                        ),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
-                                            color: buttonTextInversedColor),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                  obscureText: _obscurePassword,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _password = value.trim();
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Bitte geben Sie Ihr Passwort ein';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _password = value?.trim();
+                                  },
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 10.0),
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => const ProblemDialog(),
-                                );
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Center(
-                                  child: Text(
-                                    'Probleme bei der Anmeldung',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: invertedColor,
-                                      decoration: TextDecoration.underline,
+                              const SizedBox(height: 16.0),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsets>(
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0),
+                                          ),
+                                          foregroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            textColor,
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            white,
+                                          ),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Abbrechen',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: grey.shade600),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16.0),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () => _handleLogin(context),
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsets>(
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0),
+                                          ),
+                                          foregroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            invertedColor,
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            primaryAppLightGreen,
+                                          ),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Login',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: buttonTextInversedColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => const ProblemDialog(),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Probleme bei der Anmeldung',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: invertedColor,
+                                        decoration: TextDecoration.underline,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                ),
               ),
             ),
           ),

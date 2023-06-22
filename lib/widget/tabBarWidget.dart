@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../colors/appColors.dart';
 
 class TabBarWidget extends StatefulWidget {

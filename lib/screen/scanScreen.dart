@@ -98,320 +98,171 @@ class _ScanScreen extends State<ScanScreen> {
             return AlertDialog(
               title: Row(
                 children: [
-                  Icon(
-                    Icons.warning,
-                    color: Colors.orange,
+                  const Text(
+                    'Sensor hinzufügen',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 8),
                   Text('Hinweis'),
                 ],
               ),
-              content: Text('Dieser Sensor wurde bereits angelegt.'),
-              actions: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary:
-                        Colors.white, // Set the background color of the button
-                  ),
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(
-                      color:
-                          Colors.orange, // Set the text color of the "OK" text
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _resetScanner();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        await showDialog(
-          context: context,
-          builder: (BuildContext dialogContext) {
-            String localSensorName = sensorName ?? '';
-
-            return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Builder(
-                  builder: (BuildContext errorDialogContext) {
-                    return AlertDialog(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Neuen Sensor hinzufügen',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      content: Container(
-                        width: MediaQuery.of(context).size.width *
-                            0.9, // Set dialog width to 90% of the screen width
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Container(
-                                          height:
-                                              45, // Adjust the height of the text field
-                                          child: TextField(
-                                            controller: _sensorNameController,
-                                            decoration: InputDecoration(
-                                              labelText: 'Sensor Name',
-                                              filled: true,
-                                              fillColor: Colors.white,
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                borderSide: BorderSide(
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                borderSide: BorderSide(
-                                                  color: primaryAppLightGreen,
-                                                  width: 2.0,
-                                                ),
-                                              ),
-                                              labelStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                              focusColor: primaryAppLightGreen,
-                                            ),
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                            ),
-                                            onChanged: (value) {
-                                              // Handle the text change
-                                              print('Sensor Name: $value');
-                                              localSensorName = value;
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Latitude:',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  latitude.toString() ?? 'Laden...',
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Longitude:',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  longitude.toString() ?? 'Laden...',
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    child: const Text('Abbrechen'),
-                                    onPressed: () {
-                                      Navigator.of(dialogContext).pop();
-                                      _resetScanner(); // Reset scanner after closing the dialog
-                                    },
-                                    style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                        EdgeInsets.symmetric(horizontal: 20.0),
-                                      ),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        Colors.grey,
-                                      ),
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    child: const Text('Hinzufügen'),
-                                    onPressed: () async {
-                                      if (localSensorName.trim().isEmpty) {
-                                        showDialog(
-                                          context: errorDialogContext,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.error,
-                                                    color: Colors.red,
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  const Text(
-                                                    'Fehler',
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              content: const Text(
-                                                  'Der Sensor Name darf nicht leer sein.'),
-                                              actions: [
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors
-                                                        .white, // Set the background color of the button
-                                                  ),
-                                                  child: const Text(
-                                                    'OK',
-                                                    style: TextStyle(
-                                                      color: Colors
-                                                          .red, // Set the text color of the "OK" text
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        print(
-                                            'Code: $code, Sensor Name: $localSensorName, Latitude: $latitude, Longitude: $longitude');
-                                        final loginService = LoginService();
-                                        await loginService
-                                            .updateSensorNameInDatabase(
-                                                code,
-                                                localSensorName,
-                                                latitude,
-                                                longitude);
-
-                                        await loginService
-                                            .addAlertNewSensor(localSensorName);
-                                        // Update the sensor name in the database
-                                        Navigator.of(dialogContext).pop();
-                                        _resetScanner(); // Reset scanner after adding
-                                      }
-                                    },
-                                    style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                      ),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        const Color.fromARGB(
-                                            255, 255, 255, 255),
-                                      ),
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        primaryAppLightGreen,
-                                      ),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'UUID: $code',
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                    );
-                  },
-                );
-              },
+                      const SizedBox(width: 8),
+                      Icon(
+                        isSensorNameNull ? Icons.check : Icons.close,
+                        color: isSensorNameNull ? green : red,
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    height: 40,
+                    child: TextField(
+                      controller: TextEditingController(text: sensorName),
+                      readOnly: false,
+                      decoration: InputDecoration(
+                        labelText: 'Sensor Name',
+                        filled: true,
+                        fillColor: white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: const BorderSide(
+                            color: grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide(
+                            color: primaryAppLightGreen,
+                            width: 2.0,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: grey,
+                        ),
+                        focusColor: primaryAppLightGreen,
+                      ),
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          sensorName = value; // Save the sensor name
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Latitude:',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        latitude.toString() ?? 'Laden...',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Longitude:',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        longitude.toString() ?? 'Laden...',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          child: const Text('Abbrechen'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _resetScanner(); // Reset scanner after closing the dialog
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.symmetric(horizontal: 20.0),
+                            ),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              grey,
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              white,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          child: const Text('Hinzufügen'),
+                          onPressed: () async {
+                            print(
+                                'Code: $code, Sensor Name: $sensorName, Latitude: $latitude, Longitude: $longitude');
+                            final loginService = LoginService();
+                            await loginService.updateSensorNameInDatabase(
+                                code, sensorName, latitude, longitude);
+                            // Update the sensor name in the database
+                            Navigator.of(context).pop();
+                            _resetScanner(); // Reset scanner after adding
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                              const EdgeInsets.symmetric(horizontal: 20.0),
+                            ),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              white,
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              primaryAppLightGreen,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             );
           },
         );
-      }
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.warning_amber,
-                  color: Colors.red,
-                ),
-                const SizedBox(width: 8),
-                Text('Fehler'),
-              ],
-            ),
-            content: Text('Der Sensor existiert nicht.'),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary:
-                      Colors.white, // Set the background color of the button
-                ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                    color: Colors.red, // Set the text color of the "OK" text
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _resetScanner();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+      },
+    );
   }
 
   void _resetScanner() {
@@ -430,7 +281,7 @@ class _ScanScreen extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       appBar: TopNavBar(
         title: 'QR CODE SCANNER',
         onMenuPressed: () {

@@ -9,7 +9,7 @@ class LogOutDecoration {
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
         BoxShadow(
-          color: logoutBlack,
+          color: black26,
           blurRadius: 8.0,
           offset: Offset(0.0, 4.0),
         ),
