@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
-import 'package:forestapp/dialog/logoutDialog.dart';
-import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/dialog/loadingDialog.dart';
 import 'package:forestapp/db/apiService.dart';
 

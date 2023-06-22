@@ -94,9 +94,10 @@ class _ScanScreen extends State<ScanScreen> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Sensor hinzufügen',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: textColor),
                   ),
                 ],
               ),
@@ -109,7 +110,8 @@ class _ScanScreen extends State<ScanScreen> {
                       Expanded(
                         child: Text(
                           'UUID: $code',
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, color: textColor),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -120,7 +122,7 @@ class _ScanScreen extends State<ScanScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 40,
                     child: TextField(
@@ -129,7 +131,7 @@ class _ScanScreen extends State<ScanScreen> {
                       decoration: InputDecoration(
                         labelText: 'Sensor Name',
                         filled: true,
-                        fillColor: white,
+                        fillColor: textColor,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide: const BorderSide(
@@ -138,19 +140,17 @@ class _ScanScreen extends State<ScanScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: primaryAppLightGreen,
                             width: 2.0,
                           ),
                         ),
-                        labelStyle: TextStyle(
+                        labelStyle: const TextStyle(
                           color: grey,
                         ),
                         focusColor: primaryAppLightGreen,
                       ),
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                      ),
+                      style: TextStyle(fontSize: 16.0, color: textColor),
                       onChanged: (value) {
                         setState(() {
                           sensorName = value; // Save the sensor name
@@ -162,13 +162,14 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Latitude:',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, color: textColor),
                       ),
                       Text(
                         latitude.toString() ?? 'Laden...',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(fontSize: 16.0, color: textColor),
                       ),
                     ],
                   ),
@@ -176,13 +177,14 @@ class _ScanScreen extends State<ScanScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Longitude:',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, color: textColor),
                       ),
                       Text(
                         longitude.toString() ?? 'Laden...',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(fontSize: 16.0, color: textColor),
                       ),
                     ],
                   ),
@@ -191,14 +193,13 @@ class _ScanScreen extends State<ScanScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          child: const Text('Abbrechen'),
                           onPressed: () {
                             Navigator.of(context).pop();
                             _resetScanner(); // Reset scanner after closing the dialog
                           },
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all<EdgeInsets>(
-                              EdgeInsets.symmetric(horizontal: 20.0),
+                              const EdgeInsets.symmetric(horizontal: 20.0),
                             ),
                             foregroundColor: MaterialStateProperty.all<Color>(
                               grey,
@@ -213,12 +214,15 @@ class _ScanScreen extends State<ScanScreen> {
                               ),
                             ),
                           ),
+                          child: Text(
+                            'Abbrechen',
+                            style: TextStyle(color: textColor),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton(
-                          child: const Text('Hinzufügen'),
                           onPressed: () async {
                             print(
                                 'Code: $code, Sensor Name: $sensorName, Latitude: $latitude, Longitude: $longitude');
@@ -246,6 +250,7 @@ class _ScanScreen extends State<ScanScreen> {
                               ),
                             ),
                           ),
+                          child: const Text('Hinzufügen'),
                         ),
                       ),
                     ],
@@ -275,7 +280,7 @@ class _ScanScreen extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       appBar: TopNavBar(
         title: 'QR CODE SCANNER',
         onMenuPressed: () {

@@ -335,8 +335,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
               isVisible: rainLineChart == true && chartData == visitorChartDaily
                   ? true
                   : false,
-              markerSettings: MarkerSettings(
-                borderColor: Color(0xFF800080),
+              markerSettings: const MarkerSettings(
+                borderColor: statDeepPurple,
                 isVisible: true,
                 color: deepOrange,
                 shape: DataMarkerType.circle,
@@ -520,6 +520,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               visitorVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -605,6 +606,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -666,6 +668,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               airVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -736,6 +739,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               visitorVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -793,6 +797,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -850,6 +855,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               airVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -916,6 +922,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               visitorVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -972,6 +979,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -1029,6 +1037,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               airVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {

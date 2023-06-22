@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../provider/ThemeProvider.dart';
+
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
@@ -63,6 +65,7 @@ final List<Color> colorsList = [
 const deepOrange = Colors.deepOrange;
 const statBlue = Color.fromARGB(255, 56, 162, 197);
 const statGreen = Color.fromRGBO(38, 158, 38, 0.2);
+const statDeepPurple = Color(0xFF800080);
 
 ///SnackbarWidget
 const redAccent = Colors.redAccent;
@@ -81,10 +84,9 @@ final List<Color> tabColors = [
   blue, // QR Code
   darkGreen, // Sensors
 ];
-Color bottomNavSelectColor = getBottomNavColor();
 
 /// Logout Dialog
-const logoutBlack = Colors.black26;
+const black26 = Colors.black26;
 
 ///Warning Widget
 const warningGrey = Color.fromARGB(255, 170, 170, 170);
@@ -103,74 +105,17 @@ const sensorGreen = Color.fromARGB(255, 64, 236, 73);
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
 
+bool isNightMode = true;
 //--Dark Mode Colors
-Color iconLightRed = passwordIconColor();
-Color textLightRed = passwordChangeColor();
-Color invertedColor = invertedColour();
-Color textInverted = getInvertedTextColor();
-Color buttonTextInversedColor = getButtonTexInversedColor();
-Color buttonTextColor = getButtonTextColor();
+Color iconLightRed = ThemeProvider().passwordIconColor();
+Color textLightRed = ThemeProvider().passwordChangeColor();
+Color invertedColor = ThemeProvider().invertedColour();
+Color textInverted = ThemeProvider().getInvertedTextColor();
+Color buttonTextInversedColor = ThemeProvider().getButtonTexInversedColor();
+Color buttonTextColor = ThemeProvider().getButtonTextColor();
 Color background = white;
 Color darkBackground = Color(0xFF555555);
-Color lighterBackground = changeBackgroundLighter();
-Color textColor = getTextColor();
-
-Color getTextColor() {
-  return isNightMode ? black : white;
-}
-
-Color getInvertedTextColor() {
-  return isNightMode ? white : black;
-}
-
-Color getButtonTextColor() {
-  return isNightMode ? grey : white;
-}
-
-Color getBottomNavColor() {
-  return isNightMode ? black : grey.shade100;
-}
-
-Color getButtonTexInversedColor() {
-  return isNightMode ? white : grey;
-}
-
-Color iconColor() {
-  return isNightMode ? black : yellow;
-}
-
-Color passwordChangeColor() {
-  return isNightMode ? red : lightRed;
-}
-
-Color passwordIconColor() {
-  return isNightMode ? red : lightRed;
-}
-
-Color changeBackground() {
-  return isNightMode ? white : darkBackground;
-}
-
-Color changeBackgroundLighter() {
-  return isNightMode ? white : grey.shade600;
-}
-
-Color invertedColour() {
-  return isNightMode ? black.withOpacity(0.5) : black;
-}
-
-bool isNightMode = true;
-
-void toggleNightMode() {
-  isNightMode = !isNightMode;
-  textColor = getTextColor();
-  invertedColor = invertedColour();
-  background = changeBackground();
-  lighterBackground = changeBackgroundLighter();
-  textInverted = getInvertedTextColor();
-  iconLightRed = passwordIconColor();
-  textLightRed = passwordChangeColor();
-  buttonTextInversedColor = getButtonTexInversedColor();
-  buttonTextColor = getButtonTextColor();
-  bottomNavSelectColor = getBottomNavColor();
-}
+Color lighterBackground = ThemeProvider().changeBackgroundLighter();
+Color textColor = ThemeProvider().getTextColor();
+Color bottomNavSelectColor = ThemeProvider().getBottomNavColor();
+Color iconColour = ThemeProvider().iconColor();

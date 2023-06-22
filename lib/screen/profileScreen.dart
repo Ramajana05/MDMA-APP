@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/dialog/changePasswordDialog.dart';
-import 'package:forestapp/screen/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:geocoding/geocoding.dart';
@@ -82,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 1.0,
-                  color: changeBackgroundLighter(), // Soft grey color
+                  color: lighterBackground, // Soft grey color
                   child: Column(
                     children: [
                       buildProfileItem(
@@ -141,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 2.0,
-                  color: changeBackgroundLighter(), // Soft grey color
+                  color: lighterBackground, // Soft grey color
                   child: Column(
                     children: [
                       GestureDetector(
@@ -227,8 +226,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: buildProfileItem(
                           Icons.lock,
                           'Passwort Ändern',
-                          iconColor: passwordIconColor(),
-                          textColour: passwordChangeColor(),
+                          iconColor: textLightRed,
+                          textColour: iconLightRed,
                         ),
                       ),
                     ],

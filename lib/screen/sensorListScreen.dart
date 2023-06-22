@@ -3,7 +3,6 @@ import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
-
 import 'package:forestapp/service/loginService.dart';
 
 class SensorListScreen extends StatefulWidget {
