@@ -12,7 +12,7 @@ class SnackbarWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       decoration: BoxDecoration(
-        color: Colors.redAccent,
+        color: redAccent,
         borderRadius: BorderRadius.circular(8.0),
       ),
       width: double.infinity,

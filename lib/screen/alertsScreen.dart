@@ -4,7 +4,7 @@ import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/warningWidget.dart';
 
 class AlertScreen extends StatefulWidget {
-  AlertScreen({Key? key}) : super(key: key);
+  const AlertScreen({Key? key}) : super(key: key);
 
   @override
   State<AlertScreen> createState() => _AlertScreen();
@@ -25,8 +25,8 @@ class _AlertScreen extends State<AlertScreen> {
         children: [
           WarningWidget(message: "Your phone is about to overheat"),
           WarningWidget(message: "Your battery is running low"),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 25),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 25),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text('Alert Screen'),

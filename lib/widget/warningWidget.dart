@@ -9,7 +9,7 @@ class WarningWidget extends StatelessWidget {
   WarningWidget({
     required this.message,
     this.isWarnung = true,
-    this.iconColor = Colors.yellow,
+    this.iconColor = yellow,
   });
 
   @override
@@ -51,7 +51,7 @@ class WarningWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(255, 170, 170, 170).withOpacity(0.5),
+                color: warningGrey.withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: const Offset(0, 2),

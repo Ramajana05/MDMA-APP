@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class MapPopup extends StatelessWidget {
   final String objectName;
 
@@ -13,11 +15,11 @@ class MapPopup extends StatelessWidget {
       right: 0,
       child: Container(
         height: 60,
-        color: Colors.white,
+        color: white,
         child: Center(
           child: Text(
             objectName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: textColor),
           ),
         ),
       ),

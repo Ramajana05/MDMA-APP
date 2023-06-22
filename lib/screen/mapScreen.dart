@@ -20,7 +20,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreen extends State<MapScreen> {
   Set<Marker> _markers = {};
-  CameraPosition _kGooglePlex = CameraPosition(
+  CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 15.0,
   );
@@ -129,7 +129,7 @@ class _MapScreen extends State<MapScreen> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: background,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
                   ),
@@ -158,12 +158,12 @@ class _MapScreen extends State<MapScreen> {
                                   child: Icon(
                                     Icons.sensors,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +175,7 @@ class _MapScreen extends State<MapScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
                                       const Text(
@@ -187,7 +187,7 @@ class _MapScreen extends State<MapScreen> {
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
@@ -240,8 +240,7 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: white.withOpacity(0.3),
                           ),
                           child: const Icon(
                             Icons.close,
@@ -264,14 +263,14 @@ class _MapScreen extends State<MapScreen> {
   void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
         ),
       ),
       builder: (BuildContext context) {
-        Timer(Duration(seconds: 2), () {
+        Timer(const Duration(seconds: 2), () {
           Navigator.of(context).pop();
         });
 
@@ -285,8 +284,8 @@ class _MapScreen extends State<MapScreen> {
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
+                decoration: const BoxDecoration(
+                  color: white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
@@ -297,8 +296,8 @@ class _MapScreen extends State<MapScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(
                               4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
                         ),
                         Row(
@@ -308,21 +307,21 @@ class _MapScreen extends State<MapScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: white,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                Positioned.fill(
+                                const Positioned.fill(
                                   child: Icon(
                                     Icons.place,
                                     size: 32,
-                                    color: Color.fromARGB(255, 58, 216, 10),
+                                    color: mapGreen,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,13 +333,13 @@ class _MapScreen extends State<MapScreen> {
                                         fontWeight: FontWeight.bold,
                                         color: textColor),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.person,
                                       ),
-                                      SizedBox(width: 2),
+                                      const SizedBox(width: 2),
                                       Text(
                                         '${polygon.visitors.toString()} Besucher',
                                         style: TextStyle(
@@ -355,8 +354,8 @@ class _MapScreen extends State<MapScreen> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
                         ),
                       ],
                     ),
@@ -372,10 +371,9 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: white.withOpacity(0.3),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.close,
                             size: 24,
                             color: grey,
@@ -458,7 +456,7 @@ class _MapScreen extends State<MapScreen> {
         20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0 + 20.0 + 8.0 + 16.0;
 
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'KARTE',
@@ -495,13 +493,13 @@ class _MapScreen extends State<MapScreen> {
             right: 0,
             child: Center(
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Icon(
                       Icons.battery_full,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -512,7 +510,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.battery_5_bar,
-                      color: Colors.orange,
+                      color: orange,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -523,7 +521,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.battery_2_bar,
-                      color: Colors.red,
+                      color: red,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -542,13 +540,13 @@ class _MapScreen extends State<MapScreen> {
             right: 0,
             child: Center(
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 46, 202, 51),
+                      color: primaryGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -559,7 +557,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 128, 197, 130),
+                      color: infoGreen,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -570,7 +568,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Color.fromARGB(255, 170, 169, 169),
+                      color: infoGrey,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -593,10 +591,10 @@ class _MapScreen extends State<MapScreen> {
                   builder: (context) => InformationDialog(),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.info_outline,
                 size: 30,
-                color: const Color.fromARGB(255, 0, 112, 204),
+                color: mapBlue,
               ),
             ),
           ),
@@ -685,7 +683,7 @@ class MapSampleState extends State<MapSample> {
           polygons: polygons,
         );
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 }

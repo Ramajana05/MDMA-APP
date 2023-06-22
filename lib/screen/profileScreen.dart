@@ -60,35 +60,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Add your side panel logic here
         },
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          color: background,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
+      body: Container(
+        color: background,
+        child: ListView.builder(
+          itemCount: 5, // Adjust the count as needed
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
                 child: Text(
                   'Persönliche Daten',
                   style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: textColor),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
                 ),
-              ),
-              Padding(
+              );
+            } else if (index == 1) {
+              return Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 1.0,
                   color: changeBackgroundLighter(), // Soft grey color
                   child: Column(
                     children: [
-                      buildProfileItem(Icons.person, loggedInUsername ?? '',
-                          textColour: textColor),
+                      buildProfileItem(
+                        Icons.person,
+                        loggedInUsername ?? '',
+                        textColour: textColor,
+                      ),
                       const Divider(),
-                      buildProfileItem(Icons.phone_android, 'Förster',
-                          textColour: textColor),
+                      buildProfileItem(
+                        Icons.phone_android,
+                        'Förster',
+                        textColour: textColor,
+                      ),
                       const Divider(),
                       FutureBuilder<String>(
                         future: getLocationName(),
@@ -100,29 +107,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               textColour: textColor,
                             );
                           } else if (snapshot.hasError) {
-                            return buildProfileItem(Icons.location_off, 'Error',
-                                textColour: textColor);
+                            return buildProfileItem(
+                              Icons.location_off,
+                              'Error',
+                              textColour: textColor,
+                            );
                           }
                           return buildProfileItem(
-                              Icons.location_on, 'Loading...',
-                              textColour: textColor);
+                            Icons.location_on,
+                            'Loading...',
+                            textColour: textColor,
+                          );
                         },
                       ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
+              );
+            } else if (index == 2) {
+              return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
                 child: Text(
                   'Privatsphäre',
                   style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: textColor),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
                 ),
-              ),
-              Padding(
+              );
+            } else if (index == 3) {
+              return Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 2.0,
@@ -181,8 +196,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                            'Passwort konnte erfolgreich geändert werden.',
-                                            style: TextStyle(color: textColor)),
+                                          'Passwort konnte erfolgreich geändert werden.',
+                                          style: TextStyle(color: textColor),
+                                        ),
                                       ),
                                     );
 
@@ -208,25 +224,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           );
                         },
-                        child: buildProfileItem(Icons.lock, 'Passwort Ändern',
-                            iconColor: passwordIconColor(),
-                            textColour: passwordChangeColor()),
+                        child: buildProfileItem(
+                          Icons.lock,
+                          'Passwort Ändern',
+                          iconColor: passwordIconColor(),
+                          textColour: passwordChangeColor(),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 13),
-              Container(
-                alignment: Alignment.center,
-                width: double.infinity,
-                child: Text(
-                  'Powered by',
-                  style: TextStyle(fontSize: 24.0, color: textColor),
-                ),
-              ),
-            ],
-          ),
+              );
+            } else if (index == 4) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 13,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      'Powered by',
+                      style: TextStyle(fontSize: 24.0, color: textColor),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return SizedBox(height: 200);
+            }
+          },
         ),
       ),
     );

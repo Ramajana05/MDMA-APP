@@ -4,13 +4,6 @@ import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
 
-import 'dart:async';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:forestapp/widget/mapObjects.dart';
-
-import 'package:flutter/material.dart';
-import 'package:forestapp/widget/damage.dart';
-import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/service/loginService.dart';
 
 class SensorListScreen extends StatefulWidget {
@@ -48,15 +41,22 @@ class _SensorListScreenState extends State<SensorListScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Location: ${damage.latitude} ${damage.longitude}'),
-              SizedBox(height: 8),
-              Text('Status: ${damage.status}'),
-              SizedBox(height: 8),
-              Text('Signal Strength: ${damage.signalStrength}'),
-              SizedBox(height: 8),
-              Text('Create Date: ${damage.createDate}'),
-              SizedBox(height: 8),
-              Text('Charger Information: ${damage.chargerInfo}'),
+              Text(
+                'Location: ${damage.latitude} ${damage.longitude}',
+                style: TextStyle(color: textColor),
+              ),
+              const SizedBox(height: 8),
+              Text('Status: ${damage.status}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Signal Strength: ${damage.signalStrength}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Create Date: ${damage.createDate}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Charger Information: ${damage.chargerInfo}',
+                  style: TextStyle(color: textColor)),
             ],
           ),
           actions: [
@@ -64,7 +64,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text('Close', style: TextStyle(color: textColor)),
             ),
           ],
         );
@@ -73,9 +73,8 @@ class _SensorListScreenState extends State<SensorListScreen> {
   }
 
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
@@ -92,7 +91,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
                 itemCount: damagesList.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: EdgeInsets.only(bottom: 7.0),
+                    padding: const EdgeInsets.only(bottom: 7.0),
                     child: SensorListItemWidget(
                       sensorTitle: damagesList[index].sensorName,
                       latitude: damagesList[index].latitude,

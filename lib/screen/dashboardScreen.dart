@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -16,12 +14,6 @@ import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
 import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:forestapp/screen/mapScreen.dart';
-
-import 'package:forestapp/widget/mapObjects.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -65,17 +57,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late List<Statistic> _statistics;
 
   List<WeatherItem> weatherForecast = [];
-
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 14.5,
-  );
-  Set<Marker> _markers = {}; // Define the markers set
-  Set<Circle> _circles = {}; // Define the circles set
-  Set<Polygon> _polygons = {}; // Define the polygons set
-  late GoogleMapController _mapController;
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -186,7 +167,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
     super.dispose();
@@ -246,7 +226,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
+                                        transparent,
                                         primaryVisitorShadowColor,
                                         primaryVisitorColor,
                                         maxVisitors.toDouble(),
@@ -305,9 +285,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 194, 255, 241),
+                                        transparent,
+                                        turquoise,
                                         primaryGreen,
                                         maxSensors.toDouble(),
                                         currentSensors.toInt(),
@@ -369,9 +348,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 255, 199, 199),
+                                        transparent,
+                                        primaryTempShadowColor,
                                         red,
                                         40,
                                         currentTemperature.toInt(),
@@ -429,9 +407,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 196, 236, 255),
+                                        transparent,
+                                        primaryHumidityShadowColor,
                                         blue,
                                         100,
                                         airHumidity.toInt(),
@@ -741,7 +718,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _currentPage == index ? Colors.blue : Colors.grey,
+              color: _currentPage == index ? blue : grey,
             ),
           );
         }),
@@ -753,42 +730,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<ChartData> chartData,
     Color chartColor,
   ) {
-    return Container(
-      color: background,
-      height: MediaQuery.of(context).size.height / 5,
-      child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(
-          crossesAt: 0,
-          placeLabelsNearAxisLine: false,
-          axisLine: AxisLine(color: textColor, width: 1.5),
-          labelStyle: TextStyle(fontSize: 15, color: textColor),
-          desiredIntervals: 12,
-        ),
-        primaryYAxis: NumericAxis(
-          labelFormat: (chartData == airHumidityChartDaily)
-              ? '{value}%'
-              : (chartData == tempChartDaily)
-                  ? '{value}°C'
-                  : '',
-          majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
-          axisLine: AxisLine(color: textColor, width: 1.5),
-          labelStyle: TextStyle(fontSize: 15, color: textColor),
-        ),
-        series: <ChartSeries>[
-          LineSeries<ChartData, String>(
-            dataSource: chartData,
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y,
-            markerSettings: const MarkerSettings(
-              borderColor: Colors.deepPurple,
-              isVisible: true,
-              color: grey,
-              shape: DataMarkerType.circle,
-            ),
-            color: chartColor,
-            dataLabelMapper: (ChartData data, _) => '${data.y}',
+    return Flexible(
+      child: Container(
+        color: background,
+        child: SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            crossesAt: 0,
+            placeLabelsNearAxisLine: false,
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
+            desiredIntervals: 12,
           ),
-        ],
+          primaryYAxis: NumericAxis(
+            labelFormat: (chartData == airHumidityChartDaily)
+                ? '{value}%'
+                : (chartData == tempChartDaily)
+                    ? '{value}°C'
+                    : '',
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
+          ),
+          series: <ChartSeries>[
+            LineSeries<ChartData, String>(
+              dataSource: chartData,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              markerSettings: const MarkerSettings(
+                borderColor: deepPurple,
+                isVisible: true,
+                color: grey,
+                shape: DataMarkerType.circle,
+              ),
+              color: chartColor,
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -938,7 +916,7 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.water_drop, size: 20, color: Colors.blue),
+                const Icon(Icons.water_drop, size: 20, color: blue),
                 Text(
                   '${weatherData.rainPercentage}%',
                   style: TextStyle(fontSize: 16, color: textColor),
@@ -949,7 +927,7 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.air, size: 24, color: Colors.grey),
+                const Icon(Icons.air, size: 24, color: grey),
                 Text(
                   '${weatherData.windSpeed} km/h',
                   style: TextStyle(fontSize: 16, color: textColor),

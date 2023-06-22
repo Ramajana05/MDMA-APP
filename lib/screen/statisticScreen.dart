@@ -320,7 +320,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: MarkerSettings(
-                borderColor: Colors.deepPurple,
+                borderColor: deepPurple,
                 isVisible: true,
                 color: grey,
                 shape: DataMarkerType.circle,
@@ -338,10 +338,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
               markerSettings: MarkerSettings(
                 borderColor: Color(0xFF800080),
                 isVisible: true,
-                color: Colors.deepOrange,
+                color: deepOrange,
                 shape: DataMarkerType.circle,
               ),
-              color: Color.fromARGB(255, 56, 162, 197),
+              color: statBlue,
             ),
           ],
           tooltipBehavior: TooltipBehavior(
@@ -385,7 +385,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       //     Text(
                       //       chartName,
                       //       style:  TextStyle(
-                      //         color: Colors.white,
+                      //         color: white,
                       //         fontWeight: FontWeight.bold,
                       //       ),
                       //     )
@@ -393,7 +393,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       // ),
                       //  Text(
                       //   '────────────────',
-                      //   style: TextStyle(color: Colors.white),
+                      //   style: TextStyle(color: white),
                       // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -538,7 +538,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Padding(
                       padding: EdgeInsets.only(left: 8),
                       child: SwitchListTile(
-                        activeColor: Color.fromRGBO(38, 158, 38, 0.2),
+                        activeColor: statGreen,
                         // Lighter green tone
                         activeTrackColor: primaryAppLightGreen,
                         title: Text(

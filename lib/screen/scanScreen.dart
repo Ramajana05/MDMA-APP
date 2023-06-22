@@ -115,7 +115,7 @@ class _ScanScreen extends State<ScanScreen> {
                       const SizedBox(width: 8),
                       Icon(
                         isSensorNameNull ? Icons.check : Icons.close,
-                        color: isSensorNameNull ? Colors.green : Colors.red,
+                        color: isSensorNameNull ? green : red,
                       )
                     ],
                   ),
@@ -129,11 +129,11 @@ class _ScanScreen extends State<ScanScreen> {
                       decoration: InputDecoration(
                         labelText: 'Sensor Name',
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide: const BorderSide(
-                            color: Colors.grey,
+                            color: grey,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -144,7 +144,7 @@ class _ScanScreen extends State<ScanScreen> {
                           ),
                         ),
                         labelStyle: TextStyle(
-                          color: Colors.grey,
+                          color: grey,
                         ),
                         focusColor: primaryAppLightGreen,
                       ),
@@ -201,10 +201,10 @@ class _ScanScreen extends State<ScanScreen> {
                               EdgeInsets.symmetric(horizontal: 20.0),
                             ),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                              Colors.grey,
+                              grey,
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 255, 255, 255),
+                              white,
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
@@ -234,7 +234,7 @@ class _ScanScreen extends State<ScanScreen> {
                               const EdgeInsets.symmetric(horizontal: 20.0),
                             ),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 255, 255, 255),
+                              white,
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
                               primaryAppLightGreen,
@@ -326,7 +326,7 @@ class _ScanScreen extends State<ScanScreen> {
             child: Column(
               children: [
                 IconButton(
-                  color: Colors.white,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.cameraFacingState,
                     builder: (context, state, child) {
@@ -344,17 +344,17 @@ class _ScanScreen extends State<ScanScreen> {
                   },
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.torchState,
                     builder: (context, state, child) {
                       switch (state) {
                         case TorchState.off:
                           return const Icon(Icons.flash_off_outlined,
-                              color: Colors.grey);
+                              color: grey);
                         case TorchState.on:
                           return const Icon(Icons.flash_on_outlined,
-                              color: Color.fromARGB(255, 255, 255, 255));
+                              color: white);
                       }
                     },
                   ),
