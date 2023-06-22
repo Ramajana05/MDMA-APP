@@ -11,7 +11,7 @@ class LogoutDialog extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth * 0.9;
 
-    return Container(
+    return SizedBox(
       width: dialogWidth,
       child: AlertDialog(
         title: Text(
@@ -20,11 +20,11 @@ class LogoutDialog extends StatelessWidget {
               .copyWith(fontSize: 24.0, color: textColor),
         ),
         content: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Row(
             children: [
-              //Icon(Icons.warning, color: Colors.orange),
-              SizedBox(width: 8.0),
+              //Icon(Icons.warning, color: orange),
+              const SizedBox(width: 8.0),
               Text(
                 'Wirklich ausloggen?',
                 style: TextStyle(fontSize: 20.0, color: textColor),
@@ -53,14 +53,14 @@ class LogoutDialog extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
-            child: Text('Ausloggen',
-                style: TextStyle(fontSize: 20.0, color: lighterBackground)),
             style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 40, 233, 127),
+              primary: primaryAppLightGreen,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),
+            child: Text('Ausloggen',
+                style: TextStyle(fontSize: 20.0, color: lighterBackground)),
           ),
         ],
         shape: RoundedRectangleBorder(
@@ -68,7 +68,7 @@ class LogoutDialog extends StatelessWidget {
         ),
         backgroundColor: background,
         elevation: 8.0,
-        contentPadding: EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
           vertical: 8.0,
         ),

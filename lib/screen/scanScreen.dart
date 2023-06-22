@@ -481,7 +481,7 @@ class _ScanScreen extends State<ScanScreen> {
             child: Column(
               children: [
                 IconButton(
-                  color: Colors.white,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.cameraFacingState,
                     builder: (context, state, child) {
@@ -499,17 +499,17 @@ class _ScanScreen extends State<ScanScreen> {
                   },
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.torchState,
                     builder: (context, state, child) {
                       switch (state) {
                         case TorchState.off:
                           return const Icon(Icons.flash_off_outlined,
-                              color: Colors.grey);
+                              color: grey);
                         case TorchState.on:
                           return const Icon(Icons.flash_on_outlined,
-                              color: Color.fromARGB(255, 255, 255, 255));
+                              color: white);
                       }
                     },
                   ),

@@ -17,7 +17,7 @@ class ProblemDialog extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Text(
               'Wenden Sie sich an den Support',
               style: TextStyle(color: textColor),

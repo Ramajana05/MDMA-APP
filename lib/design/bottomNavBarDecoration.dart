@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../colors/appColors.dart';
 
-BoxDecoration bottomNavBarDecoration2 = BoxDecoration(
-  border: const Border(
+BoxDecoration bottomNavBarDecoration2 = const BoxDecoration(
+  border: Border(
     top: BorderSide(
       color: bottomGreen,
       width: 4.0,
     ),
   ),
-  gradient: const LinearGradient(
+  gradient: LinearGradient(
     colors: bottomGradient,
     begin: Alignment.bottomLeft,
     end: Alignment.bottomRight,

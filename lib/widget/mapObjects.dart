@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-import 'dart:io';
-
 import 'package:forestapp/service/loginService.dart';
-
 import '../colors/appColors.dart';
 
 class CircleData {
@@ -46,15 +40,30 @@ class CircleData {
 
     final batteryLevel = map['Battery'];
 
-    if (batteryLevel > 60) {
+    if (batteryLevel >= 90) {
       fillColor = primaryGreen.withOpacity(0.4);
       strokeColor = primaryGreen;
-    } else if (batteryLevel <= 60 && batteryLevel > 30) {
-      fillColor = Colors.orange.withOpacity(0.4);
-      strokeColor = Colors.orange;
+    } else if (batteryLevel >= 75) {
+      fillColor = primaryGreen.withOpacity(0.4);
+      strokeColor = primaryGreen;
+    } else if (batteryLevel >= 60) {
+      fillColor = orange.withOpacity(0.4);
+      strokeColor = orange;
+    } else if (batteryLevel >= 45) {
+      fillColor = orange.withOpacity(0.4);
+      strokeColor = orange;
+    } else if (batteryLevel >= 30) {
+      fillColor = red.withOpacity(0.4);
+      strokeColor = red;
+    } else if (batteryLevel >= 15) {
+      fillColor = red.withOpacity(0.4);
+      strokeColor = red;
+    } else if (batteryLevel >= 5) {
+      fillColor = red.withOpacity(0.4);
+      strokeColor = red;
     } else {
-      fillColor = Colors.red.withOpacity(0.4);
-      strokeColor = Colors.red;
+      fillColor = red.withOpacity(0.4);
+      strokeColor = red;
     }
 
     return CircleData(

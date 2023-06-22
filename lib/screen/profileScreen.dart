@@ -63,64 +63,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Add your side panel logic here
         },
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          color: background,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
+      body: Container(
+        color: background,
+        child: ListView.builder(
+          itemCount: 5, // Adjust the count as needed
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
                 child: Text(
                   'Persönliche Daten',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Card(
+                  elevation: 1.0,
+                  color: changeBackgroundLighter(), // Soft grey color
+                  child: Column(
+                    children: [
+                      buildProfileItem(Icons.person, loggedInUsername ?? '',
+                          textColour: textColor),
+                      const Divider(),
+                      buildProfileItem(Icons.phone_android, 'Förster',
+                          textColour: textColor),
+                      const Divider(),
+                      FutureBuilder<String>(
+                        future: getLocationName(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return buildProfileItem(
+                              Icons.location_on,
+                              snapshot.data ?? '',
+                              textColour: textColor,
+                            );
+                          } else if (snapshot.hasError) {
+                            return buildProfileItem(Icons.location_off, 'Error',
+                                textColour: textColor);
+                          }
+                          return buildProfileItem(
+                              Icons.location_on, 'Loading...',
+                              textColour: textColor);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+                child: Text(
+                  'Privatsphäre',
                   style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                       color: textColor),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Card(
-                elevation: 1.0,
-                color: Colors.grey[150], // Soft grey color
-                child: Column(
-                  children: [
-                    buildProfileItem(Icons.person, loggedInUsername ?? ''),
-                    const Divider(),
-                    buildProfileItem(Icons.phone_android, 'Förster'),
-                    const Divider(),
-                    FutureBuilder<String>(
-                      future: getLocationName(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return buildProfileItem(
-                            Icons.location_on,
-                            snapshot.data ?? '',
-                          );
-                        } else if (snapshot.hasError) {
-                          return buildProfileItem(Icons.location_off, 'Error');
-                        }
-                        return buildProfileItem(
-                            Icons.location_on, 'Loading...');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
-              child: Text(
-                'Kontoaktionen',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Padding(
+              );
+            } else if (index == 3) {
+              return Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 2.0,
@@ -179,46 +185,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                            'Passwort konnte erfolgreich geändert werden.',
-                                            style: TextStyle(color: textColor)),
+                                          'Passwort konnte erfolgreich geändert werden.',
+                                          style: TextStyle(color: textColor),
+                                        ),
                                       ),
                                     );
 
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    // Passwords do not match or current password is incorrect
+                                    print('Password change failed');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Passwort konnte nicht geändert werden.',
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                onCancelPressed: () {
+                                  // Handle cancel button press
                                   Navigator.of(context).pop();
-                                } else {
-                                  // Passwords do not match or current password is incorrect
-                                  print('Password change failed');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Passwort konnte nicht geändert werden.'),
-                                    ),
-                                  );
-                                }
-                              },
-                              onCancelPressed: () {
-                                // Handle cancel button press
-                                Navigator.of(context).pop();
-                              },
-                            );
-                          },
-                        );
-                      },
-                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
-                          iconColor: Colors.red, textColor: Colors.red),
-                    ),
-                  ],
+                                },
+                              );
+                            },
+                          );
+                        },
+                        child: buildProfileItem(Icons.lock, 'Passwort Ändern',
+                            iconColor: passwordIconColor(),
+                            textColour: passwordChangeColor()),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 13),
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text(
-                'Powered by',
-                style: TextStyle(
-                  fontSize: 24.0,
+              SizedBox(height: 13),
+              Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Text(
+                  'Powered by',
+                  style: TextStyle(fontSize: 24.0, color: textColor),
                 ),
               ),
             ],

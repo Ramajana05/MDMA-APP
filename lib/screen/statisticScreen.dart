@@ -309,7 +309,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: MarkerSettings(
-                borderColor: Colors.deepPurple,
+                borderColor: deepPurple,
                 isVisible: true,
                 color: grey,
                 shape: DataMarkerType.circle,
@@ -327,10 +327,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
               markerSettings: const MarkerSettings(
                 borderColor: Color(0xFF800080),
                 isVisible: true,
-                color: Colors.deepOrange,
+                color: deepOrange,
                 shape: DataMarkerType.circle,
               ),
-              color: const Color.fromARGB(255, 56, 162, 197),
+              color: Color.fromARGB(255, 56, 162, 197),
             ),
           ],
           tooltipBehavior: TooltipBehavior(
@@ -374,7 +374,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       //   children: [
                       //     Text(
                       //       chartName,
-                      //       style: const TextStyle(
+                      //       style:  TextStyle(
                       //         color: Colors.white,
                       //         fontWeight: FontWeight.bold,
                       //       ),
@@ -383,7 +383,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       // ),
                       // const Text(
                       //   '────────────────',
-                      //   style: TextStyle(color: Colors.white),
+                      //   style: TextStyle(color: white),
                       // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -528,7 +528,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: SwitchListTile(
-                        activeColor: const Color.fromRGBO(38, 158, 38, 0.2),
+                        activeColor: Color.fromRGBO(38, 158, 38, 0.2),
                         // Lighter green tone
                         activeTrackColor: primaryAppLightGreen,
                         title: Text(

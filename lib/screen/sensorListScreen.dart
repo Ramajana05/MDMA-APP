@@ -68,15 +68,22 @@ class _SensorListScreenState extends State<SensorListScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Location: ${damage.latitude} ${damage.longitude}'),
-              SizedBox(height: 8),
-              Text('Status: ${damage.status}'),
-              SizedBox(height: 8),
-              Text('Signal Strength: ${damage.signalStrength}'),
-              SizedBox(height: 8),
-              Text('Create Date: ${damage.createDate}'),
-              SizedBox(height: 8),
-              Text('Charger Information: ${damage.chargerInfo}'),
+              Text(
+                'Location: ${damage.latitude} ${damage.longitude}',
+                style: TextStyle(color: textColor),
+              ),
+              const SizedBox(height: 8),
+              Text('Status: ${damage.status}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Signal Strength: ${damage.signalStrength}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Create Date: ${damage.createDate}',
+                  style: TextStyle(color: textColor)),
+              const SizedBox(height: 8),
+              Text('Charger Information: ${damage.chargerInfo}',
+                  style: TextStyle(color: textColor)),
             ],
           ),
           actions: [
@@ -84,7 +91,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text('Close', style: TextStyle(color: textColor)),
             ),
           ],
         );
@@ -94,9 +101,8 @@ class _SensorListScreenState extends State<SensorListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
@@ -104,55 +110,34 @@ class _SensorListScreenState extends State<SensorListScreen> {
           // Add your side panel logic here
         },
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,
-              onChanged: _filterDamages,
-              decoration: InputDecoration(
-                labelText: 'Suche',
-                labelStyle: TextStyle(color: primarygrey),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: primaryAppLightGreen,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(color: primaryAppLightGreen),
-                ),
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
-                filled: true,
+      body: DefaultTabController(
+        length: 1,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: damagesList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 7.0),
+                    child: SensorListItemWidget(
+                      sensorTitle: damagesList[index].sensorName,
+                      latitude: damagesList[index].latitude,
+                      longitude: damagesList[index].longitude,
+                      status: damagesList[index].status,
+                      createDate: damagesList[index].createDate,
+                      signalStrength: damagesList[index].signalStrength,
+                      chargerInfo: damagesList[index].chargerInfo,
+                      alignLeft: true,
+                      temperature: damagesList[index].temperatur,
+                      airPressure: damagesList[index].airPressure,
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredDamagesList.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 7.0),
-                  child: SensorListItemWidget(
-                    sensorTitle: filteredDamagesList[index].sensorName,
-                    latitude: filteredDamagesList[index].latitude,
-                    longitude: filteredDamagesList[index].longitude,
-                    status: filteredDamagesList[index].status,
-                    createDate: filteredDamagesList[index].createDate,
-                    signalStrength: filteredDamagesList[index].signalStrength,
-                    chargerInfo: filteredDamagesList[index].chargerInfo,
-                    alignLeft: true,
-                    temperature: filteredDamagesList[index].temperatur,
-                    airPressure: filteredDamagesList[index].airPressure,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

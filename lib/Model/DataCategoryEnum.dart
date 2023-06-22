@@ -1,1 +1,0 @@
-enum DataCategory { persons, temperature, humidity }
