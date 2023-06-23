@@ -3,14 +3,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forestapp/Model/ChartData.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
-import 'package:forestapp/Model/sensorListItem.dart';
 import 'package:forestapp/provider/userProvider.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:forestapp/widget/warningWidget.dart';
+import '../colors/appColors.dart';
 
 class LoginService {
   void main() async {
@@ -131,7 +133,7 @@ class LoginService {
     }
   }
 
-  Future<List<Damage>> fetchSensorsFromDatabase() async {
+  Future<List<Sensor>> fetchSensorsFromDatabase() async {
     try {
       final database = await _initDatabase();
 
@@ -144,7 +146,7 @@ class LoginService {
 
       return List.generate(sensors.length, (index) {
         final sensor = sensors[index];
-        return Damage(
+        return Sensor(
           sensorName: sensor['Name'] as String,
           latitude: (sensor['Latitude'] as num?)?.toDouble() ?? 0.0,
           longitude: (sensor['Longitude'] as num?)?.toDouble() ?? 0.0,
@@ -208,6 +210,7 @@ class LoginService {
     }
   }
 
+  ///QR Code Scanner
   Future<void> updateSensorNameInDatabase(
       String uuid, String newName, double latitude, double longitude) async {
     try {
@@ -220,20 +223,28 @@ class LoginService {
         [uuid],
       );
 
-      if (result.isNotEmpty) {
-        // Update the sensor name, latitude, and longitude in the database
+      if (result.isNotEmpty && result.first['Name'] != null) {
+        // Sensor exists and has a name
+        print('Sensor with UUID $uuid already exists in the database');
+      } else if (result.isNotEmpty && result.first['Name'] == null) {
+        // Sensor exists but has no name, update the sensor details
+        // Get the current date
+        final currentDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+        // Update the sensor name, latitude, longitude, and creation date in the database
         await database.update(
           'Sensor',
           {
             'Name': newName,
-            'Latitude': latitude,
-            'Longitude': longitude,
+            'Latitude': latitude.toDouble(),
+            'Longitude': longitude.toDouble(),
+            'CreationDate': currentDate.toString(),
           },
           where: 'Uuid = ?',
           whereArgs: [uuid],
         );
 
-        print('Sensor name, latitude, and longitude updated successfully');
+        print('Sensor details updated successfully');
       } else {
         print('Sensor with UUID $uuid not found in the database');
       }
@@ -241,8 +252,7 @@ class LoginService {
       // Close the database
       await database.close();
     } catch (e) {
-      print(
-          'Error updating sensor name, latitude, and longitude in database: $e');
+      print('Error updating sensor details in the database: $e');
       rethrow;
     }
   }
@@ -271,49 +281,328 @@ class LoginService {
     }
   }
 
-/*
-  Future<Sensor?> fetchSensorFromDatabase(String uuid) async {
+  Future<bool> isUuidNotInDatabase(String uuid) async {
     try {
+      // Open the database
       final database = await _initDatabase();
 
+      // Check if the sensor with the given UUID exists in the database
       final result = await database.rawQuery(
-        'SELECT * FROM Sensors WHERE UUID = ?',
+        'SELECT Uuid FROM Sensor WHERE Uuid = ?',
         [uuid],
       );
 
+      // Check if the UUID is null or not found in the database
+      bool isUuidNull = result.isEmpty || result.first['Uuid'] == null;
+
+      // Close the database
       await database.close();
 
-      if (result.isNotEmpty) {
-        final sensorData = result.first;
-        final sensor = Sensor.fromMap(sensorData);
-        return sensor;
-      } else {
-        return null;
-      }
+      return isUuidNull;
     } catch (e) {
-      print('Error fetching sensor from database: $e');
+      print('Error retrieving sensor UUID from database: $e');
       rethrow;
     }
   }
 
-  Future<void> updateSensorNameInDatabase(String uuid, String newName) async {
+  Future<int> countOnlineSensorsWithName() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Count the sensors with a name and status "Online"
+      final result = await database.rawQuery(
+        'SELECT COUNT(*) AS Count FROM Sensor WHERE Name IS NOT NULL AND Available = "Online"',
+      );
+
+      // Extract the count from the query result
+      final onlineCount = result.isNotEmpty ? result.first['Count'] as int : 0;
+
+      // Close the database
+      await database.close();
+
+      return onlineCount;
+    } catch (e) {
+      print('Error counting online sensors with name from database: $e');
+      rethrow;
+    }
+  }
+
+  Future<int> countAllSensorsWithName() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Count the sensors with a name and status "Online"
+      final result = await database.rawQuery(
+        'SELECT COUNT(*) AS Count FROM Sensor WHERE Name IS NOT NULL',
+      );
+
+      // Extract the count from the query result
+      final allCount = result.isNotEmpty ? result.first['Count'] as int : 0;
+
+      // Close the database
+      await database.close();
+
+      return allCount;
+    } catch (e) {
+      print('Error counting all sensors with name from database: $e');
+      rethrow;
+    }
+  }
+
+//Alerts
+
+  Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Query the database to retrieve alerts
+      final result = await database.rawQuery(
+        'SELECT * FROM Alert WHERE Type IN (?, ?)',
+        ['Warnung', 'Neuigkeit'],
+      );
+
+      // Close the database
+      await database.close();
+
+      return result;
+    } catch (e) {
+      print('An error occurred while loading alerts: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<Widget>> loadAlertsFromDatabaseWidgets() async {
+    try {
+      final List<Map<String, dynamic>> alertsData =
+          await loadAlertsFromDatabase();
+      final List<Widget> alertsWidgets = [];
+
+      for (final alertData in alertsData) {
+        final String type = alertData['Type'];
+        final String message = alertData['Message'];
+        final Color iconColor =
+            type == 'Warnung' ? primaryWarningOrange : primaryNewsBlue;
+
+        final WarningWidget alertWidget = WarningWidget(
+          message: message,
+          isWarnung: type == 'Warnung',
+          iconColor: iconColor,
+        );
+
+        alertsWidgets.add(alertWidget);
+      }
+
+      return alertsWidgets;
+    } catch (e) {
+      print('An error occurred while loading alerts: $e');
+      return [];
+    }
+  }
+
+  Future<void> addAlertNewSensor(String sensorName) async {
+    try {
+      // Open the database
+      final database = await _initDatabase();
+
+      // Get the current date and time
+      final now = DateTime.now();
+
+      // Format the date as "DD.MM.YYYY"
+      final dateFormat = DateFormat('dd.MM.yyyy');
+      final formattedDate = dateFormat.format(now);
+
+      // Format the time as "HH:MM"
+      final timeFormat = DateFormat('HH:mm');
+      final formattedTime = timeFormat.format(now);
+
+      // Prepare the row values
+      final values = <String, dynamic>{
+        'Type': 'Neuigkeit',
+        'Message':
+            'Neuer Sensor "$sensorName" wurde am $formattedDate um $formattedTime Uhr hinzugefügt.',
+        'CreationDate': now.toString(),
+      };
+
+      // Insert the row into the "Alerts" table
+      await database.insert('Alert', values);
+
+      // Close the database
+      await database.close();
+
+      print('Alert row added successfully!');
+    } catch (e) {
+      print('Error adding alert row to the database: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteAlertEntry(String message) async {
     try {
       final database = await _initDatabase();
 
-      await database.update(
-        'Sensors',
-        {'Name': newName},
-        where: 'UUID = ?',
-        whereArgs: [uuid],
+      // Delete the entry where 'Message' matches the specified message
+      await database.delete(
+        'Alert',
+        where: 'Message = ?',
+        whereArgs: [message],
       );
 
       await database.close();
 
-      print('Sensor name updated successfully');
+      print('Alert entry deleted successfully!');
     } catch (e) {
-      print('Error updating sensor name in database: $e');
+      print('Error deleting alert entry from the database: $e');
       rethrow;
     }
   }
-  */
+
+  Future<List<ChartData>> fetchStatisticDataHourFromDatabase(
+      String type) async {
+    try {
+      final database = await _initDatabase();
+
+      final statisticHourly =
+          await database.query('StaitsicsDataHour', columns: ['Hour', type]);
+      await database.close();
+
+      //print('Fetched StatisticsHour: $statisticHourly');
+
+      return List.generate(statisticHourly.length, (index) {
+        final data = statisticHourly[index];
+        return ChartData(
+          data['Hour'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
+    }
+  }
+
+  Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
+      String type) async {
+    DateTime now = DateTime.now();
+    print(now);
+    DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
+
+    DateFormat dateFormat = DateFormat('yyyyMMdd');
+    String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
+    String todayFormatted = dateFormat.format(now);
+    print(sevenDaysAgoFormatted);
+
+    print("object");
+    print(todayFormatted);
+    try {
+      final database = await _initDatabase();
+
+      // Query the database
+      final statisticWeek = await database.rawQuery(
+          'SELECT Date,$type FROM StatisticsDataDay where substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) BETWEEN ? AND ?',
+          [sevenDaysAgoFormatted, todayFormatted]);
+
+      print('Fetched StatisticsWeek: $statisticWeek');
+
+      return List.generate(statisticWeek.length, (index) {
+        final data = statisticWeek[index];
+        return ChartData(
+          data['Date'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
+    }
+  }
+
+  //
+  //
+  //
+  int numOfWeeks(int year) {
+    DateTime lastDayOfYear = DateTime(year, 12, 31);
+    int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
+    if (weekNumberLastDay == 1) {
+      return int.parse(
+          DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
+    } else {
+      return weekNumberLastDay;
+    }
+  }
+
+  int weekNumber(DateTime date) {
+    int dayOfYear = int.parse(DateFormat("D").format(date));
+    int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
+    if (woy < 1) {
+      woy = numOfWeeks(date.year - 1);
+    } else if (woy > numOfWeeks(date.year)) {
+      woy = 1;
+    }
+    return woy;
+  }
+
+  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
+      String type) async {
+    DateTime now = DateTime.now();
+    DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
+    DateTime lastDayOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
+
+    DateFormat dateFormat = DateFormat('yyyyMMdd');
+    String firstDayOfCurrentMonthFormatted =
+        dateFormat.format(firstDayOfCurrentMonth);
+    String lastDayOfCurrentMonthFormatted =
+        dateFormat.format(lastDayOfCurrentMonth);
+
+    try {
+      final database = await _initDatabase();
+
+      final statisticMonth = await database.rawQuery('''
+      SELECT AVG($type) AS average_value, 
+             'Week ' || strftime('%W', date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch')) || ' in ' || strftime('%B', date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch'))) AS week_month
+      FROM StatisticsDataDay
+      WHERE date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch') BETWEEN date(?, 'localtime') AND date(?, 'localtime')
+      GROUP BY week_month
+    ''', [firstDayOfCurrentMonthFormatted, lastDayOfCurrentMonthFormatted]);
+
+      await database.close();
+
+      return List.generate(statisticMonth.length, (index) {
+        final data = statisticMonth[index];
+
+        return ChartData(
+          data['week_month'] as String,
+          (data['average_value'] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return [];
+    }
+  }
+
+  Future<List<String>> fetchPreviousWeekDatesFromDatabase(
+      Database database) async {
+    final DateFormat dateFormat = DateFormat('dd.MM.yyyy');
+
+    DateTime now = DateTime.now();
+    int currentWeek = weekNumber(now);
+
+    List<String> previousWeekDates = [];
+    for (int i = 1; i <= 4; i++) {
+      DateTime previousWeekStart =
+          now.subtract(Duration(days: (currentWeek - i) * 7));
+      DateTime previousWeekEnd = previousWeekStart.add(Duration(days: 6));
+
+      String previousWeekStartFormatted = dateFormat.format(previousWeekStart);
+      String previousWeekEndFormatted = dateFormat.format(previousWeekEnd);
+
+      previousWeekDates
+          .add('$previousWeekStartFormatted - $previousWeekEndFormatted');
+    }
+
+    return previousWeekDates;
+  }
 }

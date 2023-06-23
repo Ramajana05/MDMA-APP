@@ -23,6 +23,8 @@ void main() async {
   );
 }
 
+enum ThemeMode { light, dark }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.white, systemNavigationBarColor: Colors.white));
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),

@@ -22,6 +22,7 @@ import 'package:location/location.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -34,8 +35,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var currentVisitors = 48;
   var maxVisitors = 70;
 
-  var currentSensors = 9;
-  var maxSensors = 10;
+  var currentSensors = 0;
+  var maxSensors = 0;
 
   var currentTemperature = 0.0;
   var maxTemperature = 0.0;
@@ -61,21 +62,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+  LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
+  bool hasLoadedAlerts = false;
+  bool isMapDataLoaded =
+      false; // Add a boolean variable to track if map data is loaded
 
   List<WeatherItem> weatherForecast = [];
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
-    zoom: 14.5,
-  );
-  Set<Marker> _markers = {}; // Define the markers set
-  Set<Circle> _circles = {}; // Define the circles set
-  Set<Polygon> _polygons = {}; // Define the polygons set
-  late GoogleMapController _mapController;
+  List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -170,6 +166,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+    loadAlerts();
+
+    updateSensorCounts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -182,30 +181,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
     generateData();
 
     super.initState();
-
-    // Initialize _markers set
-    _markers = {};
-    _circles = Set<Circle>();
-    _polygons = Set<Polygon>();
-
-    MapObjects().getPolygons((PolygonData polygon) {}).then((polygons) {
-      setState(() {
-        _polygons = polygons;
-      });
-    });
-    MapObjects().getCircles(_handleCircleTap).then((circles) {
-      setState(() {
-        _circles = circles;
-      });
-    });
   }
 
   @override
   void dispose() {
-    _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
+
     super.dispose();
+  }
+
+  Future<void> loadAlerts() async {
+    try {
+      final List<Widget> alerts =
+          await loginService.loadAlertsFromDatabaseWidgets();
+      setState(() {
+        alertWidgets = alerts;
+      });
+    } catch (error) {
+      print('Error loading alerts: $error');
+    }
+  }
+
+  Future<void> updateSensorCounts() async {
+    try {
+      final onlineCount = await loginService.countOnlineSensorsWithName();
+      final allCount = await loginService.countAllSensorsWithName();
+
+      currentSensors = onlineCount;
+      maxSensors = allCount;
+
+      print(
+          'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+    } catch (e) {
+      print('Error updating sensor counts: $e');
+    }
+  }
+
+  //News
+  Widget buildNewsSection() {
+    if (alertWidgets.isNotEmpty) {
+      return InkWell(
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Neuigkeiten",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showWarningWidget = !showWarningWidget;
+                          loadAlerts();
+                        });
+                      },
+                      icon: Icon(
+                        showWarningWidget
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: showWarningWidget,
+              child: Column(
+                children: alertWidgets.toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox.shrink(); // Return an empty widget if no news alerts
+    }
   }
 
   @override
@@ -250,8 +315,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryVisitorColor
-                                            .withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -310,7 +374,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryGreen.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -374,7 +438,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.red.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -435,7 +499,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.blue.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -477,157 +541,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  //Map
-                  const SizedBox(height: 15.0),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 0.15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CustomBottomTabBar(trans_index: 2)));
-                            },
-                            child: const Text(
-                              "Karte",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                showMap = !showMap;
-                              });
-                            },
-                            icon: Icon(
-                              showMap
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                              color: Colors.black,
-                              size: 30.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showMap,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {},
-                            child: GoogleMap(
-                              mapType: MapType.normal,
-                              initialCameraPosition: _kGooglePlex,
-                              zoomControlsEnabled: false,
-                              markers: _markers,
-                              circles: _circles,
-                              polygons: _polygons,
-                              onMapCreated: (GoogleMapController controller) {
-                                _controller.complete(controller);
-                              },
-                              onCameraMove: (CameraPosition position) {
-                                // Handle camera movements if needed
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 15.0),
                   // News
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomBottomTabBar(trans_index: 4)));
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Neuigkeiten",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showWarningWidget = !showWarningWidget;
-                                });
-                              },
-                              icon: Icon(
-                                showWarningWidget
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message:
-                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
-                      isWarnung: false,
-                      iconColor: const Color.fromARGB(255, 37, 70, 255),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
-                      isWarnung: true,
-                      iconColor: const Color.fromARGB(255, 255, 106, 37),
-                    ),
-                  ),
+                  buildNewsSection(),
+
                   const SizedBox(height: 15.0),
+
                   // Statistics
                   Container(
                     height: 40,
@@ -1105,12 +1024,12 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: primarybackgroundColor,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
           color: chartColor,
-          spreadRadius: 3,
+          spreadRadius: 2,
           blurRadius: 4,
           offset: const Offset(0, 2),
         ),
