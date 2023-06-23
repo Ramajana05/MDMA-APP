@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:forestapp/widget/warningWidget.dart';
 
-import '../Model/dateHelper.dart';
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
@@ -17,6 +17,8 @@ import '../widget/bottomNavBar.dart';
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:forestapp/screen/mapScreen.dart';
 import 'package:location/location.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 
@@ -64,6 +66,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   late List<Statistic> _statistics;
   bool hasLoadedAlerts = false;
+  bool isMapDataLoaded =
+      false; // Add a boolean variable to track if map data is loaded
 
   List<WeatherItem> weatherForecast = [];
 
@@ -76,7 +80,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<Marker> _markers = {}; // Define the markers set
   Set<Circle> _circles = {}; // Define the circles set
   Set<Polygon> _polygons = {}; // Define the polygons set
-  late GoogleMapController _mapController;
+  //late GoogleMapController _mapController;
+  List<Widget> alertWidgets = []; // Store the alert widgets
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -151,6 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     fetchWeatherData();
     loadAlerts();
+
     updateSensorCounts();
 
     _statistics = [
@@ -168,7 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    _mapController.dispose();
+    // _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
 
@@ -199,6 +205,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
           'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
     } catch (e) {
       print('Error updating sensor counts: $e');
+    }
+  }
+
+  //News
+  Widget buildNewsSection() {
+    if (alertWidgets.isNotEmpty) {
+      return InkWell(
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Neuigkeiten",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showWarningWidget = !showWarningWidget;
+                          loadAlerts();
+                        });
+                      },
+                      icon: Icon(
+                        showWarningWidget
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: showWarningWidget,
+              child: Column(
+                children: alertWidgets.toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox.shrink(); // Return an empty widget if no news alerts
     }
   }
 
@@ -243,8 +304,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryVisitorColor
-                                            .withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -303,7 +363,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primaryGreen.withOpacity(0.5),
+                                        color: primarygrey.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -366,7 +426,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: red.withOpacity(0.5),
+                                        color: Colors.red.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -426,7 +486,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: blue.withOpacity(0.5),
+                                        color: Colors.blue.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -469,6 +529,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                   const SizedBox(height: 15.0),
+                  // News
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CustomBottomTabBar(trans_index: 4),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Neuigkeiten",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: showWarningWidget,
+                          child: Column(
+                            children: alertWidgets,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15.0),
+                  //Map
                   Container(
                     height: 40,
                     alignment: Alignment.centerLeft,
@@ -553,68 +658,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 15.0),
-                  // News
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomBottomTabBar(trans_index: 4)));
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Neuigkeiten",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showWarningWidget = !showWarningWidget;
-                                });
-                              },
-                              icon: Icon(
-                                showWarningWidget
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message:
-                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
-                      isWarnung: false,
-                      iconColor: const Color.fromARGB(255, 37, 70, 255),
-                    ),
-                  ),
-                  Visibility(
-                    visible: showWarningWidget,
-                    child: WarningWidget(
-                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
-                      isWarnung: true,
-                      iconColor: const Color.fromARGB(255, 255, 106, 37),
                     ),
                   ),
                   const SizedBox(height: 15.0),
@@ -1089,12 +1132,12 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: background,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
           color: chartColor,
-          spreadRadius: 3,
+          spreadRadius: 2,
           blurRadius: 4,
           offset: const Offset(0, 2),
         ),
