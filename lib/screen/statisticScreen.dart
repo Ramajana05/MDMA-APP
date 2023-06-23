@@ -314,7 +314,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               dataSource: chartData,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              markerSettings: MarkerSettings(
+              markerSettings: const MarkerSettings(
                 borderColor: deepPurple,
                 isVisible: true,
                 color: grey,
@@ -330,10 +330,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
               isVisible: rainLineChart == true && chartData == visitorChartDaily
                   ? true
                   : false,
-              markerSettings: MarkerSettings(
+              markerSettings: const MarkerSettings(
                 borderColor: Color(0xFF800080),
                 isVisible: true,
-                color: deepOrange,
+                color: Colors.deepOrange,
                 shape: DataMarkerType.circle,
               ),
               color: const Color.fromARGB(255, 56, 162, 197),
@@ -422,7 +422,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: black,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
@@ -436,15 +436,15 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             'Regenwahrscheinlichkeit',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: white,
                               fontWeight: FontWeight.bold,
                             ),
                           )
                         ],
                       ),
-                      const Text(
+                      Text(
                         '────────────────',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: textColor),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -461,7 +461,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             '  ${data.x} : '
                             '$formattedY%',
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: textColor),
                           ),
                         ],
                       ),
