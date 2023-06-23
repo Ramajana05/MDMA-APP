@@ -35,55 +35,56 @@ class SensorListItemWidget extends StatefulWidget {
 class _SensorListItemWidgetState extends State<SensorListItemWidget> {
   bool expanded = false;
 
-  Widget _buildBatteryIcon(String chargerInfo) {
+  Widget _buildBatteryIcon(String chargerInfo, double size) {
     int batteryLevel = int.tryParse(chargerInfo) ?? 0;
+    Color batteryColor;
 
     if (batteryLevel >= 90) {
-      return const Icon(
+      return Icon(
         Icons.battery_full,
-        size: 30,
+        size: size,
         color: primaryGreen,
       );
     } else if (batteryLevel >= 75) {
-      return const Icon(
+      return Icon(
         Icons.battery_5_bar,
-        size: 30,
+        size: size,
         color: primaryGreen,
       );
     } else if (batteryLevel >= 60) {
-      return const Icon(
+      return Icon(
         Icons.battery_4_bar,
-        size: 30,
+        size: size,
         color: primaryOrange,
       );
     } else if (batteryLevel >= 45) {
-      return const Icon(
+      return Icon(
         Icons.battery_3_bar,
-        size: 30,
+        size: size,
         color: primaryOrange,
       );
     } else if (batteryLevel >= 30) {
-      return const Icon(
+      return Icon(
         Icons.battery_3_bar,
-        size: 30,
+        size: size,
         color: primaryOrange,
       );
     } else if (batteryLevel >= 15) {
-      return const Icon(
+      return Icon(
         Icons.battery_2_bar,
-        size: 30,
+        size: size,
         color: primaryTempColor,
       );
     } else if (batteryLevel >= 5) {
-      return const Icon(
+      return Icon(
         Icons.battery_1_bar,
-        size: 30,
+        size: size,
         color: primaryTempColor,
       );
     } else {
-      return const Icon(
+      return Icon(
         Icons.battery_0_bar,
-        size: 30,
+        size: size,
         color: primaryTempColor,
       );
     }
@@ -174,7 +175,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           color: Colors.black,
                         ),
                         SizedBox(height: 6),
-                        _buildBatteryIcon(widget.chargerInfo),
+                        _buildBatteryIcon(widget.chargerInfo, 30),
                       ],
                     ),
                   ),
@@ -249,12 +250,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(
-                          Icons.battery_full_outlined,
-                          color: const Color.fromARGB(
-                              255, 0, 0, 0), // Adjust the color as needed
-                          size: 20,
-                        ),
+                        _buildBatteryIcon(widget.chargerInfo, 20),
                         SizedBox(width: 6),
                         Text(
                           'Akkustand: ${widget.chargerInfo}%',
