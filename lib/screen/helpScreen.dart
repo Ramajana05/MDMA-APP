@@ -3,6 +3,8 @@ import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 
+import '../colors/appColors.dart';
+
 class InstructionsScreen extends StatefulWidget {
   @override
   _InstructionsScreenState createState() => _InstructionsScreenState();
@@ -74,6 +76,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: helpScreen_background_Color,
       appBar: TopNavBarBasic(
         title: 'Hilfe',
         returnStatus: true,

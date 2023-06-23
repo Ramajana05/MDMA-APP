@@ -8,12 +8,19 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'package:forestapp/widget/warningWidget.dart';
 
+import '../Model/dateHelper.dart';
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
 import 'dart:async';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:forestapp/screen/mapScreen.dart';
+
+import 'package:forestapp/widget/mapObjects.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -26,8 +33,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var currentVisitors = 48;
   var maxVisitors = 70;
 
-  var currentSensors = 9;
-  var maxSensors = 10;
+  var currentSensors = 0;
+  var maxSensors = 0;
 
   var currentTemperature = 0.0;
   var maxTemperature = 0.0;
@@ -53,10 +60,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+  LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
+  bool hasLoadedAlerts = false;
 
   List<WeatherItem> weatherForecast = [];
+
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
+    zoom: 14.5,
+  );
+  Set<Marker> _markers = {}; // Define the markers set
+  Set<Circle> _circles = {}; // Define the circles set
+  Set<Polygon> _polygons = {}; // Define the polygons set
+  late GoogleMapController _mapController;
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -116,27 +136,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return [];
   }
 
-  String getGermanWeekday(int weekday) {
-    switch (weekday) {
-      case DateTime.monday:
-        return 'Montag';
-      case DateTime.tuesday:
-        return 'Dienstag';
-      case DateTime.wednesday:
-        return 'Mittwoch';
-      case DateTime.thursday:
-        return 'Donnerstag';
-      case DateTime.friday:
-        return 'Freitag';
-      case DateTime.saturday:
-        return 'Samstag';
-      case DateTime.sunday:
-        return 'Sonntag';
-      default:
-        return '';
-    }
-  }
-
   void _handleUserScroll() {
     setState(() {
       _userScrolled = true;
@@ -151,6 +150,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     fetchWeatherData();
+    loadAlerts();
+    updateSensorCounts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -167,16 +168,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
+    _mapController.dispose();
     _pageController.dispose();
     _scrollTimer?.cancel();
+
     super.dispose();
+  }
+
+  Future<void> loadAlerts() async {
+    try {
+      final List<Widget> alerts =
+          await loginService.loadAlertsFromDatabaseWidgets();
+      setState(() {
+        alertWidgets = alerts;
+      });
+    } catch (error) {
+      print('Error loading alerts: $error');
+    }
+  }
+
+  Future<void> updateSensorCounts() async {
+    try {
+      final onlineCount = await loginService.countOnlineSensorsWithName();
+      final allCount = await loginService.countAllSensorsWithName();
+
+      currentSensors = onlineCount;
+      maxSensors = allCount;
+
+      print(
+          'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+    } catch (e) {
+      print('Error updating sensor counts: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: background,
+      backgroundColor: Colors.white,
       appBar: const TopNavBar(
         title: 'DASHBOARD',
       ),
@@ -269,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: background,
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -348,10 +378,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        transparent,
-                                        primaryTempShadowColor,
-                                        red,
-                                        40,
+                                        Colors.transparent,
+                                        const Color.fromARGB(
+                                            255, 255, 199, 199),
+                                        Colors.red,
+                                        maxTemperature,
                                         currentTemperature.toInt(),
                                         [
                                           Icons.thermostat,
@@ -407,10 +438,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        transparent,
-                                        primaryHumidityShadowColor,
-                                        blue,
-                                        100,
+                                        Colors.transparent,
+                                        const Color.fromARGB(
+                                            255, 196, 236, 255),
+                                        Colors.blue,
+                                        avgAirHumidity,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
@@ -437,6 +469,93 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                   const SizedBox(height: 15.0),
+                  Container(
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 0.15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CustomBottomTabBar(trans_index: 2)));
+                            },
+                            child: const Text(
+                              "Karte",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                showMap = !showMap;
+                              });
+                            },
+                            icon: Icon(
+                              showMap
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down,
+                              color: Colors.black,
+                              size: 30.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: showMap,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {},
+                            child: GoogleMap(
+                              mapType: MapType.normal,
+                              initialCameraPosition: _kGooglePlex,
+                              zoomControlsEnabled: false,
+                              markers: _markers,
+                              circles: _circles,
+                              polygons: _polygons,
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
+                              onCameraMove: (CameraPosition position) {
+                                // Handle camera movements if needed
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
                   // News
                   InkWell(
                     onTap: () {
@@ -447,7 +566,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   CustomBottomTabBar(trans_index: 4)));
                     },
                     child: Container(
-                      color: background,
                       height: 40,
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -455,12 +573,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Neuigkeiten",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: Colors.black,
                               ),
                             ),
                             IconButton(
@@ -473,7 +591,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 showWarningWidget
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor,
+                                color: Colors.black,
                                 size: 30.0,
                               ),
                             ),
@@ -486,17 +604,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     visible: showWarningWidget,
                     child: WarningWidget(
                       message:
-                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt.',
+                          'Es wurde ein neuer Sensor am 06.06.2023 um 14:34 Uhr hinzugefügt',
                       isWarnung: false,
-                      iconColor: blue,
+                      iconColor: const Color.fromARGB(255, 37, 70, 255),
                     ),
                   ),
                   Visibility(
                     visible: showWarningWidget,
                     child: WarningWidget(
-                      message: 'Der Sensor ST342 hat kaum noch Akku.',
+                      message: 'Der Sensor ST342 hat kaum noch Akkulaufzeit',
                       isWarnung: true,
-                      iconColor: orange,
+                      iconColor: const Color.fromARGB(255, 255, 106, 37),
                     ),
                   ),
                   const SizedBox(height: 15.0),
