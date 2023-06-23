@@ -76,7 +76,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: helpScreen_background_Color,
+      backgroundColor: background,
       appBar: TopNavBarBasic(
         title: 'Hilfe',
         returnStatus: true,
