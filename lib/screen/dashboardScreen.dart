@@ -698,7 +698,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
         _pageController.animateToPage(
           _currentPage,
-          duration: Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 1000),
           curve: Curves.easeInOut,
         );
       } else {
@@ -778,12 +778,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             dataSource: chartData,
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
-            markerSettings: const MarkerSettings(
-              borderColor: Colors.deepPurple,
-              isVisible: true,
-              color: Colors.grey,
-              shape: DataMarkerType.verticalLine,
-            ),
             color: chartColor,
             dataLabelMapper: (ChartData data, _) => data.x,
           ),
