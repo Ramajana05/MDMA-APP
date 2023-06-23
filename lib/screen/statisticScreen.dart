@@ -1,13 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../Model/ChartData.dart';
-import '../Model/dateHelper.dart';
 import '../service/LoginService.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
@@ -32,19 +26,23 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   double dailyMax = 5;
   double weeklyMax = 4;
-  double monthlyMax = 3;
+
+  //double monthlyMax = 3;
 
   List<ChartData> visitorChartDaily = [];
   List<ChartData> visitorChartWeekly = [];
-  List<ChartData> visitorChartMonthly = [];
+
+  //List<ChartData> visitorChartMonthly = [];
 
   List<ChartData> tempChartDaily = [];
   List<ChartData> tempChartWeekly = [];
-  List<ChartData> tempChartMonthly = [];
+
+  //List<ChartData> tempChartMonthly = [];
 
   List<ChartData> airHumidityChartDaily = [];
   List<ChartData> airHumidityChartWeekly = [];
-  List<ChartData> airHumidityChartMonthly = [];
+
+  //List<ChartData> airHumidityChartMonthly = [];
 
   bool visitorVisible = true;
   bool tempVisible = true;
@@ -124,7 +122,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   void initState() {
     super.initState();
     _loadChartData();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   Future<void> _loadChartData() async {
@@ -151,14 +149,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
         await loginService.fetchStatisticDataWeekFromDatabase('AirHumidity');
 
     //get the statistics data daily for a month
-    final fetchStatisticsDataMonthVisitor =
-        await loginService.fetchStatisticDataMonthFromDatabase('Visitor');
-
-    final fetchStatisticsDataMonthTemperatur =
-        await loginService.fetchStatisticDataMonthFromDatabase('Temperatur');
-
-    final fetchStatisticsDataMonthHumidity =
-        await loginService.fetchStatisticDataMonthFromDatabase('AirHumidity');
+    // final fetchStatisticsDataMonthVisitor =
+    //     await loginService.fetchStatisticDataMonthFromDatabase('Visitor');
+    //
+    // final fetchStatisticsDataMonthTemperatur =
+    //     await loginService.fetchStatisticDataMonthFromDatabase('Temperatur');
+    //
+    // final fetchStatisticsDataMonthHumidity =
+    //     await loginService.fetchStatisticDataMonthFromDatabase('AirHumidity');
 
     setState(() {
       //day charts
@@ -172,9 +170,9 @@ class _StatisticsScreen extends State<StatisticsScreen>
       airHumidityChartWeekly = fetchStatisticsDataWeekHumidity;
 
       //month chart
-      visitorChartMonthly = fetchStatisticsDataMonthVisitor;
-      tempChartMonthly = fetchStatisticsDataMonthTemperatur;
-      airHumidityChartMonthly = fetchStatisticsDataMonthHumidity;
+      // visitorChartMonthly = fetchStatisticsDataMonthVisitor;
+      // tempChartMonthly = fetchStatisticsDataMonthTemperatur;
+      // airHumidityChartMonthly = fetchStatisticsDataMonthHumidity;
     });
   }
 
@@ -229,7 +227,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                       children: [
                         buildDailyTab(),
                         buildWeeklyTab(),
-                        buildMonthlyTab(),
+                        //buildMonthlyTab(),
                       ],
                     ),
                   ),
@@ -258,7 +256,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
     // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
-        chartData == visitorChartMonthly ||
+        // chartData == visitorChartMonthly ||
         chartData == visitorChartWeekly) {
       yAxisTitle = 'Anzahl';
     }
@@ -288,12 +286,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
           ),
           primaryYAxis: NumericAxis(
             labelFormat: (chartData == airHumidityChartDaily ||
-                    chartData == airHumidityChartWeekly ||
-                    chartData == airHumidityChartMonthly)
+                    chartData == airHumidityChartWeekly)
+                //||
+                //chartData == airHumidityChartMonthly)
                 ? '{value}%'
-                : (chartData == tempChartDaily ||
-                        chartData == tempChartWeekly ||
-                        chartData == tempChartMonthly)
+                : (chartData == tempChartDaily || chartData == tempChartWeekly)
+                    //||
+                    //chartData == tempChartMonthly)
                     ? '{value}°C'
                     : '',
             title: AxisTitle(
@@ -353,11 +352,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 }
 
                 if (chartData == tempChartDaily ||
-                    chartData == tempChartMonthly ||
+                    //chartData == tempChartMonthly ||
                     chartData == tempChartWeekly) {
                   formattedYWithUnit = '$formattedY°C';
                 } else if (chartData == airHumidityChartDaily ||
-                    chartData == airHumidityChartMonthly ||
+                    // chartData == airHumidityChartMonthly ||
                     chartData == airHumidityChartWeekly) {
                   formattedYWithUnit = '$formattedY%';
                 } else {
@@ -889,7 +888,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
         children: [
           /// Visitor
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: visitorChartShadow,
               child: Column(
@@ -906,13 +905,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 20, top: 5),
+                            padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -921,7 +920,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               visitorVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -937,11 +935,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
-                      child: buildChartWidget(
-                          visitorChartMonthly,
-                          primaryVisitorColor,
-                          monthlyMax,
-                          '$monthly $visitor')),
+                      child: buildChartWidget(visitorChartMonthly, visitorColor,
+                          monthlyMax, '$monthly $visitor')),
                 ],
               ),
             ),
@@ -949,7 +944,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           // Button
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: temperatureChartShadow,
               child: Column(
@@ -966,13 +961,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 20, top: 5),
+                            padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -981,7 +976,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -997,7 +991,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartMonthly, primaryTempColor,
+                    child: buildChartWidget(tempChartMonthly, temperatureColor,
                         monthlyMax, '$monthly $temperature'),
                   ),
                 ],
@@ -1007,7 +1001,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
           /// Button
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: airHumidityChartShadow,
               child: Column(
@@ -1024,13 +1018,13 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 20, top: 5),
+                            padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -1039,7 +1033,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               airVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: textColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -1055,11 +1048,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(
-                        airHumidityChartMonthly,
-                        primaryHumidityColor,
-                        monthlyMax,
-                        '$monthly $airHumidity'),
+                    child: buildChartWidget(airHumidityChartMonthly,
+                        airHumidityColor, monthlyMax, '$monthly $airHumidity'),
                   ),
                 ],
               ),

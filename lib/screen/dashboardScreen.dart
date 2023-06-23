@@ -1,13 +1,8 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-import 'package:forestapp/widget/warningWidget.dart';
-
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
 import '../service/LoginService.dart';
@@ -21,6 +16,7 @@ import 'package:location/location.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -46,10 +42,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool showStatistics = true;
   bool showWeatherForecast = true;
 
-  late List<ChartData> visitorChartDaily;
-  late List<ChartData> tempChartDaily;
-  late List<ChartData> airHumidityChartDaily;
-  late List<ChartData> rainPercentChartDaily;
+  List<ChartData> visitorChartDaily = [];
+  late List<ChartData> tempChartDaily = [];
+  late List<ChartData> airHumidityChartDaily = [];
 
   late PageController _pageController;
   int _currentPage = 0;
@@ -185,8 +180,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: _statistics.length);
     _currentPage = _statistics.length;
     _startAutoScroll();
-    generateData();
-
+    _loadChartData();
     super.initState();
   }
 
@@ -239,7 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Neuigkeiten",
                       style: TextStyle(
                         fontSize: 24,
@@ -351,9 +345,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         child: Text(
                                           'Besucher',
                                           style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: textColor),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -840,12 +834,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (!_userScrolled) {
         if (_currentPage < _statistics.length * 3 - 1) {
           _currentPage++;
+          _loadChartData();
         } else {
           _currentPage = _statistics.length;
         }
         _pageController.animateToPage(
           _currentPage,
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 1000),
           curve: Curves.easeInOut,
         );
       } else {
@@ -854,21 +849,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
-  void generateData() {
-    visitorChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(50) + 100);
-    });
+  Future<void> _loadChartData() async {
+    LoginService loginService = LoginService();
 
-    tempChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(15) - 5);
-    });
+    //get the statistics data hourly
+    final fetchStatisticsDataHourVisitor = await loginService
+        .fetchStatisticDataHourYesterdayFromDatabase('Visitor');
 
-    airHumidityChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(10) + 50);
-    });
+    final fetchStatisticsDataHourTemp = await loginService
+        .fetchStatisticDataHourYesterdayFromDatabase('Temperatur');
 
-    rainPercentChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(40) + 10);
+    final fetchStatisticsDataHourHumidity = await loginService
+        .fetchStatisticDataHourYesterdayFromDatabase('AirHumidity');
+
+    setState(() {
+      //day charts of yesterday
+      visitorChartDaily = fetchStatisticsDataHourVisitor;
+      tempChartDaily = fetchStatisticsDataHourTemp;
+      airHumidityChartDaily = fetchStatisticsDataHourHumidity;
     });
   }
 
@@ -883,6 +881,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return '$hourString:00';
     }
     return '';
+  }
+
+  void _handleCircleTap(CircleData circle) {
+    int batteryLevel = circle.battery;
   }
 
   Widget _buildIndicator() {
@@ -909,43 +911,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<ChartData> chartData,
     Color chartColor,
   ) {
-    return Flexible(
-      child: Container(
-        color: background,
-        child: SfCartesianChart(
-          primaryXAxis: CategoryAxis(
-            crossesAt: 0,
-            placeLabelsNearAxisLine: false,
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
-            desiredIntervals: 12,
-          ),
-          primaryYAxis: NumericAxis(
-            labelFormat: (chartData == airHumidityChartDaily)
-                ? '{value}%'
-                : (chartData == tempChartDaily)
-                    ? '{value}°C'
-                    : '',
-            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
-          ),
-          series: <ChartSeries>[
-            LineSeries<ChartData, String>(
-              dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              markerSettings: const MarkerSettings(
-                borderColor: deepPurple,
-                isVisible: true,
-                color: grey,
-                shape: DataMarkerType.circle,
-              ),
-              color: chartColor,
-              dataLabelMapper: (ChartData data, _) => '${data.y}',
-            ),
-          ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 5,
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(
+          crossesAt: 0,
+          placeLabelsNearAxisLine: false,
+          axisLine: const AxisLine(color: Colors.black, width: 1.5),
+          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+          desiredIntervals: 12,
         ),
+        primaryYAxis: NumericAxis(
+          labelFormat: (chartData == airHumidityChartDaily)
+              ? '{value}%'
+              : (chartData == tempChartDaily)
+                  ? '{value}°C'
+                  : '',
+          majorTickLines:
+              const MajorTickLines(size: 6, width: 2, color: Colors.black),
+          axisLine: const AxisLine(color: Colors.black, width: 1.5),
+          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+        ),
+        series: <ChartSeries>[
+          LineSeries<ChartData, String>(
+            dataSource: chartData,
+            xValueMapper: (ChartData data, _) => data.x,
+            yValueMapper: (ChartData data, _) => data.y,
+            markerSettings: const MarkerSettings(
+              borderColor: Colors.deepPurple,
+              isVisible: true,
+              color: Colors.grey,
+              shape: DataMarkerType.circle,
+            ),
+            color: chartColor,
+            dataLabelMapper: (ChartData data, _) => '${data.y}',
+          ),
+        ],
       ),
     );
   }
