@@ -101,7 +101,11 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     return Card(
       color: background,
       elevation: 6,
-      shadowColor: black54,
+      shadowColor: Colors.black54,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(12.0), // Adjust the border radius as needed
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 11),
         child: Column(
