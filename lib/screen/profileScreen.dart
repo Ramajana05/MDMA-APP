@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Persönliche Daten',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: Colors.black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Kontoaktionen',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: Colors.black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Powered by',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: Colors.black,
                   fontSize: 24.0,
                 ),
               ),
