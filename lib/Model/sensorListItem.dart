@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../colors/appColors.dart';
+import '../colors/getBatteryColors.dart';
 
 class SensorListItemWidget extends StatefulWidget {
   final String sensorTitle;
@@ -37,55 +38,54 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
 
   Widget _buildBatteryIcon(String chargerInfo, double size) {
     int batteryLevel = int.tryParse(chargerInfo) ?? 0;
-    Color batteryColor;
 
     if (batteryLevel >= 90) {
       return Icon(
         Icons.battery_full,
         size: size,
-        color: primaryGreen,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 75) {
       return Icon(
         Icons.battery_5_bar,
         size: size,
-        color: primaryGreen,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 60) {
       return Icon(
         Icons.battery_4_bar,
         size: size,
-        color: orange,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 45) {
       return Icon(
         Icons.battery_3_bar,
         size: size,
-        color: orange,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 30) {
       return Icon(
         Icons.battery_3_bar,
         size: size,
-        color: red,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 15) {
       return Icon(
         Icons.battery_2_bar,
         size: size,
-        color: red,
+        color: getBatteryColor(batteryLevel),
       );
     } else if (batteryLevel >= 5) {
       return Icon(
         Icons.battery_1_bar,
         size: size,
-        color: red,
+        color: getBatteryColor(batteryLevel),
       );
     } else {
       return Icon(
         Icons.battery_0_bar,
         size: size,
-        color: red,
+        color: getBatteryColor(batteryLevel),
       );
     }
   }

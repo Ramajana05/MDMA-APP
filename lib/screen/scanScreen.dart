@@ -96,6 +96,7 @@ class _ScanScreen extends State<ScanScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              backgroundColor: background,
               title: Row(
                 children: [
                   const Icon(
@@ -139,6 +140,7 @@ class _ScanScreen extends State<ScanScreen> {
                 return Builder(
                   builder: (BuildContext errorDialogContext) {
                     return AlertDialog(
+                      backgroundColor: background,
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -279,6 +281,7 @@ class _ScanScreen extends State<ScanScreen> {
                                           context: errorDialogContext,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
+                                              backgroundColor: background,
                                               title: Row(
                                                 children: [
                                                   const Icon(
@@ -378,6 +381,7 @@ class _ScanScreen extends State<ScanScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: background,
             title: Row(
               children: [
                 const Icon(

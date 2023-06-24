@@ -64,6 +64,7 @@ class _LoadingDialogState extends State<LoadingDialog>
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: background,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),

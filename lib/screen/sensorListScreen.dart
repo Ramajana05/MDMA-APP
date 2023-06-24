@@ -57,6 +57,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: background,
           title: Text(damage.sensorName),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

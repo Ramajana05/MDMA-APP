@@ -11,8 +11,32 @@ class ThemeProvider extends ChangeNotifier {
     return isNightMode ? black : white;
   }
 
-  Color getInvertedTextColor() {
+  Color getInvertedColor() {
     return isNightMode ? white : black;
+  }
+
+  Color getBackground() {
+    return isNightMode ? white : darkBackground;
+  }
+
+  Color getLighterBackground() {
+    return isNightMode ? white : grey.shade600;
+  }
+
+  Color getTextInverted() {
+    return isNightMode ? black.withOpacity(0.5) : black;
+  }
+
+  Color getIconLightRed() {
+    return isNightMode ? red : lightRed;
+  }
+
+  Color getTextLightRed() {
+    return isNightMode ? red : lightRed;
+  }
+
+  Color getButtonTextInversedColor() {
+    return isNightMode ? white : grey;
   }
 
   Color getButtonTextColor() {
@@ -23,47 +47,39 @@ class ThemeProvider extends ChangeNotifier {
     return isNightMode ? black : grey.shade100;
   }
 
-  Color getButtonTexInversedColor() {
-    return isNightMode ? white : grey;
-  }
-
-  Color iconColor() {
+  Color getIconColor() {
     return isNightMode ? black : yellow;
   }
 
-  Color passwordChangeColor() {
-    return isNightMode ? red : lightRed;
-  }
-
-  Color passwordIconColor() {
-    return isNightMode ? red : lightRed;
-  }
-
-  Color changeBackground() {
-    return isNightMode ? white : darkBackground;
-  }
-
-  Color changeBackgroundLighter() {
-    return isNightMode ? white : grey.shade600;
-  }
-
-  Color invertedColour() {
-    return isNightMode ? black.withOpacity(0.5) : black;
+  void toggleLightMode() {
+    isNightMode;
+    textColor = getTextColor();
+    invertedColor = getInvertedColor();
+    background = getBackground();
+    lighterBackground = getLighterBackground();
+    textInverted = getTextInverted();
+    iconLightRed = getIconLightRed();
+    textLightRed = getTextLightRed();
+    buttonTextInversedColor = getButtonTextInversedColor();
+    buttonTextColor = getButtonTextColor();
+    bottomNavColor = getBottomNavColor();
+    iconColor = getIconColor();
+    notifyListeners();
   }
 
   void toggleDarkMode() {
     isNightMode = !isNightMode;
     textColor = getTextColor();
-    invertedColor = invertedColour();
-    background = changeBackground();
-    lighterBackground = changeBackgroundLighter();
-    textInverted = getInvertedTextColor();
-    iconLightRed = passwordIconColor();
-    textLightRed = passwordChangeColor();
-    buttonTextInversedColor = getButtonTexInversedColor();
+    invertedColor = getInvertedColor();
+    background = getBackground();
+    lighterBackground = getLighterBackground();
+    textInverted = getTextInverted();
+    iconLightRed = getIconLightRed();
+    textLightRed = getTextLightRed();
+    buttonTextInversedColor = getButtonTextInversedColor();
     buttonTextColor = getButtonTextColor();
-    bottomNavSelectColor = getBottomNavColor();
-    iconColour = iconColor();
+    bottomNavColor = getBottomNavColor();
+    iconColor = getIconColor();
     notifyListeners();
   }
 }

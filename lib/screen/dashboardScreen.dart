@@ -202,33 +202,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Neuigkeiten",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: textColor,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showWarningWidget = !showWarningWidget;
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Neuigkeiten",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          showWarningWidget = !showWarningWidget;
-                          loadAlerts();
-                        });
-                      },
-                      icon: Icon(
-                        showWarningWidget
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
-                        color: textColor,
-                        size: 30.0,
-                      ),
-                    )
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showWarningWidget = !showWarningWidget;
+                            loadAlerts();
+                          });
+                        },
+                        icon: Icon(
+                          showWarningWidget
+                              ? Icons.arrow_drop_up
+                              : Icons.arrow_drop_down,
+                          color: textColor,
+                          size: 30.0,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -736,42 +743,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<ChartData> chartData,
     Color chartColor,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 5,
-      child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(
-          crossesAt: 0,
-          placeLabelsNearAxisLine: false,
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          desiredIntervals: 12,
-        ),
-        primaryYAxis: NumericAxis(
-          labelFormat: (chartData == airHumidityChartDaily)
-              ? '{value}%'
-              : (chartData == tempChartDaily)
-                  ? '{value}°C'
-                  : '',
-          majorTickLines:
-              const MajorTickLines(size: 6, width: 2, color: Colors.black),
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-        ),
-        series: <ChartSeries>[
-          LineSeries<ChartData, String>(
-            dataSource: chartData,
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y,
-            markerSettings: const MarkerSettings(
-              borderColor: Colors.deepPurple,
-              isVisible: true,
-              color: Colors.grey,
-              shape: DataMarkerType.verticalLine,
-            ),
-            color: chartColor,
-            dataLabelMapper: (ChartData data, _) => data.x,
+    return Flexible(
+      child: Container(
+        color: background,
+        child: SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            crossesAt: 0,
+            placeLabelsNearAxisLine: false,
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
+          ), // Set the maximum number of visible categories
+          primaryYAxis: NumericAxis(
+            labelFormat: (chartData == airHumidityChartDaily)
+                ? '{value}%'
+                : (chartData == tempChartDaily)
+                    ? '{value}°C'
+                    : '',
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
           ),
-        ],
+          series: <ChartSeries>[
+            LineSeries<ChartData, String>(
+              dataSource: chartData,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              markerSettings: const MarkerSettings(
+                borderColor: deepPurple,
+                isVisible: true,
+                color: grey,
+                shape: DataMarkerType.circle,
+              ),
+              color: chartColor,
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+          ],
+        ),
       ),
     );
   }

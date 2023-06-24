@@ -25,7 +25,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var weekly = "Wöchentliche";
 
   double dailyMax = 5;
-  double weeklyMax = 4;
+  double weeklyMax = 5;
+  double monthlyMax = 3;
 
   List<ChartData> visitorChartDaily = [];
   List<ChartData> visitorChartWeekly = [];
@@ -702,183 +703,179 @@ class _StatisticsScreen extends State<StatisticsScreen>
     );
   }
 
-//   Widget buildMonthlyTab() {
-//     return SingleChildScrollView(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           /// Visitor
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Container(
-//               decoration: visitorChartShadow,
-//               child: Column(
-//                 children: [
-//                   GestureDetector(
-//                     onTap: () {
-//                       setState(() {
-//                         visitorVisible = !visitorVisible;
-//                       });
-//                     },
-//                     child: SizedBox(
-//                       height: 70,
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Padding(
-//                             padding: const EdgeInsets.only(left: 20, top: 5),
-//                             child: Text(
-//                               visitor,
-//                               style: const TextStyle(
-//                                 fontSize: 21,
-//                                 fontWeight: FontWeight.bold,
-//                                 color: Colors.black,
-//                               ),
-//                             ),
-//                           ),
-//                           IconButton(
-//                             icon: Icon(
-//                               visitorVisible
-//                                   ? Icons.arrow_drop_up
-//                                   : Icons.arrow_drop_down,
-//                             ),
-//                             onPressed: () {
-//                               setState(() {
-//                                 visitorVisible = !visitorVisible;
-//                               });
-//                             },
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//
-//                   /// Chart - Visitor
-//                   Visibility(
-//                       visible: visitorVisible,
-//                       child: buildChartWidget(visitorChartMonthly, visitorColor,
-//                           monthlyMax, '$monthly $visitor')),
-//                 ],
-//               ),
-//             ),
-//           ),
-//
-//           // Button
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Container(
-//               decoration: temperatureChartShadow,
-//               child: Column(
-//                 children: [
-//                   GestureDetector(
-//                     onTap: () {
-//                       setState(() {
-//                         tempVisible = !tempVisible;
-//                       });
-//                     },
-//                     child: SizedBox(
-//                       height: 70,
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Padding(
-//                             padding: const EdgeInsets.only(left: 20, top: 5),
-//                             child: Text(
-//                               temperature,
-//                               style: const TextStyle(
-//                                 fontSize: 21,
-//                                 fontWeight: FontWeight.bold,
-//                                 color: Colors.black,
-//                               ),
-//                             ),
-//                           ),
-//                           IconButton(
-//                             icon: Icon(
-//                               tempVisible
-//                                   ? Icons.arrow_drop_up
-//                                   : Icons.arrow_drop_down,
-//                             ),
-//                             onPressed: () {
-//                               setState(() {
-//                                 tempVisible = !tempVisible;
-//                               });
-//                             },
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//
-//                   // Chart - Temperature
-//                   Visibility(
-//                     visible: tempVisible,
-//                     child: buildChartWidget(tempChartMonthly, temperatureColor,
-//                         monthlyMax, '$monthly $temperature'),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//
-//           /// Button
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Container(
-//               decoration: airHumidityChartShadow,
-//               child: Column(
-//                 children: [
-//                   GestureDetector(
-//                     onTap: () {
-//                       setState(() {
-//                         airVisible = !airVisible;
-//                       });
-//                     },
-//                     child: SizedBox(
-//                       height: 70,
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Padding(
-//                             padding: const EdgeInsets.only(left: 20, top: 5),
-//                             child: Text(
-//                               airHumidity,
-//                               style: const TextStyle(
-//                                 fontSize: 21,
-//                                 fontWeight: FontWeight.bold,
-//                                 color: Colors.black,
-//                               ),
-//                             ),
-//                           ),
-//                           IconButton(
-//                             icon: Icon(
-//                               airVisible
-//                                   ? Icons.arrow_drop_up
-//                                   : Icons.arrow_drop_down,
-//                             ),
-//                             onPressed: () {
-//                               setState(() {
-//                                 airVisible = !airVisible;
-//                               });
-//                             },
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//
-//                   /// Chart - Air Humidity
-//                   Visibility(
-//                     visible: airVisible,
-//                     child: buildChartWidget(airHumidityChartMonthly,
-//                         airHumidityColor, monthlyMax, '$monthly $airHumidity'),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  Widget buildMonthlyTab() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          /// Visitor
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: visitorChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        visitorVisible = !visitorVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              visitor,
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                                visitorVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: textColor),
+                            onPressed: () {
+                              setState(() {
+                                visitorVisible = !visitorVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  /// Chart - Visitor
+                  Visibility(
+                      visible: visitorVisible,
+                      child: buildChartWidget(visitorChartMonthly, visitorColor,
+                          monthlyMax, '$monthly $visitor')),
+                ],
+              ),
+            ),
+          ),
+
+          // Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: temperatureChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        tempVisible = !tempVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              temperature,
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                                tempVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: textColor),
+                            onPressed: () {
+                              setState(() {
+                                tempVisible = !tempVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Chart - Temperature
+                  Visibility(
+                    visible: tempVisible,
+                    child: buildChartWidget(tempChartMonthly, temperatureColor,
+                        monthlyMax, '$monthly $temperature'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          /// Button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: airHumidityChartShadow,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        airVisible = !airVisible;
+                      });
+                    },
+                    child: SizedBox(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              airHumidity,
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                                airVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: textColor),
+                            onPressed: () {
+                              setState(() {
+                                airVisible = !airVisible;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  /// Chart - Air Humidity
+                  Visibility(
+                    visible: airVisible,
+                    child: buildChartWidget(airHumidityChartMonthly,
+                        airHumidityColor, monthlyMax, '$monthly $airHumidity'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

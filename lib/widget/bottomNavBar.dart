@@ -21,7 +21,7 @@ class CustomBottomTabBar extends StatefulWidget {
 class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   final screens = [
     const DashboardScreen(),
-    StatisticsScreen(),
+    const StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
     const SensorListScreen(),
@@ -41,7 +41,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           type: BottomNavigationBarType.shifting,
           currentIndex: widget.index,
           showUnselectedLabels: false,
-          unselectedItemColor: bottomNavSelectColor,
+          unselectedItemColor: bottomNavColor,
           selectedItemColor: tabColors[widget.index],
           // Use the respective color for the selected tab
 
@@ -56,8 +56,9 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               icon: const Icon(Icons.dashboard),
               label: 'Dashbaord',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_outlined),
+            BottomNavigationBarItem(
+              backgroundColor: background,
+              icon: const Icon(Icons.bar_chart_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
@@ -65,12 +66,14 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               icon: const Icon(Icons.pin_drop),
               label: 'Karte',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner),
+            BottomNavigationBarItem(
+              backgroundColor: background,
+              icon: const Icon(Icons.qr_code_scanner),
               label: 'QR Code',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.sensors),
+            BottomNavigationBarItem(
+              backgroundColor: background,
+              icon: const Icon(Icons.sensors),
               label: 'Sensoren',
             ),
           ],

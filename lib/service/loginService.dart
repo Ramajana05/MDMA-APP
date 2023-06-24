@@ -552,9 +552,12 @@ class LoginService {
           .query('StaitsicsDataYesterdayHour', columns: ['Hour', type]);
       await database.close();
 
+      //print('Fetched StatisticsHourYesterday: $statisticHourly');
+
       return List.generate(statisticHourly.length, (index) {
         final data = statisticHourly[index];
-
+        //var dataType = data[type];
+        //print("data type: $type:--  $dataType");
         return ChartData(
           data['Hour'] as String,
           (data[type] as num?)?.toDouble() ?? 0.0,
@@ -567,120 +570,78 @@ class LoginService {
     }
   }
 
-///////////////////////////////////////////////////////////////////////
-//   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
-//       String type) async {
-//     try {
-//       final database = await _initDatabase();
-//
-//       List<String> previousWeekDates =
-//           await fetchPreviousWeekDatesFromDatabase();
-//
-//       List<ChartData> statisticData = [];
-//
-//
-//       for (String weekDates in previousWeekDates) {
-//         List<String> dates = weekDates.split(' - ');
-//
-//         String firstDate = dates[0];
-//         String lastDate = dates[1];
-//
-//         final statisticWeek = await database.rawQuery('''
-//           SELECT AVG($type) AS average_value
-//           FROM StatisticsDataDay
-//           WHERE date(substr(Date,7)||substr(Date,4,2)||substr(Date,1,2)) BETWEEN date(?, 'localtime') AND date(?, 'localtime')
-//         ''', [firstDate, lastDate]);
-//         return List.generate(statisticWeek.length, (index) {
-//           final data = statisticWeek[index];;
-//           return ChartData(
-//             'Week ${weekNumber(DateTime.parse(firstDate))} in ${DateFormat('MMMM').format(DateTime.parse(firstDate))}',
-//               (statisticWeek.first['average_value'] as num?)?.toDouble() ?? 0.0
-//           );
-//         });
-//       }
-//
-//       await database.close();
-//
-//       return statisticData;
-//     } catch (e) {
-//       print('Error fetching statistics for the month data from database: $e');
-//       return [];
-//     }
-//   }
-//
-//   Future<List<String>> fetchPreviousWeekDatesFromDatabase() async {
-//     final DateFormat dateFormat = DateFormat('yyyyMMdd');
-//
-//     DateTime now = DateTime.now();
-//     int currentWeek = weekNumber(now);
-//
-//     List<String> previousWeekDates = [];
-//     for (int i = 1; i <= 4; i++) {
-//       DateTime previousWeekStart =
-//           now.subtract(Duration(days: (currentWeek - i) * 7));
-//       DateTime previousWeekEnd = previousWeekStart.add(const Duration(days: 6));
-//
-//       String previousWeekStartFormatted = dateFormat.format(previousWeekStart);
-//       String previousWeekEndFormatted = dateFormat.format(previousWeekEnd);
-//
-//       previousWeekDates
-//           .add('$previousWeekStartFormatted - $previousWeekEndFormatted');
-//     }
-//
-//     return previousWeekDates;
-//   }
-//
-//   int weekNumber(DateTime date) {
-//     int dayOfYear = int.parse(DateFormat("D").format(date));
-//     int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
-//     if (woy < 1) {
-//       woy = numOfWeeks(date.year - 1);
-//     } else if (woy > numOfWeeks(date.year)) {
-//       woy = 1;
-//     }
-//     return woy;
-//   }
-//
-//
-//   int numOfWeeks(int year) {
-//     DateTime lastDayOfYear = DateTime(year, 12, 31);
-//     int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
-//     if (weekNumberLastDay == 1) {
-//       return int.parse(DateFormat("W").format(lastDayOfYear.subtract(const Duration(days: 7))));
-//     } else {
-//       return weekNumberLastDay;
-//     }
-//   }
+  Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
+      String type, int startHour, int endHour) async {
+    try {
+      final database = await _initDatabase();
+
+      final statisticHourly = await database.query(
+        'StaitsicsDataYesterdayHour',
+        columns: ['Hour', type],
+        where: 'Hour >= ? AND Hour < ?',
+        whereArgs: [
+          startHour.toString().padLeft(2, '0'), // Convert to 2-digit format
+          (startHour + 7)
+              .toString()
+              .padLeft(2, '0'), // Convert to 2-digit format
+        ],
+      );
+
+      await database.close();
+
+      return List.generate(statisticHourly.length, (index) {
+        final data = statisticHourly[index];
+        return ChartData(
+          data['Hour'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
+        );
+      });
+    } catch (e) {
+      print(
+          'Error fetching StaitsicsDataYesterdayHour data from database: $type:$e');
+      return [];
+    }
+  }
 
   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
       String type) async {
     try {
       final database = await _initDatabase();
 
-      List<String> previousWeekDates =
-          await fetchPreviousWeekDatesFromDatabase();
+      final DateTime now = DateTime.now();
+      final DateTime previousMonth = DateTime(now.year, now.month - 1, 1);
+      final DateTime lastDayPreviousMonth = DateTime(now.year, now.month, 0);
+      final DateFormat dateFormat = DateFormat('yyyyMMdd');
 
       List<ChartData> statisticData = [];
 
-      //to get the first an last date of each of 4 privious weeks
-      for (int i = 1; i <= 4; i++) {
-        DateTime previousWeekStart = now.subtract(Duration(days: i * 7));
-        DateTime previousWeekEnd =
-            previousWeekStart.add(const Duration(days: 6));
+      // Get the first and last date of each week in the previous month
+      DateTime weekStart = previousMonth;
+      DateTime weekEnd;
+      for (int i = 0; i < 4; i++) {
+        weekEnd = weekStart.add(const Duration(days: 6));
 
-        final String previousWeekStartFormatted =
-            DateFormat('dd.MM').format(previousWeekStart);
-        final String previousWeekEndFormatted =
-            DateFormat('dd.MM').format(previousWeekEnd);
+        // If the weekEnd exceeds the last day of the previous month, set it to the last day
+        if (weekEnd.isAfter(lastDayPreviousMonth)) {
+          weekEnd = lastDayPreviousMonth;
+        }
+
+        // If it's the last iteration and there are remaining days, add them to the last week
+        if (i == 3 && weekEnd != lastDayPreviousMonth) {
+          final remainingDays = lastDayPreviousMonth.difference(weekEnd).inDays;
+          weekEnd = lastDayPreviousMonth;
+          weekStart = weekStart.subtract(Duration(days: remainingDays));
+        }
+
+        final String weekStartFormatted =
+            DateFormat('dd.MM.').format(weekStart);
+        final String weekEndFormatted = DateFormat('dd.MM.').format(weekEnd);
 
         final statisticWeek = await database.rawQuery('''
         SELECT AVG($type) AS average
         FROM StatisticsDataDay
         WHERE substr(Date, 7) || substr(Date, 4, 2) || substr(Date, 1, 2) BETWEEN ? AND ?
-      ''', [
-          dateFormat.format(previousWeekStart),
-          dateFormat.format(previousWeekEnd)
-        ]);
+      ''', [dateFormat.format(weekStart), dateFormat.format(weekEnd)]);
 
         double average =
             (statisticWeek.first['average'] as num?)?.toDouble() ?? 0.0;
@@ -691,9 +652,11 @@ class LoginService {
           average = double.parse(average.toStringAsFixed(2));
         }
 
-        ChartData chartData = ChartData(
-            '$previousWeekStartFormatted - $previousWeekEndFormatted', average);
+        ChartData chartData =
+            ChartData('$weekStartFormatted - $weekEndFormatted', average);
         statisticData.add(chartData);
+
+        weekStart = weekEnd.add(const Duration(days: 1));
       }
 
       await database.close();
@@ -705,28 +668,6 @@ class LoginService {
     }
   }
 
-  Future<List<String>> fetchPreviousWeekDatesFromDatabase() async {
-    final DateFormat dateFormat = DateFormat('yyyyMMdd');
-
-    DateTime now = DateTime.now();
-    int currentWeek = weekNumber(now);
-
-    List<String> previousWeekDates = [];
-    for (int i = 1; i <= 4; i++) {
-      DateTime previousWeekStart =
-          now.subtract(Duration(days: (currentWeek - i) * 7));
-      DateTime previousWeekEnd = previousWeekStart.add(const Duration(days: 6));
-
-      String previousWeekStartFormatted = dateFormat.format(previousWeekStart);
-      String previousWeekEndFormatted = dateFormat.format(previousWeekEnd);
-
-      previousWeekDates
-          .add('$previousWeekStartFormatted - $previousWeekEndFormatted');
-    }
-
-    return previousWeekDates;
-  }
-
   int weekNumber(DateTime date) {
     DateTime firstDayOfYear = DateTime(date.year, 1, 1);
     int daysOffset = DateTime.thursday - firstDayOfYear.weekday;
@@ -735,18 +676,18 @@ class LoginService {
 
     int weekNumber = targetDate.difference(firstThursday).inDays ~/ 7 + 1;
     if (weekNumber < 1) {
-      weekNumber = numOfWeeks(date.year - 1);
-    } else if (weekNumber > numOfWeeks(date.year)) {
+      weekNumber = numOfWeeks(date.year - 1, 12);
+    } else if (weekNumber > numOfWeeks(date.year, date.month)) {
       weekNumber = 1;
     }
 
     return weekNumber;
   }
 
-  int numOfWeeks(int year) {
-    DateTime lastDayOfYear = DateTime(year, 12, 31);
+  int numOfWeeks(int year, int month) {
+    DateTime lastDayOfMonth = DateTime(year, month + 1, 0);
     int weekNumberLastDay =
-        lastDayOfYear.weekday == DateTime.saturday ? 53 : 52;
+        lastDayOfMonth.weekday == DateTime.saturday ? 53 : 52;
 
     return weekNumberLastDay;
   }
@@ -756,5 +697,81 @@ class LoginService {
     final outputFormat = DateFormat('yyyy-MM-dd');
     final date = inputFormat.parse(inputDate);
     return outputFormat.format(date);
+  }
+
+  Future<List<Map<String, String>>> loadPlacesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final List<Map<String, dynamic>> places = await database.query(tableName);
+
+      await database.close();
+
+      List<Map<String, String>> loadedPlaces = [];
+
+      for (var place in places) {
+        final String name = place[columnName];
+        final double latitude = place[columnLatitude];
+        final double longitude = place[columnLongitude];
+
+        // Do something with the retrieved place data
+        print('Name: $name');
+        print('Latitude: $latitude');
+        print('Longitude: $longitude');
+
+        loadedPlaces.add({
+          'name': name,
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
+        });
+      }
+
+      return loadedPlaces; // Return the loaded places
+    } catch (e) {
+      // Handle the error
+      print('Error loading places: $e');
+      return []; // Return an empty list as a fallback
+    }
+  }
+
+  Future<void> addPlaceFromDatabase(
+      String name, double latitude, double longitude) async {
+    try {
+      final database = await _initDatabase();
+
+      final place = {
+        'Name': name, // Updated column name to match the database
+        'Latitude': latitude,
+        'Longitude': longitude,
+      };
+
+      await database.insert('Place', place);
+
+      await database.close();
+
+      print('Place added successfully');
+    } catch (e) {
+      print('Error adding place: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deletePlaceFromDatabase(String name) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.delete(
+        'Place',
+        where: 'Name = ?',
+        whereArgs: [name],
+      );
+
+      await database.close();
+
+      print('Place deleted successfully');
+    } catch (e) {
+      print('Error deleting place: $e');
+      rethrow;
+    }
   }
 }

@@ -112,17 +112,16 @@ const gradient = [
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
 
-bool isNightMode = true;
 //--Dark Mode Colors
-Color iconLightRed = ThemeProvider().passwordIconColor();
-Color textLightRed = ThemeProvider().passwordChangeColor();
-Color invertedColor = ThemeProvider().invertedColour();
-Color textInverted = ThemeProvider().getInvertedTextColor();
-Color buttonTextInversedColor = ThemeProvider().getButtonTexInversedColor();
+Color iconLightRed = ThemeProvider().getIconColor();
+Color textLightRed = ThemeProvider().getTextLightRed();
+Color invertedColor = ThemeProvider().getInvertedColor();
+Color textInverted = ThemeProvider().getTextInverted();
+Color buttonTextInversedColor = ThemeProvider().getButtonTextInversedColor();
 Color buttonTextColor = ThemeProvider().getButtonTextColor();
 Color background = white;
 Color darkBackground = Color(0xFF555555);
-Color lighterBackground = ThemeProvider().changeBackgroundLighter();
+Color lighterBackground = ThemeProvider().getLighterBackground();
 Color textColor = ThemeProvider().getTextColor();
-Color bottomNavSelectColor = ThemeProvider().getBottomNavColor();
-Color iconColour = ThemeProvider().iconColor();
+Color bottomNavColor = ThemeProvider().getBottomNavColor();
+Color iconColor = ThemeProvider().getIconColor();

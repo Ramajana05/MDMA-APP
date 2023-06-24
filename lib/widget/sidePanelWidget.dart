@@ -128,7 +128,7 @@ class _SidePanel extends State<SidePanel> {
                               : Icons.light_mode_outlined,
                           size: 28,
                         ),
-                        iconColor: iconColour,
+                        iconColor: iconColor,
                         title: Text(
                           themeProvider.isNightMode
                               ? 'Dunkler Modus'

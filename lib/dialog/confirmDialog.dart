@@ -16,6 +16,7 @@ class ConfirmDialog extends StatelessWidget {
     return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: AlertDialog(
+          backgroundColor: background,
           title: Text(
             title,
             style: textStyle,

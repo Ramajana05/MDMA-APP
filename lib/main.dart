@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -52,26 +52,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangePlatformBrightness();
     setState(() {
       // Set the app's theme based on the system's dark mode setting
-      if (WidgetsBinding.instance?.window.platformBrightness ==
+      if (WidgetsBinding.instance.window.platformBrightness ==
           Brightness.dark) {
         themeProvider.toggleDarkMode();
+        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
       } else {
-        themeProvider.toggleDarkMode();
+        themeProvider.toggleLightMode();
+        WidgetsBinding.instance.window.platformBrightness == Brightness.light;
       }
     });
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: white,
-      systemNavigationBarColor: white,
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: background,
+      systemNavigationBarColor: background,
     ));
 
     return ChangeNotifierProvider(

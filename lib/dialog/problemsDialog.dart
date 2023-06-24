@@ -31,7 +31,7 @@ class ProblemDialog extends StatelessWidget {
           child: Text(
             'Zurück',
             style: TextStyle(
-              color: invertedColor,
+              color: textColor,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
@@ -45,13 +45,16 @@ class ProblemDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.0),
             ),
           ),
-          child: const Text('Ok'),
+          child: Text(
+            'Ok',
+            style: TextStyle(color: buttonTextInversedColor),
+          ),
         ),
       ],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(9.0),
       ),
-      backgroundColor: textInverted,
+      backgroundColor: background,
       elevation: 8.0,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16.0,
