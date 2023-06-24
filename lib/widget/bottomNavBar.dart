@@ -1,74 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
-import 'package:forestapp/screen/statisticsScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
-import 'package:forestapp/screen/alertsScreen.dart';
 import 'package:forestapp/design/bottomNavBarDecoration.dart';
-import 'package:forestapp/screen/damagesDashboardScreen.dart';
+import 'package:forestapp/screen/sensorListScreen.dart';
+import '../screen/statisticScreen.dart';
+import '../colors/appColors.dart';
 
-class BottomTabBar extends StatefulWidget {
-  BottomTabBar({Key? key}) : super(key: key);
+class CustomBottomTabBar extends StatefulWidget {
+  int index = 0;
+
+  CustomBottomTabBar({int trans_index = 0}) {
+    index = trans_index;
+  }
 
   @override
-  State<BottomTabBar> createState() => _BottomTabBarState();
+  State<CustomBottomTabBar> createState() => _CustomBottomTabBarState();
 }
 
-class _BottomTabBarState extends State<BottomTabBar> {
-  int _index = 0;
+class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   final screens = [
     DashboardScreen(),
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    DamagesDashboardScreen(),
+    SensorListScreen(),
   ];
+
+  final List<Color> tabColors = [
+    primaryAppLightGreen, // Dashboard
+    primaryAppLightGreen, // Statistics
+    primaryAppLightGreen, // Map
+    primaryAppLightGreen, // QR Code
+    primaryAppLightGreen, // Sensors
+  ];
+
+  void updateSelectedIndex(int newIndex) {
+    widget.index = newIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_index],
+      body: screens[widget.index],
       bottomNavigationBar: Container(
         decoration: bottomNavBarDecoration2,
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _index,
+          type: BottomNavigationBarType.shifting,
+          currentIndex: widget.index,
           showUnselectedLabels: false,
-           unselectedItemColor: Colors.black,
-          selectedItemColor: Color.fromARGB(255, 31, 158, 80),
+          unselectedItemColor: Colors.black,
+          selectedItemColor: tabColors[widget.index],
+          // Use the respective color for the selected tab
+
           onTap: (value) {
             setState(() {
-              _index = value;
+              widget.index = value;
             });
           },
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
               label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.graphic_eq),
+              icon: Icon(Icons.line_axis_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              icon: Icon(Icons.pin_drop_outlined),
               label: 'Karte',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
-              label: 'Scanner',
+              label: 'QR Code',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.report),
-              label: 'Berichte',
+              icon: Icon(Icons.sensors),
+              label: 'Sensoren',
             ),
           ],
           selectedLabelStyle: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 16,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

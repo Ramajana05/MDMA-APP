@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
+import 'package:forestapp/widget/sidePanelWidget.dart';
+import 'package:forestapp/dialog/loadingDialog.dart';
+import 'package:forestapp/db/apiService.dart';
 
-class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
+import '../colors/appColors.dart';
+
+class TopNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onMenuPressed;
 
@@ -10,16 +15,50 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
+
+  @override
+  _TopNavBarState createState() => _TopNavBarState();
+}
+
+class _TopNavBarState extends State<TopNavBar>
+    with SingleTickerProviderStateMixin {
+  bool _isLoading = false;
+  late AnimationController _animationController;
+  final ApiService apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat();
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return LoadingDialog(apiService: apiService);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        title,
-        style: topNavBarDecoration.getTitleTextStyle(),
+        widget.title,
+        style: topNavBarDecoration.getTitleTextStyle().copyWith(fontSize: 27),
       ),
-      backgroundColor: Color.fromARGB(255, 232, 241, 232),
+      backgroundColor: topNavBar_background_Color,
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -30,25 +69,29 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       leading: IconButton(
-        icon: const Icon(Icons.brightness_4),
+        icon: const Icon(
+          Icons.menu,
+          color: primaryAppLightGreen,
+          size: 35,
+        ),
         onPressed: () {
-          // TODO: Implement dark mode functionality
+          Scaffold.of(context).openDrawer();
         },
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.logout),
+          icon: const Icon(
+            Icons.refresh,
+            color: primaryAppLightGreen,
+            size: 35,
+          ),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => LogoutDialog(),
-            );
-            // TODO: Implement logout functionality
+            _showDialog(context);
           },
         ),
       ],
-      iconTheme: IconThemeData(
-        color: Colors.green, // Change this to the desired color
+      iconTheme: const IconThemeData(
+        color: primaryAppLightGreen,
       ),
     );
   }

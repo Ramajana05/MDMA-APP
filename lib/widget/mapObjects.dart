@@ -1,61 +1,208 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'dart:io';
+
+import 'package:forestapp/service/loginService.dart';
+
+import '../colors/appColors.dart';
 
 class CircleData {
-  final CircleId id;
+  final CircleId circleId;
   final LatLng center;
   final double radius;
   final Color fillColor;
   final Color strokeColor;
-  final double strokeWidth;
+  final int strokeWidth;
+  final int battery;
 
-  const CircleData({
-    required this.id,
+  CircleData({
+    required this.circleId,
     required this.center,
     required this.radius,
     required this.fillColor,
     required this.strokeColor,
     required this.strokeWidth,
+    required this.battery,
   });
+
+  Circle toCircle() {
+    return Circle(
+      circleId: circleId,
+      center: center,
+      radius: radius,
+      fillColor: fillColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+    );
+  }
+
+  factory CircleData.fromMap(Map<String, dynamic> map) {
+    Color fillColor;
+    Color strokeColor;
+
+    final batteryLevel = map['Battery'];
+
+    if (batteryLevel > 60) {
+      fillColor = primaryGreen.withOpacity(0.4);
+      strokeColor = primaryGreen;
+    } else if (batteryLevel <= 60 && batteryLevel > 30) {
+      fillColor = Colors.orange.withOpacity(0.4);
+      strokeColor = Colors.orange;
+    } else {
+      fillColor = Colors.red.withOpacity(0.4);
+      strokeColor = Colors.red;
+    }
+
+    return CircleData(
+      circleId: CircleId(map['Name']),
+      center: LatLng(map['Latitude'], map['Longitude']),
+      radius: 27,
+      battery: batteryLevel,
+      fillColor: fillColor,
+      strokeColor: strokeColor,
+      strokeWidth: 2,
+    );
+  }
 }
 
 class PolygonData {
-  final PolygonId id;
+  final PolygonId polygonId;
   final List<LatLng> points;
   final Color fillColor;
   final Color strokeColor;
-  final double strokeWidth;
+  final int strokeWidth;
+  final int visitors;
 
   const PolygonData({
-    required this.id,
+    required this.polygonId,
     required this.points,
     required this.fillColor,
     required this.strokeColor,
     required this.strokeWidth,
+    required this.visitors,
   });
+
+  factory PolygonData.fromMap(Map<String, dynamic> map) {
+    Color fillColor;
+    Color strokeColor;
+    final visitors = map['Visitor'];
+
+    if (visitors < 5) {
+      fillColor = primaryVisitorLowCountColor;
+      strokeColor = primaryVisitorLowCountColor;
+    } else if (visitors >= 5 && visitors <= 10) {
+      fillColor = primaryVisitorModerateCountColor;
+      strokeColor = primaryVisitorModerateCountColor;
+    } else {
+      fillColor = primaryGreen;
+      strokeColor = primaryGreen;
+    }
+
+    return PolygonData(
+      polygonId: PolygonId(map['Name']),
+      points: [
+        LatLng(map['Latitude'], map['Longitude']),
+        LatLng(map['Latitude2'], map['Longitude2']),
+        LatLng(map['Latitude3'], map['Longitude3']),
+        LatLng(map['Latitude4'], map['Longitude4']),
+      ],
+      visitors: visitors,
+      fillColor: fillColor.withOpacity(0.5),
+      strokeColor: strokeColor,
+      strokeWidth: 2,
+    );
+  }
+
+  Polygon toPolygon() {
+    return Polygon(
+      polygonId: polygonId,
+      points: points,
+      fillColor: fillColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+    );
+  }
 }
 
 class MapObjects {
-  static const CircleData circle1 = CircleData(
-    id: CircleId('circle1'),
-    center: LatLng(49.140287, 9.219953),
-    radius: 5,
-    fillColor: Colors.red,
-    strokeColor: Colors.red,
-    strokeWidth: 2,
-  );
+  Future<Set<Circle>> getCircles(Function(CircleData) onTap) async {
+    LoginService loginService = LoginService();
+    final fetchedCircles = await loginService.fetchCirclesFromDatabase();
 
-  static const PolygonData polygon1 = PolygonData(
-    id: PolygonId('polygon1'),
-    points: [
-      LatLng(49.140287, 9.218493),
-      LatLng(49.140431, 9.219608),
-      LatLng(49.139823, 9.219762),
-      LatLng(49.139678, 9.218647),
-    ],
-    fillColor: Color.fromARGB(255, 136, 241, 50),
-    strokeColor: Color.fromARGB(255, 128, 243, 33),
-    strokeWidth: 2,
-  );
+    return Set.from(fetchedCircles.map((circle) {
+      return Circle(
+        circleId: circle.circleId,
+        center: circle.center,
+        radius: circle.radius,
+        fillColor: circle.fillColor,
+        strokeColor: circle.strokeColor,
+        strokeWidth: circle.strokeWidth,
+        consumeTapEvents: true,
+        onTap: () => onTap(circle),
+      );
+    }));
+  }
+
+  Future<Set<Polygon>> getPolygons(Function(PolygonData) onTap) async {
+    LoginService loginService = LoginService();
+    final fetchedPolygons = await loginService.fetchPolygonsFromDatabase();
+
+    return Set.from(fetchedPolygons.map((polygonData) {
+      Polygon polygon = Polygon(
+        polygonId: polygonData.polygonId,
+        points: polygonData.points,
+        fillColor: polygonData.fillColor,
+        strokeColor: polygonData.strokeColor,
+        strokeWidth: polygonData.strokeWidth,
+        consumeTapEvents: true,
+        onTap: () => onTap(polygonData),
+      );
+
+      return polygon;
+    }));
+  }
+
+  LatLng calculatePolygonCenter(List<LatLng> points) {
+    double latitude = 0;
+    double longitude = 0;
+
+    for (LatLng point in points) {
+      latitude += point.latitude;
+      longitude += point.longitude;
+    }
+
+    int totalPoints = points.length;
+    latitude /= totalPoints;
+    longitude /= totalPoints;
+
+    return LatLng(latitude, longitude);
+  }
+
+  Set<Circle> getCircless(Function(CircleData) onTap) {
+    return Set.from([
+      // Add other circles with onTap callback
+    ]);
+  }
+
+  // ... existing code ...
+
+  Set<Polygon> getPolygonss(Function(PolygonData) onTap) {
+    return Set.from([
+      // Define polygons using the toPolygon method and assign the onTap callback
+    ]);
+  }
+
+  Set<Overlay> getAllObjectss(VoidCallback onTap) {
+    return Set.from([
+      // Define all objects using the toCircle and toPolygon methods and assign the onTap callback
+    ]);
+  }
+
+  Set<Overlay> getAllObjects() {
+    return Set.from([]);
+  }
 }
