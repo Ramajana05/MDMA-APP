@@ -11,7 +11,7 @@ class InformationDialog extends StatelessWidget {
         children: [
           Text(
             "Information",
-            style: TextStyle(fontSize: 22),
+            style: TextStyle(fontSize: 22, color: textColor),
           ),
           InkWell(
             onTap: () {
@@ -20,6 +20,7 @@ class InformationDialog extends StatelessWidget {
             child: Icon(
               Icons.close,
               size: 24,
+              color: textColor,
             ),
           ),
         ],

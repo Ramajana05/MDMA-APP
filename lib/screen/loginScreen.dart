@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           return null;
                         },
-                        onSaved: (value) => _email = value?.trim(),
+                        onSaved: (value) => _username = value?.trim(),
                       ),
                     ),
                     SizedBox(height: 16.0),

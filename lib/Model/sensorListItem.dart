@@ -102,7 +102,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     return Card(
       color: background,
       elevation: 6,
-      shadowColor: Colors.black54,
+      shadowColor: buttonTextColor.withOpacity(0.5),
       shape: RoundedRectangleBorder(
         borderRadius:
             BorderRadius.circular(12.0), // Adjust the border radius as needed
@@ -177,7 +177,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           color: textColor,
                         ),
                         SizedBox(height: 6),
-                        _buildBatteryIcon(widget.chargerInfo),
+                        _buildBatteryIcon(widget.chargerInfo, 30),
                       ],
                     ),
                   ),
@@ -216,22 +216,15 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(
-                          Icons.battery_full_outlined,
-                          color: const Color.fromARGB(
-                              255, 0, 0, 0), // Adjust the color as needed
-                          size: 20,
-                        ),
+                        _buildBatteryIcon(widget.chargerInfo, 20),
                         SizedBox(width: 6),
                         Text(
                           'Akkustand: ${widget.chargerInfo}%',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
+                          style: TextStyle(fontSize: 17, color: textColor),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                   ],
                 ),
               ),

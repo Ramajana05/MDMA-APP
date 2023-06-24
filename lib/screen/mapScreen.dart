@@ -10,6 +10,7 @@ import 'package:forestapp/dialog/informationDialog.dart';
 
 import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
+import '../service/loginService.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -1228,7 +1229,7 @@ class _MapScreen extends State<MapScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            color: Colors.white,
+                            color: background,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -1236,7 +1237,7 @@ class _MapScreen extends State<MapScreen> {
                               children: [
                                 Icon(
                                   Icons.delete_outlined,
-                                  color: primaryTempColor,
+                                  color: red,
                                 ),
                               ],
                             ),
