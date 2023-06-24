@@ -21,8 +21,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreen extends State<MapScreen> {
-  Set<Marker> _markers = {};
-  CameraPosition _kGooglePlex = const CameraPosition(
+  CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 15.0,
   );
@@ -47,22 +46,23 @@ class _MapScreen extends State<MapScreen> {
   late Circle _currentLocationCircle;
   bool useCurrentLocation = true;
   bool notifyUser = false;
+
   @override
   void initState() {
     super.initState();
-    _markers = {};
     _selectedTab = 'alle';
     _circles = <Circle>{};
     _polygons = <Polygon>{};
 
-    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-      setState(() {
-        _polygons = polygons;
-      });
-    });
     MapObjects().getCircles(_handleCircleTap).then((circles) {
       setState(() {
         _circles = circles;
+      });
+    });
+
+    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
+      setState(() {
+        _polygons = polygons;
       });
     });
 
@@ -562,7 +562,6 @@ class _MapScreen extends State<MapScreen> {
                   mapType: MapType.normal,
                   initialCameraPosition: _kGooglePlex,
                   zoomControlsEnabled: false,
-                  markers: _markers,
                   circles: _circles,
                   polygons: _polygons,
                   onMapCreated: _onMapCreated,
