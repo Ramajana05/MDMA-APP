@@ -15,6 +15,13 @@ import 'package:forestapp/widget/warningWidget.dart';
 import '../colors/appColors.dart';
 
 class LoginService {
+  static const String tableName = 'Place';
+  static const String columnId = 'ID';
+  static const String columnName = 'Name';
+  static const String columnLatitude = 'Latitude';
+  static const String columnLongitude = 'Longitude';
+  List<Map<String, String>> _dropdownItems = [];
+
   void main() async {
     final userProvider = UserProvider(); // Create an instance of UserProvider
     final loggedInUsername = userProvider.loggedInUsername;
@@ -695,5 +702,81 @@ class LoginService {
     final outputFormat = DateFormat('yyyy-MM-dd');
     final date = inputFormat.parse(inputDate);
     return outputFormat.format(date);
+  }
+
+  Future<List<Map<String, String>>> loadPlacesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final List<Map<String, dynamic>> places = await database.query(tableName);
+
+      await database.close();
+
+      List<Map<String, String>> loadedPlaces = [];
+
+      for (var place in places) {
+        final String name = place[columnName];
+        final double latitude = place[columnLatitude];
+        final double longitude = place[columnLongitude];
+
+        // Do something with the retrieved place data
+        print('Name: $name');
+        print('Latitude: $latitude');
+        print('Longitude: $longitude');
+
+        loadedPlaces.add({
+          'name': name,
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
+        });
+      }
+
+      return loadedPlaces; // Return the loaded places
+    } catch (e) {
+      // Handle the error
+      print('Error loading places: $e');
+      return []; // Return an empty list as a fallback
+    }
+  }
+
+  Future<void> addPlaceFromDatabase(
+      String name, double latitude, double longitude) async {
+    try {
+      final database = await _initDatabase();
+
+      final place = {
+        'Name': name, // Updated column name to match the database
+        'Latitude': latitude,
+        'Longitude': longitude,
+      };
+
+      await database.insert('Place', place);
+
+      await database.close();
+
+      print('Place added successfully');
+    } catch (e) {
+      print('Error adding place: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deletePlaceFromDatabase(String name) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.delete(
+        'Place',
+        where: 'Name = ?',
+        whereArgs: [name],
+      );
+
+      await database.close();
+
+      print('Place deleted successfully');
+    } catch (e) {
+      print('Error deleting place: $e');
+      rethrow;
+    }
   }
 }

@@ -75,64 +75,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: textColor,
                   ),
                 ),
-              );
-            } else if (index == 1) {
-              return Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Card(
-                  elevation: 1.0,
-                  color: lighterBackground, // Soft grey color
-                  child: Column(
-                    children: [
-                      buildProfileItem(
-                        Icons.person,
-                        loggedInUsername ?? '',
-                        textColour: textColor,
-                      ),
-                      const Divider(),
-                      buildProfileItem(
-                        Icons.phone_android,
-                        'Förster',
-                        textColour: textColor,
-                      ),
-                      const Divider(),
-                      FutureBuilder<String>(
-                        future: getLocationName(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return buildProfileItem(
-                              Icons.location_on,
-                              snapshot.data ?? '',
-                              textColour: textColor,
-                            );
-                          } else if (snapshot.hasError) {
-                            return buildProfileItem(
-                              Icons.location_off,
-                              'Error',
-                              textColour: textColor,
-                            );
-                          }
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Card(
+                elevation: 1.0,
+                color: Colors.grey[150], // Soft grey color
+                child: Column(
+                  children: [
+                    buildProfileItem(Icons.person, loggedInUsername ?? ''),
+                    const Divider(),
+                    buildProfileItem(Icons.phone_android, 'Förster'),
+                    const Divider(),
+                    FutureBuilder<String>(
+                      future: getLocationName(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
                           return buildProfileItem(
                             Icons.location_on,
-                            'Loading...',
-                            textColour: textColor,
+                            snapshot.data ?? '',
                           );
-                        },
-                      ),
-                    ],
-                  ),
+                        } else if (snapshot.hasError) {
+                          return buildProfileItem(Icons.location_off, 'Error');
+                        }
+                        return buildProfileItem(
+                            Icons.location_on, 'Loading...');
+                      },
+                    ),
+                  ],
                 ),
-              );
-            } else if (index == 2) {
-              return Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
-                child: Text(
-                  'Privatsphäre',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
+              child: Text(
+                'Kontoaktionen',
+                style: TextStyle(
+                  color: primaryAppLightGreen,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
               );
             } else if (index == 3) {
@@ -201,59 +183,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     );
 
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    // Passwords do not match or current password is incorrect
-                                    print('Password change failed');
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Passwort konnte nicht geändert werden.',
-                                          style: TextStyle(color: textColor),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                onCancelPressed: () {
-                                  // Handle cancel button press
                                   Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                          );
-                        },
-                        child: buildProfileItem(
-                          Icons.lock,
-                          'Passwort Ändern',
-                          iconColor: textLightRed,
-                          textColour: iconLightRed,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else if (index == 4) {
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: 13,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: Text(
-                      'Powered by',
-                      style: TextStyle(fontSize: 24.0, color: textColor),
+                                } else {
+                                  // Passwords do not match or current password is incorrect
+                                  print('Password change failed');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Passwort konnte nicht geändert werden.'),
+                                    ),
+                                  );
+                                }
+                              },
+                              onCancelPressed: () {
+                                // Handle cancel button press
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
+                          iconColor: Colors.red, textColor: Colors.red),
                     ),
-                  ),
-                ],
-              );
-            } else {
-              return SizedBox(height: 200);
-            }
-          },
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 13),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                'Powered by',
+                style: TextStyle(
+                  color: primaryAppLightGreen,
+                  fontSize: 24.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

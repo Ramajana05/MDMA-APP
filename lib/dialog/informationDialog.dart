@@ -6,11 +6,23 @@ class InformationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        "Information",
-        style: TextStyle(
-            fontSize: 22,
-            color: textColor), // Increase the font size as desired
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Information",
+            style: TextStyle(fontSize: 22),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Icon(
+              Icons.close,
+              size: 24,
+            ),
+          ),
+        ],
       ),
       backgroundColor: background,
       content: Column(
