@@ -139,70 +139,76 @@ class _MapScreen extends State<MapScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
+                          padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
                         ),
                         Row(
                           children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    shape: BoxShape.circle,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: background,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const Positioned.fill(
-                                  child: Icon(
-                                    Icons.sensors,
-                                    size: 32,
-                                    color: mapGreen,
+                                  const Positioned.fill(
+                                    child: Icon(
+                                      Icons.sensors,
+                                      size: 32,
+                                      color: mapGreen,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             const SizedBox(width: 8),
-                            Expanded(
+                            Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     circle.circleId.value,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Standort: ',
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
-                                        style: const TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                            fontSize: 16, color: textColor),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
-                                        style: const TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                            fontSize: 16, color: textColor),
                                       ),
                                       const SizedBox(width: 8),
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        child: Icon(
-                                          Icons.battery_full,
-                                          color: invertedColor,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 2),
+                                      // Container(
+                                      //   color: background,
+                                      //   width: 24,
+                                      //   height: 24,
+                                      //   child: Icon(
+                                      //     Icons.battery_full,
+                                      //     color: green,
+                                      //     size: 16,
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(width: 2),
                                       Icon(
                                         Icons.battery_6_bar_outlined,
                                         color: getBatteryColor(batteryLevel),
@@ -239,13 +245,12 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: background.withOpacity(0.3),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 24,
-                            color: grey,
+                            color: buttonTextColor,
                           ),
                         ),
                       ),
@@ -283,8 +288,8 @@ class _MapScreen extends State<MapScreen> {
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: white,
+                decoration: BoxDecoration(
+                  color: background,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
@@ -301,27 +306,30 @@ class _MapScreen extends State<MapScreen> {
                         ),
                         Row(
                           children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    shape: BoxShape.circle,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: background,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const Positioned.fill(
-                                  child: Icon(
-                                    Icons.place,
-                                    size: 32,
-                                    color: mapGreen,
+                                  const Positioned.fill(
+                                    child: Icon(
+                                      Icons.place,
+                                      size: 32,
+                                      color: mapGreen,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             const SizedBox(width: 8),
-                            Expanded(
+                            Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -337,6 +345,7 @@ class _MapScreen extends State<MapScreen> {
                                     children: [
                                       const Icon(
                                         Icons.person,
+                                        color: grey,
                                       ),
                                       const SizedBox(width: 2),
                                       Text(
@@ -370,13 +379,12 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: background.withOpacity(0.3),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 24,
-                            color: grey,
+                            color: buttonTextColor,
                           ),
                         ),
                       ),
@@ -460,7 +468,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {
@@ -513,7 +521,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.battery_5_bar,
-                      color: Colors.orange,
+                      color: orange,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -524,7 +532,7 @@ class _MapScreen extends State<MapScreen> {
                     SizedBox(width: 16),
                     Icon(
                       Icons.battery_2_bar,
-                      color: Colors.red,
+                      color: red,
                       size: 20,
                     ),
                     SizedBox(width: 8),

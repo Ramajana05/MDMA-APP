@@ -3,8 +3,6 @@ import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/design/logOutDialogDecoration.dart';
 import 'package:forestapp/screen/loginScreen.dart';
 
-import '../colors/appColors.dart';
-
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({Key? key}) : super(key: key);
 
@@ -28,7 +26,7 @@ class LogoutDialog extends StatelessWidget {
               //Icon(Icons.warning, color: orange),
               const SizedBox(width: 8.0),
               Text(
-                'Wollen Sie wirklich ausloggen?',
+                'Wirklich ausloggen?',
                 style: TextStyle(fontSize: 20.0, color: textColor),
               ),
             ],

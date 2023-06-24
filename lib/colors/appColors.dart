@@ -23,7 +23,7 @@ const infoGrey = Color.fromARGB(255, 170, 169, 169);
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
-const red = Colors.red;
+const red = Color.fromARGB(255, 255, 89, 77);
 const blue = Colors.blue;
 
 ///Colors of the map
@@ -37,6 +37,7 @@ const primaryHumidityShadowColor = Color.fromARGB(255, 196, 236, 255);
 const transparent = Colors.transparent;
 const deepPurple = Colors.deepPurple;
 const turquoise = Color.fromARGB(255, 194, 255, 241);
+const lightblue = Color.fromARGB(255, 177, 230, 255);
 
 ///Battery color
 const primaryGreen = Color.fromARGB(255, 46, 202, 51);
@@ -101,6 +102,12 @@ const topBorderGreen = Color.fromARGB(6, 95, 247, 115);
 ///SensorListItem
 const sensorGreen = Color.fromARGB(255, 64, 236, 73);
 
+///SidePanel
+const gradient = [
+  topGreen,
+  primaryAppLightGreen,
+];
+
 ///Map
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
@@ -115,114 +122,7 @@ Color buttonTextInversedColor = ThemeProvider().getButtonTexInversedColor();
 Color buttonTextColor = ThemeProvider().getButtonTextColor();
 Color background = white;
 Color darkBackground = Color(0xFF555555);
-Color lighterBackground = changeBackgroundLighter();
-Color textColor = getTextColor();
-
-Color getTextColor() {
-  return isNightMode ? black : white;
-}
-
-Color getInvertedTextColor() {
-  return isNightMode ? white : black;
-}
-
-Color getButtonTextColor() {
-  return isNightMode ? grey : white;
-}
-
-Color getBottomNavColor() {
-  return isNightMode ? black : grey.shade100;
-}
-
-Color getButtonTexInversedColor() {
-  return isNightMode ? white : grey;
-}
-
-Color iconColor() {
-  return isNightMode ? black : yellow;
-}
-
-Color passwordChangeColor() {
-  return isNightMode ? red : lightRed;
-}
-
-Color passwordIconColor() {
-  return isNightMode ? red : lightRed;
-}
-
-Color changeBackground() {
-  return isNightMode ? white : darkBackground;
-}
-
-Color changeBackgroundLighter() {
-  return isNightMode ? white : grey.shade600;
-}
-
-Color invertedColour() {
-  return isNightMode ? black.withOpacity(0.5) : black;
-}
-
-bool isNightMode = true;
-
-void toggleNightMode() {
-  isNightMode = !isNightMode;
-  textColor = getTextColor();
-  invertedColor = invertedColour();
-  background = changeBackground();
-  lighterBackground = changeBackgroundLighter();
-  textInverted = getInvertedTextColor();
-  iconLightRed = passwordIconColor();
-  textLightRed = passwordChangeColor();
-  buttonTextInversedColor = getButtonTexInversedColor();
-  buttonTextColor = getButtonTextColor();
-  bottomNavSelectColor = getBottomNavColor();
-}
-
-const onlineColor = Color.fromARGB(255, 64, 236, 73);
-
-///Box Shadow Color
-var boxshadowColor = Color.fromARGB(255, 158, 158, 158).withOpacity(0.5);
-
-///Marker Color
-const markerColor = Color.fromARGB(255, 56, 162, 197);
-
-/// Set the color of the icon
-const iconColor = Color.fromARGB(255, 154, 155, 154);
-const dialogIconColor = Color.fromARGB(255, 173, 173, 173);
-
-/// SidePanel Gradient
-const gradient = [
-  Color.fromARGB(255, 86, 252, 108),
-  Color.fromARGB(255, 40, 233, 127)
-];
-const blue = Color.fromARGB(255, 7, 19, 29);
-
-const primaryWarningOrange = Color.fromARGB(255, 255, 106, 37);
-const primaryNewsBlue = Color.fromARGB(255, 37, 70, 255);
-const primarySignalStrength = Colors.black;
-// Light-Dark Mode Colors------------------------------
-// Shared Colors
-var primarybackgroundColor = Colors.white;
-
-/// Help
-const grey = Color.fromARGB(255, 127, 127, 128);
-const red = Color.fromARGB(255, 255, 2, 2);
-const green = Color.fromARGB(255, 58, 243, 33);
-
-/// Map
-const mapGreen = Color.fromARGB(255, 58, 216, 10);
-const mapBlue = Color.fromARGB(255, 0, 112, 204);
-
-/// Profile
-const profileBlack = Color.fromARGB(255, 24, 23, 23);
-
-///Statistic
-const statColor = Color.fromRGBO(38, 158, 38, 0.2);
-
-/// Bottom Nav
-const darkGreen = Color.fromARGB(204, 0, 165, 22);
-const sensorGreen = Color.fromARGB(204, 0, 165, 22);
-
-///Warning Widet
-const backgroundColor = Color.fromARGB(255, 248, 250, 253);
-var opacityGray = const Color.fromARGB(255, 170, 170, 170).withOpacity(0.5);
+Color lighterBackground = ThemeProvider().changeBackgroundLighter();
+Color textColor = ThemeProvider().getTextColor();
+Color bottomNavSelectColor = ThemeProvider().getBottomNavColor();
+Color iconColour = ThemeProvider().iconColor();

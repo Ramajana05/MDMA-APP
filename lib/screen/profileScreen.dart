@@ -8,8 +8,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/service/LoginService.dart';
 
-import '../colors/appColors.dart';
-
 class ProfileScreen extends StatefulWidget {
   final String? currentUsername;
 
@@ -54,9 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
-      backgroundColor: profileScreen_background_Color,
       appBar: TopNavBarBasic(
-        title: 'Mein Profil ',
+        title: 'Mein Profil',
         returnStatus: true,
         onMenuPressed: () {
           // Add your side panel logic here
@@ -78,19 +75,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: textColor,
                   ),
                 ),
-              ),
-              Padding(
+              );
+            } else if (index == 1) {
+              return Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Card(
                   elevation: 1.0,
                   color: lighterBackground, // Soft grey color
                   child: Column(
                     children: [
-                      buildProfileItem(Icons.person, loggedInUsername ?? '',
-                          textColour: textColor),
+                      buildProfileItem(
+                        Icons.person,
+                        loggedInUsername ?? '',
+                        textColour: textColor,
+                      ),
                       const Divider(),
-                      buildProfileItem(Icons.phone_android, 'Förster',
-                          textColour: textColor),
+                      buildProfileItem(
+                        Icons.phone_android,
+                        'Förster',
+                        textColour: textColor,
+                      ),
                       const Divider(),
                       FutureBuilder<String>(
                         future: getLocationName(),
@@ -102,26 +106,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               textColour: textColor,
                             );
                           } else if (snapshot.hasError) {
-                            return buildProfileItem(Icons.location_off, 'Error',
-                                textColour: textColor);
+                            return buildProfileItem(
+                              Icons.location_off,
+                              'Error',
+                              textColour: textColor,
+                            );
                           }
                           return buildProfileItem(
-                              Icons.location_on, 'Loading...',
-                              textColour: textColor);
+                            Icons.location_on,
+                            'Loading...',
+                            textColour: textColor,
+                          );
                         },
                       ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
+              );
+            } else if (index == 2) {
+              return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
                 child: Text(
                   'Privatsphäre',
                   style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: textColor),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
                 ),
               );
             } else if (index == 3) {
@@ -215,25 +226,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: buildProfileItem(
                           Icons.lock,
                           'Passwort Ändern',
-                          iconColor: passwordIconColor(),
-                          textColour: passwordChangeColor(),
+                          iconColor: textLightRed,
+                          textColour: iconLightRed,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 13),
-              Container(
-                alignment: Alignment.center,
-                width: double.infinity,
-                child: Text(
-                  'Powered by',
-                  style: TextStyle(fontSize: 24.0, color: textColor),
-                ),
-              ),
-            ],
-          ),
+              );
+            } else if (index == 4) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 13,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      'Powered by',
+                      style: TextStyle(fontSize: 24.0, color: textColor),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return SizedBox(height: 200);
+            }
+          },
         ),
       ),
     );
@@ -269,14 +289,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? textColour,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColour ?? textColour,
         ),
       ),
     );

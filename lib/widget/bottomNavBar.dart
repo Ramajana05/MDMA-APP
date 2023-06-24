@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/screen/dashboardScreen.dart';
 import 'package:forestapp/screen/mapScreen.dart';
 import 'package:forestapp/screen/scanScreen.dart';
@@ -7,7 +6,6 @@ import 'package:forestapp/design/bottomNavBarDecoration.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import '../colors/appColors.dart';
 import '../screen/statisticScreen.dart';
-import '../colors/appColors.dart';
 
 class CustomBottomTabBar extends StatefulWidget {
   int index = 0;
@@ -26,15 +24,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
     StatisticsScreen(),
     MapScreen(),
     ScanScreen(),
-    SensorListScreen(),
-  ];
-
-  final List<Color> tabColors = [
-    darkGreen, // Dashboard
-    Colors.blue, // Statistics
-    Colors.red, // Map
-    Colors.blue, // QR Code
-    sensorGreen, // Sensors
+    const SensorListScreen(),
   ];
 
   void updateSelectedIndex(int newIndex) {
@@ -60,21 +50,22 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: Colors.white,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
+              backgroundColor: background,
+              icon: const Icon(Icons.dashboard),
               label: 'Dashbaord',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              backgroundColor: background,
+              icon: const Icon(Icons.pin_drop),
               label: 'Karte',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.qr_code_scanner),
               label: 'QR Code',
             ),
@@ -86,7 +77,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           selectedLabelStyle: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),

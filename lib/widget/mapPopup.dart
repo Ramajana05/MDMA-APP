@@ -14,7 +14,7 @@ class MapPopup extends StatelessWidget {
       right: 0,
       child: Container(
         height: 60,
-        color: white,
+        color: background,
         child: Center(
           child: Text(
             objectName,

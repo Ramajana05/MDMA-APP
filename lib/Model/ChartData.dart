@@ -19,6 +19,7 @@ class ChartDataHour {
       required this.visitorValue,
       required this.humidityValue});
 }
+
 class ChartDataDay {
   final String date;
   final int visitorValue;
@@ -27,7 +28,7 @@ class ChartDataDay {
 
   ChartDataDay(
       {required this.date,
-        required this.tempValue,
-        required this.visitorValue,
-        required this.humidityValue});
+      required this.tempValue,
+      required this.visitorValue,
+      required this.humidityValue});
 }

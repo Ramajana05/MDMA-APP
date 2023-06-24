@@ -65,6 +65,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
       ),
       content: SingleChildScrollView(
         child: Container(
+          color: background,
           width: MediaQuery.of(context).size.width * 0.9,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -101,8 +102,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurecurrentPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: buttonTextColor, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -154,8 +154,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurenewPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: buttonTextColor, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -206,8 +205,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       _obscurenewPassword
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Color.fromARGB(
-                          255, 173, 173, 173), // Set the color of the icon
+                      color: buttonTextColor, // Set the color of the icon
                     ),
                     onPressed: () {
                       setState(() {
@@ -271,7 +269,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   child: const Text(
                     'Abbrechen',
                     style: TextStyle(
-                      fontSize: 17.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -302,7 +300,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       : const Text(
                           'Bestätigen',
                           style: TextStyle(
-                            fontSize: 17.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

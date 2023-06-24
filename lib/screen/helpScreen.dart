@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/topNavBarBasic.dart';
 import 'package:forestapp/Model/helpListItem.dart';
 
@@ -14,7 +15,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     'Karte',
     'QR Scanner',
     'Sensorliste',
-    'Menu',
+    'Menü',
     'Profil',
     'Website',
     'Hilfe',
@@ -53,7 +54,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     'Karte': Icons.pin_drop,
     'QR Scanner': Icons.qr_code_scanner,
     'Sensorliste': Icons.sensors,
-    'Menu': Icons.menu,
+    'Menü': Icons.menu,
     'Profil': Icons.person,
     'Website': Icons.public,
     'Hilfe': Icons.help_outline_outlined,
@@ -70,24 +71,10 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     expansionStates = List<bool>.filled(instructionsList.length, false);
   }
 
-  final List<Color> colorsList = [
-    Colors.green,
-    Colors.black,
-    Colors.red,
-    Colors.black,
-    Colors.green,
-    Colors.green,
-    Colors.green,
-    Colors.blue,
-    const Color.fromARGB(255, 127, 127, 128),
-    Color.fromARGB(255, 255, 2, 2),
-    const Color.fromARGB(255, 58, 243, 33),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: helpScreen_background_Color,
+      backgroundColor: background,
       appBar: TopNavBarBasic(
         title: 'Hilfe',
         returnStatus: true,
@@ -120,8 +107,8 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                       instruction == 'Statistik' ||
                       instruction == 'Karte' ||
                       instruction == 'QR Scanner' ||
-                      instruction == 'Sensoren Liste' ||
-                      instruction == 'Menu' ||
+                      instruction == 'Sensorliste' ||
+                      instruction == 'Menü' ||
                       instruction == 'Profil' ||
                       instruction == 'Website' ||
                       instruction == 'Hilfe' ||
@@ -149,7 +136,8 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                             index % 2 == 0, // Align left for even index items
                         description: instructionDescriptions[instruction] ?? '',
                         icon: icon,
-                        iconColor: iconColor, // Pass the random color
+                        iconColor: iconColor,
+                        // Pass the random color
                       ),
                     );
                   } else {

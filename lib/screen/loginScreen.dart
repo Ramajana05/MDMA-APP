@@ -23,13 +23,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final LoginService _loginService = LoginService();
   String loggedInUsername = "";
+  bool _obscurePassword = true;
 
   late Database _database;
-
-  final gradientColors = [
-    const Color.fromARGB(255, 86, 252, 108),
-    const Color.fromARGB(255, 40, 233, 127)
-  ];
 
   @override
   void initState() {
@@ -198,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (value) => _email = value?.trim(),
+                                  onSaved: (value) => _username = value?.trim(),
                                 ),
                               ),
                               const SizedBox(height: 16.0),
@@ -357,7 +353,7 @@ class _LoginPageState extends State<LoginPage> {
                                       'Probleme bei der Anmeldung',
                                       style: TextStyle(
                                         fontSize: 14.0,
-                                        color: invertedColor,
+                                        color: buttonTextColor,
                                         decoration: TextDecoration.underline,
                                       ),
                                     ),

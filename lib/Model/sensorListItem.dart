@@ -54,37 +54,37 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return const Icon(
         Icons.battery_4_bar,
         size: 30,
-        color: Colors.orange,
+        color: orange,
       );
     } else if (batteryLevel >= 45) {
       return const Icon(
         Icons.battery_3_bar,
         size: 30,
-        color: Colors.orange,
+        color: orange,
       );
     } else if (batteryLevel >= 30) {
       return const Icon(
         Icons.battery_3_bar,
         size: 30,
-        color: Colors.red,
+        color: red,
       );
     } else if (batteryLevel >= 15) {
       return const Icon(
         Icons.battery_2_bar,
         size: 30,
-        color: Colors.red,
+        color: red,
       );
     } else if (batteryLevel >= 5) {
       return const Icon(
         Icons.battery_1_bar,
         size: 30,
-        color: Colors.red,
+        color: red,
       );
     } else {
       return const Icon(
         Icons.battery_0_bar,
         size: 30,
-        color: Colors.red,
+        color: red,
       );
     }
   }
@@ -101,11 +101,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     return Card(
       color: background,
       elevation: 6,
-      shadowColor: Colors.black54,
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(12.0), // Adjust the border radius as needed
-      ),
+      shadowColor: black54,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 11),
         child: Column(
@@ -131,8 +127,8 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? Color.fromARGB(255, 64, 236, 73)
-                                    : Colors.red,
+                                    ? sensorGreen
+                                    : red,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -150,15 +146,14 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           alignment: Alignment.centerLeft,
                           child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 4,
                                 width: 4,
                               ),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                                style:
+                                    TextStyle(fontSize: 16, color: textColor),
                               ),
                             ],
                           ),
@@ -193,36 +188,30 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     const SizedBox(height: 10),
                     Text(
                       'Sensor Werte:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Aktuelle Temperatur: ${widget.temperature}°C',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Aktuelle Signal Stärke: ${widget.signalStrength}',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Aktueller Akku Stand: ${widget.chargerInfo}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const SizedBox(height: 12),
                   ],

@@ -12,7 +12,7 @@ class InformationDialog extends StatelessWidget {
             fontSize: 22,
             color: textColor), // Increase the font size as desired
       ),
-      backgroundColor: const Color.fromARGB(220, 255, 255, 255),
+      backgroundColor: background,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -109,7 +109,7 @@ class InformationDialog extends StatelessWidget {
             children: [
               const Icon(
                 Icons.person,
-                color: Color.fromARGB(255, 128, 197, 130),
+                color: infoGreen,
                 size: 24,
               ),
               const SizedBox(width: 8),
@@ -124,7 +124,7 @@ class InformationDialog extends StatelessWidget {
             children: [
               const Icon(
                 Icons.person,
-                color: Color.fromARGB(255, 170, 169, 169),
+                color: infoGrey,
                 size: 24,
               ),
               const SizedBox(width: 8),

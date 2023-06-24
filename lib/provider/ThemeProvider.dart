@@ -51,7 +51,7 @@ class ThemeProvider extends ChangeNotifier {
     return isNightMode ? black.withOpacity(0.5) : black;
   }
 
-  void toggleNightMode() {
+  void toggleDarkMode() {
     isNightMode = !isNightMode;
     textColor = getTextColor();
     invertedColor = invertedColour();
