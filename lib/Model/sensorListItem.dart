@@ -55,37 +55,37 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
       return Icon(
         Icons.battery_4_bar,
         size: size,
-        color: primaryOrange,
+        color: orange,
       );
     } else if (batteryLevel >= 45) {
       return Icon(
         Icons.battery_3_bar,
         size: size,
-        color: primaryOrange,
+        color: orange,
       );
     } else if (batteryLevel >= 30) {
       return Icon(
         Icons.battery_3_bar,
         size: size,
-        color: primaryOrange,
+        color: orange,
       );
     } else if (batteryLevel >= 15) {
       return Icon(
         Icons.battery_2_bar,
         size: size,
-        color: primaryTempColor,
+        color: red,
       );
     } else if (batteryLevel >= 5) {
       return Icon(
         Icons.battery_1_bar,
         size: size,
-        color: primaryTempColor,
+        color: red,
       );
     } else {
       return Icon(
         Icons.battery_0_bar,
         size: size,
-        color: primaryTempColor,
+        color: red,
       );
     }
   }
@@ -100,7 +100,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: primarybackgroundColor,
+      color: background,
       elevation: 6,
       shadowColor: Colors.black54,
       shape: RoundedRectangleBorder(
@@ -133,7 +133,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                                 Icons.sensors,
                                 color: widget.status == 'Online'
                                     ? primaryAppLightGreen
-                                    : primarygrey,
+                                    : grey,
                               ),
                               SizedBox(width: 4),
                               Text(
@@ -172,7 +172,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                         Icon(
                           Icons.arrow_drop_down,
                           size: 30,
-                          color: Colors.black,
+                          color: black,
                         ),
                         SizedBox(height: 6),
                         _buildBatteryIcon(widget.chargerInfo, 30),
@@ -199,7 +199,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.thermostat_outlined,
-                          color: primaryTempColor, // Adjust the color as needed
+                          color: red, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),
@@ -216,8 +216,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.water_drop_outlined,
-                          color:
-                              primaryHumidityColor, // Adjust the color as needed
+                          color: blue, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),
@@ -234,8 +233,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                       children: [
                         Icon(
                           Icons.signal_cellular_alt_outlined,
-                          color:
-                              primarySignalStrength, // Adjust the color as needed
+                          color: black, // Adjust the color as needed
                           size: 20,
                         ),
                         SizedBox(width: 6),

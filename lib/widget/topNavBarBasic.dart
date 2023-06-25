@@ -29,7 +29,7 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
             .getTitleTextStyle()
             .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
-      backgroundColor: topNavBar_background_Color,
+      backgroundColor: background,
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
