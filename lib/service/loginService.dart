@@ -11,10 +11,18 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:intl/intl.dart';
-import 'package:forestapp/widget/warningWidget.dart';
 import '../colors/appColors.dart';
+import '../widget/warningWidget.dart';
 
 class LoginService {
+  static const String tableName = 'Place';
+  static const String columnId = 'ID';
+  static const String columnName = 'Name';
+  static const String columnLatitude = 'Latitude';
+  static const String columnLongitude = 'Longitude';
+  List<Map<String, String>> _dropdownItems = [];
+  bool isDarkmode = false;
+
   void main() async {
     final userProvider = UserProvider(); // Create an instance of UserProvider
     final loggedInUsername = userProvider.loggedInUsername;
@@ -383,8 +391,7 @@ class LoginService {
       for (final alertData in alertsData) {
         final String type = alertData['Type'];
         final String message = alertData['Message'];
-        final Color iconColor =
-            type == 'Warnung' ? primaryWarningOrange : primaryNewsBlue;
+        final Color iconColor = type == 'Warnung' ? orange : blue;
 
         final WarningWidget alertWidget = WarningWidget(
           message: message,
@@ -604,5 +611,130 @@ class LoginService {
     }
 
     return previousWeekDates;
+  }
+
+  Future<List<Map<String, String>>> loadPlacesFromDatabase() async {
+    try {
+      final database = await _initDatabase();
+
+      final List<Map<String, dynamic>> places = await database.query(tableName);
+
+      await database.close();
+
+      List<Map<String, String>> loadedPlaces = [];
+
+      for (var place in places) {
+        final String name = place[columnName];
+        final double latitude = place[columnLatitude];
+        final double longitude = place[columnLongitude];
+
+        // Do something with the retrieved place data
+        print('Name: $name');
+        print('Latitude: $latitude');
+        print('Longitude: $longitude');
+
+        loadedPlaces.add({
+          'name': name,
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
+        });
+      }
+
+      return loadedPlaces; // Return the loaded places
+    } catch (e) {
+      // Handle the error
+      print('Error loading places: $e');
+      return []; // Return an empty list as a fallback
+    }
+  }
+
+  Future<void> addPlaceFromDatabase(
+      String name, double latitude, double longitude) async {
+    try {
+      final database = await _initDatabase();
+
+      final place = {
+        'Name': name, // Updated column name to match the database
+        'Latitude': latitude,
+        'Longitude': longitude,
+      };
+
+      await database.insert('Place', place);
+
+      await database.close();
+
+      print('Place added successfully');
+    } catch (e) {
+      print('Error adding place: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deletePlaceFromDatabase(String name) async {
+    try {
+      final database = await _initDatabase();
+
+      await database.delete(
+        'Place',
+        where: 'Name = ?',
+        whereArgs: [name],
+      );
+
+      await database.close();
+
+      print('Place deleted successfully');
+    } catch (e) {
+      print('Error deleting place: $e');
+
+      fetchDarkModeValue(param0) {}
+      rethrow;
+    }
+  }
+
+  Future<void> updateDarkModeStatus(String username, bool isDarkMode) async {
+    try {
+      final database = await _initDatabase();
+
+      final updatedValue = isDarkMode ? 'False' : 'True';
+
+      await database.rawUpdate(
+        'UPDATE User SET DarkMode = ? WHERE Username = ?',
+        [updatedValue, username],
+      );
+
+      await database.close();
+
+      print(
+          'Dark mode status updated: username = $username, isDarkMode = $isDarkMode');
+    } catch (e) {
+      print('Updating dark mode status failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> fetchDarkModeValue(String username) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT * FROM User WHERE Username = ?',
+        [username],
+      );
+
+      if (result.isNotEmpty) {
+        final userData = result.first;
+        final darkModeValue = userData['DarkMode'];
+
+        await database.close();
+
+        return darkModeValue == 'True';
+      } else {
+        await database.close();
+        return false;
+      }
+    } catch (e) {
+      print('Fetching dark mode value failed: $e');
+      rethrow;
+    }
   }
 }

@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
-      backgroundColor: profileScreen_background_Color,
+      backgroundColor: background,
       appBar: TopNavBarBasic(
         title: 'Mein Profil ',
         returnStatus: true,
@@ -66,12 +66,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Persönliche Daten',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 1.0,
-                color: Colors.grey[150], // Soft grey color
+                color: background, // Soft grey color
                 child: Column(
                   children: [
                     buildProfileItem(Icons.person, loggedInUsername ?? ''),
@@ -107,12 +107,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
                 'Kontoaktionen',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -122,8 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 2.0,
-                color:
-                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
+                color: background, // Soft grey color
                 child: Column(
                   children: [
                     GestureDetector(
@@ -201,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       },
                       child: buildProfileItem(Icons.lock, 'Passwort Ändern',
-                          iconColor: Colors.red, textColor: Colors.red),
+                          iconColor: red, textColor: red),
                     ),
                   ],
                 ),
@@ -214,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'Powered by',
                 style: TextStyle(
-                  color: primaryAppLightGreen,
+                  color: black,
                   fontSize: 24.0,
                 ),
               ),
@@ -255,14 +254,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? black,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColor ?? black,
         ),
       ),
     );

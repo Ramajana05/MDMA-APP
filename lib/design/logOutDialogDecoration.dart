@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import '../colors/appColors.dart';
 
 class LogOutDecoration {
   static BoxDecoration getBoxDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: background,
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
         BoxShadow(

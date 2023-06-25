@@ -8,9 +8,23 @@ class InformationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(
-        "Information",
-        style: TextStyle(fontSize: 22), // Increase the font size as desired
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Information",
+            style: TextStyle(fontSize: 22),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Icon(
+              Icons.close,
+              size: 24,
+            ),
+          ),
+        ],
       ),
       backgroundColor: const Color.fromARGB(220, 255, 255, 255),
       content: Column(

@@ -1,14 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../Model/ChartData.dart';
-import '../Model/dateHelper.dart';
-import '../service/LoginService.dart';
+import '../service/loginService.dart';
 import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/tabBarWidget.dart';
@@ -31,7 +25,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var weekly = "Wöchentliche";
 
   double dailyMax = 5;
-  double weeklyMax = 4;
+  double weeklyMax = 6;
   double monthlyMax = 3;
 
   List<ChartData> visitorChartDaily = [];
@@ -52,8 +46,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
-  var temperatureColor = primaryTempColor;
-  var airHumidityColor = primaryHumidityColor;
+  var temperatureColor = red;
+  var airHumidityColor = blue;
 
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
@@ -131,11 +125,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   static buildChartBoxDecoration(Color boxShadowColor) {
     return BoxDecoration(
-      color: Colors.white,
+      color: background,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
-          color: boxShadowColor,
+          color: cardShadow,
           spreadRadius: 3,
           blurRadius: 4,
           offset: const Offset(0, 2),
@@ -147,7 +141,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: primarybackgroundColor,
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'STATISTIK',
         onMenuPressed: () {},
@@ -160,7 +154,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               child: Column(
                 children: [
                   TabBarWidget(
-                    tabTexts: const ['Tag', 'Woche', 'Monat'],
+                    tabTexts: const ['Tag', 'Woche', "Monat"],
                     onTabSelected: (int index) {
                       setState(() {
                         _selectedTabIndex = index;
@@ -200,18 +194,12 @@ class _StatisticsScreen extends State<StatisticsScreen>
       xAxisTitle = 'Uhrzeit';
     }
 
-   // initializeDateFormatting('de_DE','');
     String yAxisTitle = '';
     if (chartData == visitorChartDaily ||
         chartData == visitorChartMonthly ||
         chartData == visitorChartWeekly) {
       yAxisTitle = 'Anzahl';
     }
-    // String locale = Localizations.localeOf(context).languageCode;
-    // DateTime now = new DateTime.now();
-    // String dayOfWeek = DateFormat.EEEE(locale).format(now);
-    // String dayMonth = DateFormat.MMMMd(locale).format(now);
-    // String year = DateFormat.y(locale).format(now);
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -220,14 +208,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-            axisLine: const AxisLine(color: Colors.black, width: 1.5),
-            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
             visibleMaximum: visibleMaximum,
             placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
-              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+              textStyle: TextStyle(fontWeight: FontWeight.w700, color: black),
             ),
           ),
           primaryYAxis: NumericAxis(
@@ -242,12 +230,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     : '',
             title: AxisTitle(
               text: yAxisTitle,
-              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+              textStyle: TextStyle(fontWeight: FontWeight.w700, color: black),
             ),
-            majorTickLines:
-                const MajorTickLines(size: 6, width: 2, color: Colors.black),
-            axisLine: const AxisLine(color: Colors.black, width: 1.5),
-            labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: black),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
           ),
           //Scroll enabling
           zoomPanBehavior: ZoomPanBehavior(
@@ -256,16 +243,16 @@ class _StatisticsScreen extends State<StatisticsScreen>
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
               dataSource: chartData,
-              xValueMapper: (ChartData data, _) =>data.x,
+              xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               markerSettings: const MarkerSettings(
-                borderColor: Colors.deepPurple,
+                borderColor: deepPurple,
                 isVisible: true,
-                color: Colors.grey,
+                color: grey,
                 shape: DataMarkerType.circle,
               ),
               color: chartColor,
-              dataLabelMapper: (ChartData data, _) => '${data.x}',
+              dataLabelMapper: (ChartData data, _) => data.x,
             )
           ],
           tooltipBehavior: TooltipBehavior(
@@ -274,11 +261,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
               if (seriesIndex == 0) {
-                String formattedY = data.y.toString();
+                String formattedY = data.y.toStringAsFixed(2);
                 String formattedYWithUnit = formattedY;
 
                 if (formattedY.endsWith('.0')) {
                   formattedY = formattedY.substring(0, formattedY.length - 2);
+                }
+                if (formattedY.contains('.')) {
+                  formattedY = formattedY.split('.')[0];
                 }
 
                 if (chartData == tempChartDaily ||
@@ -296,7 +286,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: black,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
@@ -318,7 +308,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             '  ${data.x} : '
                             '$formattedYWithUnit',
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: black),
                           ),
                         ],
                       ),
@@ -331,55 +321,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 if (formattedY.endsWith('.0')) {
                   formattedY = formattedY.substring(0, formattedY.length - 2);
                 }
-                // return Container(
-                //   padding: const EdgeInsets.all(10),
-                //   decoration: BoxDecoration(
-                //     color: Colors.black,
-                //     borderRadius: BorderRadius.circular(5),
-                //   ),
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.min,
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: const [
-                //           Text(
-                //             'Regenwahrscheinlichkeit',
-                //             style: TextStyle(
-                //               color: Colors.white,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           )
-                //         ],
-                //       ),
-                //       const Text(
-                //         '────────────────',
-                //         style: TextStyle(color: Colors.white),
-                //       ),
-                //       Row(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           Container(
-                //             width: 10,
-                //             height: 10,
-                //             decoration: BoxDecoration(
-                //               shape: BoxShape.circle,
-                //               color: chartColor,
-                //             ),
-                //           ),
-                //           Text(
-                //             '  ${data.x} : '
-                //                 '$formattedY%',
-                //             style: const TextStyle(color: Colors.white),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // );
               }
               return Container();
             },
@@ -416,19 +357,19 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              visitorVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                visitorVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -479,10 +420,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                           ),
@@ -491,6 +432,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
+                              color: black,
                             ),
                             onPressed: () {
                               setState(() {
@@ -540,19 +482,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              airVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                airVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;
@@ -610,19 +551,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              visitorVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                visitorVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -667,19 +607,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              tempVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                tempVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 tempVisible = !tempVisible;
@@ -724,19 +663,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              airVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                airVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;
@@ -790,19 +728,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               visitor,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              visitorVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                visitorVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -846,19 +783,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               temperature,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              tempVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                tempVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 tempVisible = !tempVisible;
@@ -903,19 +839,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             padding: const EdgeInsets.only(left: 20, top: 5),
                             child: Text(
                               airHumidity,
-                              style: const TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
                             ),
                           ),
                           IconButton(
                             icon: Icon(
-                              airVisible
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down,
-                            ),
+                                airVisible
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;
