@@ -51,7 +51,7 @@ class WarningWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: warningGrey.withOpacity(0.5),
+                color: cardShadow,
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: const Offset(0, 2),

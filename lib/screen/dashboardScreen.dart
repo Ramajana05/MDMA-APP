@@ -182,7 +182,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    checkDarkMode();
+    //checkDarkMode();
     fetchWeatherData();
     loadAlerts();
     updateSensorCounts();

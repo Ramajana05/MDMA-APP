@@ -111,13 +111,12 @@ class _ScanScreen extends State<ScanScreen> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary:
-                        Colors.white, // Set the background color of the button
+                        background, // Set the background color of the button
                   ),
                   child: const Text(
                     'OK',
                     style: TextStyle(
-                      color:
-                          Colors.orange, // Set the text color of the "OK" text
+                      color: orange, // Set the text color of the "OK" text
                     ),
                   ),
                   onPressed: () {
@@ -171,12 +170,12 @@ class _ScanScreen extends State<ScanScreen> {
                                             decoration: InputDecoration(
                                               labelText: 'Sensor Name',
                                               filled: true,
-                                              fillColor: Colors.white,
+                                              fillColor: background,
                                               enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color: Colors.grey,
+                                                  color: grey,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -188,13 +187,12 @@ class _ScanScreen extends State<ScanScreen> {
                                                 ),
                                               ),
                                               labelStyle: TextStyle(
-                                                color: Colors.grey,
+                                                color: black,
                                               ),
                                               focusColor: primaryAppLightGreen,
                                             ),
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                            ),
+                                            style: TextStyle(
+                                                fontSize: 16.0, color: black),
                                             onChanged: (value) {
                                               // Handle the text change
                                               print('Sensor Name: $value');
@@ -241,7 +239,10 @@ class _ScanScreen extends State<ScanScreen> {
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
-                                    child: const Text('Abbrechen'),
+                                    child: Text(
+                                      'Abbrechen',
+                                      style: TextStyle(color: black),
+                                    ),
                                     onPressed: () {
                                       Navigator.of(dialogContext).pop();
                                       _resetScanner(); // Reset scanner after closing the dialog
@@ -257,7 +258,7 @@ class _ScanScreen extends State<ScanScreen> {
                                       ),
                                       backgroundColor:
                                           MaterialStateProperty.all<Color>(
-                                        Color.fromARGB(255, 255, 255, 255),
+                                        background,
                                       ),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
@@ -283,13 +284,13 @@ class _ScanScreen extends State<ScanScreen> {
                                                 children: [
                                                   Icon(
                                                     Icons.error,
-                                                    color: Colors.red,
+                                                    color: red,
                                                   ),
                                                   const SizedBox(width: 8),
                                                   const Text(
                                                     'Fehler',
                                                     style: TextStyle(
-                                                      color: Colors.red,
+                                                      color: red,
                                                     ),
                                                   ),
                                                 ],
@@ -300,14 +301,14 @@ class _ScanScreen extends State<ScanScreen> {
                                                 ElevatedButton(
                                                   style:
                                                       ElevatedButton.styleFrom(
-                                                    primary: Colors
-                                                        .white, // Set the background color of the button
+                                                    primary:
+                                                        background, // Set the background color of the button
                                                   ),
                                                   child: const Text(
                                                     'OK',
                                                     style: TextStyle(
-                                                      color: Colors
-                                                          .red, // Set the text color of the "OK" text
+                                                      color:
+                                                          red, // Set the text color of the "OK" text
                                                     ),
                                                   ),
                                                   onPressed: () {
@@ -383,23 +384,25 @@ class _ScanScreen extends State<ScanScreen> {
               children: [
                 Icon(
                   Icons.warning_amber,
-                  color: Colors.red,
+                  color: red,
                 ),
                 const SizedBox(width: 8),
-                Text('Fehler'),
+                Text(
+                  'Fehler',
+                  style: TextStyle(color: black),
+                ),
               ],
             ),
             content: Text('Der Sensor existiert nicht.'),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary:
-                      Colors.white, // Set the background color of the button
+                  primary: background, // Set the background color of the button
                 ),
                 child: const Text(
                   'OK',
                   style: TextStyle(
-                    color: Colors.red, // Set the text color of the "OK" text
+                    color: red, // Set the text color of the "OK" text
                   ),
                 ),
                 onPressed: () {
@@ -481,7 +484,7 @@ class _ScanScreen extends State<ScanScreen> {
             child: Column(
               children: [
                 IconButton(
-                  color: Colors.white,
+                  color: background,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.cameraFacingState,
                     builder: (context, state, child) {
@@ -499,7 +502,7 @@ class _ScanScreen extends State<ScanScreen> {
                   },
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color: background,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.torchState,
                     builder: (context, state, child) {
