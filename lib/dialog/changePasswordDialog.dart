@@ -82,7 +82,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: buttonTextColor,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -91,9 +91,6 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         color: primaryAppLightGreen,
                         width: 2.0,
                       ),
-                    ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: const EdgeInsets.symmetric(

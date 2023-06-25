@@ -373,26 +373,27 @@ class _MapScreen extends State<MapScreen> {
                             ),
                             const SizedBox(width: 8),
                             Flexible(
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: background,
-                                      shape: BoxShape.circle,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: background,
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
-                                  ),
-                                  const Positioned.fill(
-                                    child: Icon(
-                                      Icons.place,
-                                      size: 32,
-                                      color: mapGreen,
+                                    const Positioned.fill(
+                                      child: Icon(
+                                        Icons.place,
+                                        size: 32,
+                                        color: mapGreen,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),

@@ -51,7 +51,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
             });
           },
           backgroundColor: background,
-          items: const [
+          items: [
             BottomNavigationBarItem(
               backgroundColor: background,
               icon: const Icon(Icons.dashboard),
