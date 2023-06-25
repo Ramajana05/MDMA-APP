@@ -823,6 +823,7 @@ class _MapScreen extends State<MapScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         TextFormField(
+                                          style: TextStyle(color: textColor),
                                           onChanged: (value) {
                                             newItemName = value;
                                           },

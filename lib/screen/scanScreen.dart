@@ -97,29 +97,17 @@ class _ScanScreen extends State<ScanScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: background,
-              title: Row(
-                children: [
-                  const Icon(
-                    Icons.warning,
-                    color: orange,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Hinweis'),
-                ],
+              title: Text(
+                'Sensor existiert bereits',
+                style: TextStyle(color: textColor),
               ),
-              content: const Text('Dieser Sensor wurde bereits angelegt.'),
+              content: Text(
+                'Dieser Sensor wurde bereits angelegt.',
+                style: TextStyle(color: textColor),
+              ),
               actions: [
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary:
-                        buttonTextColor, // Set the background color of the button
-                  ),
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(
-                      color: orange, // Set the text color of the "OK" text
-                    ),
-                  ),
+                  child: const Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     _resetScanner();
@@ -140,13 +128,13 @@ class _ScanScreen extends State<ScanScreen> {
                 return Builder(
                   builder: (BuildContext errorDialogContext) {
                     return AlertDialog(
-                      backgroundColor: background,
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Neuen Sensor hinzufügen',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Text(
+                            'Sensor hinzufügen',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: textColor),
                           ),
                         ],
                       ),
@@ -172,30 +160,30 @@ class _ScanScreen extends State<ScanScreen> {
                                             decoration: InputDecoration(
                                               labelText: 'Sensor Name',
                                               filled: true,
-                                              fillColor: buttonTextColor,
+                                              fillColor: background,
                                               enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
-                                                borderSide: const BorderSide(
+                                                borderSide: BorderSide(
                                                   color: grey,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
-                                                borderSide: const BorderSide(
+                                                borderSide: BorderSide(
                                                   color: primaryAppLightGreen,
                                                   width: 2.0,
                                                 ),
                                               ),
-                                              labelStyle: const TextStyle(
+                                              labelStyle: TextStyle(
                                                 color: grey,
                                               ),
                                               focusColor: primaryAppLightGreen,
                                             ),
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                            ),
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: textColor),
                                             onChanged: (value) {
                                               // Handle the text change
                                               print('Sensor Name: $value');
@@ -213,13 +201,15 @@ class _ScanScreen extends State<ScanScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'Latitude:',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: textColor),
                                 ),
                                 Text(
                                   latitude.toString() ?? 'Laden...',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),
@@ -227,13 +217,15 @@ class _ScanScreen extends State<ScanScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'Longitude:',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: textColor),
                                 ),
                                 Text(
                                   longitude.toString() ?? 'Laden...',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),
@@ -242,7 +234,10 @@ class _ScanScreen extends State<ScanScreen> {
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
-                                    child: const Text('Abbrechen'),
+                                    child: Text(
+                                      'Abbrechen',
+                                      style: TextStyle(color: textColor),
+                                    ),
                                     onPressed: () {
                                       Navigator.of(dialogContext).pop();
                                       _resetScanner(); // Reset scanner after closing the dialog
@@ -250,8 +245,7 @@ class _ScanScreen extends State<ScanScreen> {
                                     style: ButtonStyle(
                                       padding:
                                           MaterialStateProperty.all<EdgeInsets>(
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
+                                        EdgeInsets.symmetric(horizontal: 20.0),
                                       ),
                                       foregroundColor:
                                           MaterialStateProperty.all<Color>(
@@ -259,7 +253,7 @@ class _ScanScreen extends State<ScanScreen> {
                                       ),
                                       backgroundColor:
                                           MaterialStateProperty.all<Color>(
-                                        buttonTextColor,
+                                        textInverted,
                                       ),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
@@ -274,7 +268,10 @@ class _ScanScreen extends State<ScanScreen> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: ElevatedButton(
-                                    child: const Text('Hinzufügen'),
+                                    child: Text(
+                                      'Hinzufügen',
+                                      style: TextStyle(color: textColor),
+                                    ),
                                     onPressed: () async {
                                       if (localSensorName.trim().isEmpty) {
                                         showDialog(
@@ -282,36 +279,28 @@ class _ScanScreen extends State<ScanScreen> {
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               backgroundColor: background,
-                                              title: Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.error,
-                                                    color: red,
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  const Text(
-                                                    'Fehler',
-                                                    style: TextStyle(
-                                                      color: red,
-                                                    ),
-                                                  ),
-                                                ],
+                                              title: Text(
+                                                'Fehler',
+                                                style:
+                                                    TextStyle(color: textColor),
                                               ),
-                                              content: const Text(
-                                                  'Der Sensor Name darf nicht leer sein.'),
+                                              content: Text(
+                                                'Sensor Name darf nicht leer sein.',
+                                                style:
+                                                    TextStyle(color: textColor),
+                                              ),
                                               actions: [
                                                 ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary:
-                                                        buttonTextColor, // Set the background color of the button
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                primaryGreen),
                                                   ),
-                                                  child: const Text(
+                                                  child: Text(
                                                     'OK',
                                                     style: TextStyle(
-                                                      color:
-                                                          red, // Set the text color of the "OK" text
-                                                    ),
+                                                        color: textColor),
                                                   ),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
@@ -347,7 +336,7 @@ class _ScanScreen extends State<ScanScreen> {
                                       ),
                                       foregroundColor:
                                           MaterialStateProperty.all<Color>(
-                                        background,
+                                        textInverted,
                                       ),
                                       backgroundColor:
                                           MaterialStateProperty.all<Color>(
@@ -381,29 +370,29 @@ class _ScanScreen extends State<ScanScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: background,
             title: Row(
               children: [
-                const Icon(
+                Text('Sensor existiert nicht'),
+                SizedBox(width: 8),
+                Icon(
                   Icons.warning_amber,
                   color: red,
                 ),
-                const SizedBox(width: 8),
-                const Text('Fehler'),
               ],
             ),
-            content: const Text('Der Sensor existiert nicht.'),
+            content: Text(
+              'Der Sensor existiert nicht.',
+              style: TextStyle(color: textColor),
+            ),
             actions: [
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary:
-                      buttonTextColor, // Set the background color of the button
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(primaryGreen),
                 ),
-                child: const Text(
+                child: Text(
                   'OK',
-                  style: TextStyle(
-                    color: red, // Set the text color of the "OK" text
-                  ),
+                  style: TextStyle(color: textColor),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -433,7 +422,7 @@ class _ScanScreen extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const SidePanel(),
+      drawer: SidePanel(),
       appBar: TopNavBar(
         title: 'QR CODE SCANNER',
         onMenuPressed: () {
@@ -484,13 +473,16 @@ class _ScanScreen extends State<ScanScreen> {
             child: Column(
               children: [
                 IconButton(
-                  color: grey.shade300,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.cameraFacingState,
                     builder: (context, state, child) {
                       switch (state) {
                         case CameraFacing.front:
-                          return const Icon(Icons.camera_front_outlined);
+                          return const Icon(
+                            Icons.camera_front_outlined,
+                            color: grey,
+                          );
                         case CameraFacing.back:
                           return const Icon(Icons.camera_rear_outlined);
                       }
@@ -502,19 +494,17 @@ class _ScanScreen extends State<ScanScreen> {
                   },
                 ),
                 IconButton(
-                  color: grey.shade300,
+                  color: white,
                   icon: ValueListenableBuilder(
                     valueListenable: cameraController.torchState,
                     builder: (context, state, child) {
                       switch (state) {
                         case TorchState.off:
-                          return const Icon(
-                            Icons.flash_off_outlined,
-                          );
+                          return const Icon(Icons.flash_off_outlined,
+                              color: grey);
                         case TorchState.on:
-                          return const Icon(
-                            Icons.flash_on_outlined,
-                          );
+                          return const Icon(Icons.flash_on_outlined,
+                              color: white);
                       }
                     },
                   ),

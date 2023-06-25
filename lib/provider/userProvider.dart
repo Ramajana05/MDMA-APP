@@ -65,4 +65,13 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool _isSystemDarkModeEnabled = false;
+
+  bool get isSystemDarkModeEnabled => _isSystemDarkModeEnabled;
+
+  void setSystemDarkModeEnabled(bool value) {
+    _isSystemDarkModeEnabled = value;
+    notifyListeners();
+  }
 }

@@ -139,8 +139,9 @@ class _SidePanel extends State<SidePanel> {
                           ),
                         ),
                         onTap: () {
-                          themeProvider
-                              .toggleDarkMode(); // Switch back to light mode
+                          setState(() {
+                            themeProvider.toggleDarkMode();
+                          }); // Switch back to light mode
                         },
                       ),
                       const Spacer(),
