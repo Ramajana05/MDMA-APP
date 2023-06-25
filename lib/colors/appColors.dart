@@ -1,18 +1,37 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
-import '../provider/ThemeProvider.dart';
+import 'package:forestapp/service/LoginService.dart';
 
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
-const white = Colors.white;
-const black = Colors.black;
+
 const grey = Colors.grey;
 const yellow = Color.fromARGB(255, 228, 210, 46);
 const green = Colors.green;
-const moonColor = Color(0xFF7CA2D8); // Helleres Blau-Weiß
+const moonColor = Color(0xFF7CA2D8);
+
+Color background = Color.fromARGB(255, 48, 47, 47);
+Color backgroundCard = Color.fromARGB(255, 65, 64, 64);
+Color white = Color.fromARGB(255, 0, 0, 0); //For some buttons
+Color black = Color.fromARGB(255, 255, 255, 255); //Fonts
+Color cardShadow = Color.fromARGB(255, 0, 0, 0); //Fonts//CardShadow
+
+void updateAppColors(bool isDarkMode) {
+  if (isDarkMode) {
+    background = Color.fromARGB(255, 48, 47, 47);
+    backgroundCard = Color.fromARGB(255, 65, 64, 64);
+    white = Colors.black;
+    black = Colors.white;
+    cardShadow = Colors.black;
+  } else {
+    background = Colors.white;
+    backgroundCard = Colors.white;
+    white = const Color.fromARGB(255, 255, 255, 255);
+    black = const Color.fromARGB(255, 0, 0, 0);
+    cardShadow = Color.fromARGB(255, 145, 143, 143);
+  }
+}
 
 ///Login
 final gradientColors = [topGreen, primaryAppLightGreen];
@@ -112,17 +131,3 @@ const gradient = [
 ///Map
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
-
-//--Dark Mode Colors
-Color iconLightRed = ThemeProvider().getIconColor();
-Color textLightRed = ThemeProvider().getTextLightRed();
-Color invertedColor = ThemeProvider().getInvertedColor();
-Color textInverted = ThemeProvider().getTextInverted();
-Color buttonTextInversedColor = ThemeProvider().getButtonTextInversedColor();
-Color buttonTextColor = ThemeProvider().getButtonTextColor();
-Color background = white;
-Color darkBackground = Color(0xFF555555);
-Color lighterBackground = ThemeProvider().getLighterBackground();
-Color textColor = ThemeProvider().getTextColor();
-Color bottomNavColor = ThemeProvider().getBottomNavColor();
-Color iconColor = ThemeProvider().getIconColor();

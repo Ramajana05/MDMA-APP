@@ -13,6 +13,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: background,
       appBar: TopNavBarBasic(
         title: 'Hilfe',
         returnStatus: true,
@@ -30,6 +31,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                 style: TextStyle(
                   fontSize: 26.0,
                   fontWeight: FontWeight.bold,
+                  color: black,
                 ),
               ),
             ),
@@ -44,9 +46,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
               child: Text(
                 'Nebenfunktionen',
                 style: TextStyle(
-                  fontSize: 26.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                    fontSize: 26.0, fontWeight: FontWeight.bold, color: black),
               ),
             ),
             BuildProfile(),

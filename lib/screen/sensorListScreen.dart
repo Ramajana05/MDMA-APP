@@ -95,7 +95,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
@@ -110,21 +110,23 @@ class _SensorListScreenState extends State<SensorListScreen> {
             child: TextField(
               controller: searchController,
               onChanged: _filterDamages,
+              style: TextStyle(color: black),
               decoration: InputDecoration(
                 labelText: 'Suche',
-                labelStyle: TextStyle(color: buttonTextColor),
+                labelStyle: TextStyle(color: black),
                 prefixIcon: Icon(
                   Icons.search,
                   color: primaryAppLightGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: black),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                   borderSide: BorderSide(color: primaryAppLightGreen),
                 ),
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                fillColor: background,
                 filled: true,
               ),
             ),

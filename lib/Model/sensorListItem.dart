@@ -101,8 +101,8 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
 
     return Card(
       color: background,
-      elevation: 6,
-      shadowColor: Colors.black54,
+      elevation: 12,
+      shadowColor: cardShadow,
       shape: RoundedRectangleBorder(
         borderRadius:
             BorderRadius.circular(12.0), // Adjust the border radius as needed
@@ -139,9 +139,9 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Text(
                                 widget.sensorTitle,
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: black),
                               ),
                             ],
                           ),
@@ -154,9 +154,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               SizedBox(height: 4),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                ),
+                                style: TextStyle(fontSize: 17, color: black),
                               ),
                             ],
                           ),
@@ -191,8 +189,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                     SizedBox(height: 10),
                     Text(
                       'Aktuelle Werte:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: black),
                     ),
                     SizedBox(height: 12),
                     Row(
@@ -207,6 +207,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           'Temperatur: ${widget.temperature}°C',
                           style: TextStyle(
                             fontSize: 17,
+                            color: black,
                           ),
                         ),
                       ],
@@ -224,6 +225,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           'Luftfeuchtigkeit: ${widget.airPressure}%',
                           style: TextStyle(
                             fontSize: 17,
+                            color: black,
                           ),
                         ),
                       ],
@@ -241,6 +243,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           'Signalstärke: ${widget.signalStrength}',
                           style: TextStyle(
                             fontSize: 17,
+                            color: black,
                           ),
                         ),
                       ],
@@ -254,6 +257,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           'Akkustand: ${widget.chargerInfo}%',
                           style: TextStyle(
                             fontSize: 17,
+                            color: black,
                           ),
                         ),
                       ],

@@ -209,7 +209,7 @@ class _MapScreen extends State<MapScreen> {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: textColor),
+                                        color: black),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
@@ -219,17 +219,17 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
                                         style: TextStyle(
-                                            fontSize: 16, color: textColor),
+                                            fontSize: 16, color: black),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
                                         style: TextStyle(
-                                            fontSize: 16, color: textColor),
+                                            fontSize: 16, color: black),
                                       ),
                                       const SizedBox(width: 8),
                                       Icon(
@@ -242,7 +242,7 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                     ],
                                   ),
@@ -273,7 +273,7 @@ class _MapScreen extends State<MapScreen> {
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: buttonTextColor,
+                            color: black,
                           ),
                         ),
                       ),
@@ -361,7 +361,7 @@ class _MapScreen extends State<MapScreen> {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: textColor),
+                                        color: black),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
@@ -377,7 +377,7 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                     ],
                                   ),
@@ -408,7 +408,7 @@ class _MapScreen extends State<MapScreen> {
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: buttonTextColor,
+                            color: black,
                           ),
                         ),
                       ),
@@ -720,7 +720,7 @@ class _MapScreen extends State<MapScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14),
-                                color: Colors.white,
+                                color: background,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -730,7 +730,7 @@ class _MapScreen extends State<MapScreen> {
                                       Icons.location_on,
                                       color: isSelected
                                           ? primaryAppLightGreen
-                                          : const Color.fromARGB(255, 0, 0, 0),
+                                          : black,
                                     ),
                                     SizedBox(width: 8),
                                     Text(
@@ -740,8 +740,7 @@ class _MapScreen extends State<MapScreen> {
                                         fontWeight: FontWeight.w400,
                                         color: isSelected
                                             ? primaryAppLightGreen
-                                            : const Color.fromARGB(
-                                                255, 0, 0, 0),
+                                            : black,
                                       ),
                                     ),
                                   ],
@@ -791,12 +790,12 @@ class _MapScreen extends State<MapScreen> {
                                           },
                                           decoration: InputDecoration(
                                             labelText: 'Name',
-                                            fillColor: Colors.white,
+                                            fillColor: background,
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               borderSide: const BorderSide(
-                                                color: Colors.grey,
+                                                color: grey,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
@@ -807,8 +806,8 @@ class _MapScreen extends State<MapScreen> {
                                                 width: 2.0,
                                               ),
                                             ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.grey,
+                                            labelStyle: TextStyle(
+                                              color: black,
                                             ),
                                             focusColor: const Color.fromARGB(
                                                 255, 40, 233, 127),
@@ -1136,8 +1135,8 @@ class _MapScreen extends State<MapScreen> {
                                                     selectedPlace = value ?? '';
                                                   });
                                                 },
-                                                dropdownColor: Colors
-                                                    .white, // Customize the dropdown background color
+                                                dropdownColor:
+                                                    background, // Customize the dropdown background color
                                                 style: TextStyle(
                                                   fontSize:
                                                       18.0, // Adjust the font size as needed
@@ -1174,12 +1173,12 @@ class _MapScreen extends State<MapScreen> {
                                                   child: Text(
                                                     'Löschen',
                                                     style: TextStyle(
-                                                      color: Colors.white,
+                                                      color: black,
                                                       fontSize: 18.0,
                                                     ),
                                                   ),
                                                   style: TextButton.styleFrom(
-                                                    backgroundColor: Colors.red,
+                                                    backgroundColor: red,
                                                   ),
                                                   onPressed: () async {
                                                     // Delete the selected item

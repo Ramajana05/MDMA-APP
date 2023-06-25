@@ -4,32 +4,58 @@ import 'package:forestapp/dialog/logoutDialog.dart';
 
 import '../colors/appColors.dart';
 
-class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
+class TopNavBarBasic extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onMenuPressed;
   final bool returnStatus;
 
-  const TopNavBarBasic(
-      {Key? key,
-      required this.title,
-      this.onMenuPressed,
-      required this.returnStatus})
-      : super(key: key);
+  const TopNavBarBasic({
+    Key? key,
+    required this.title,
+    this.onMenuPressed,
+    required this.returnStatus,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
 
   @override
+  _TopNavBarBasicState createState() => _TopNavBarBasicState();
+}
+
+class _TopNavBarBasicState extends State<TopNavBarBasic> {
+  Color backgroundColor = background;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    checkBackgroundColor();
+  }
+
+  void checkBackgroundColor() {
+    setState(() {
+      backgroundColor = background;
+    });
+  }
+
+  void reloadBackgroundColor() {
+    setState(() {
+      // Reload the background color from appColors.dart
+      backgroundColor = background;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: returnStatus,
+      automaticallyImplyLeading: widget.returnStatus,
       title: Text(
-        title,
+        widget.title,
         style: topNavBarDecoration
             .getTitleTextStyle()
             .copyWith(fontSize: 27), // Adjust the fontSize as desired
       ),
-      backgroundColor: background,
+      backgroundColor: backgroundColor, // Use the updated background color
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -49,6 +75,14 @@ class TopNavBarBasic extends StatelessWidget implements PreferredSizeWidget {
       iconTheme: IconThemeData(
         color: primaryAppLightGreen,
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () {
+            reloadBackgroundColor(); // Reload the background color
+          },
+        ),
+      ],
     );
   }
 }

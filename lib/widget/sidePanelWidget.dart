@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:forestapp/service/loginService.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../colors/appColors.dart';
@@ -8,31 +8,56 @@ import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
-import 'package:forestapp/provider/themeProvider.dart';
+import 'package:forestapp/colors/appColors.dart';
 
-import 'bottomNavBar.dart';
+import 'package:forestapp/widget/bottomnavbar.dart';
 
 class SidePanel extends StatefulWidget {
-  const SidePanel({Key? key}) : super(key: key);
+  final VoidCallback? onDarkModeChanged;
+
+  const SidePanel({Key? key, this.onDarkModeChanged}) : super(key: key);
 
   @override
-  State<SidePanel> createState() => _SidePanel();
+  State<SidePanel> createState() => _SidePanelState();
 }
 
-class _SidePanel extends State<SidePanel> {
+class _SidePanelState extends State<SidePanel> {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final loggedInUsername = userProvider.loggedInUsername;
-    final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return loggedInUsername ?? ''; // Replace with your actual logic
+    return loggedInUsername ?? '';
+  }
+
+  ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
+  int currentIndex = 0; // Store the current index
+
+  @override
+  void initState() {
+    super.initState();
+    checkDarkMode();
+  }
+
+  @override
+  void dispose() {
+    _isDarkModeNotifier.dispose();
+    super.dispose();
+  }
+
+  void checkDarkMode() async {
+    LoginService loginService = LoginService();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final loggedInUsername = userProvider.loggedInUsername;
+    final darkModeValue =
+        await loginService.fetchDarkModeValue(loggedInUsername!);
+
+    _isDarkModeNotifier.value = darkModeValue;
   }
 
   @override
   Widget build(BuildContext context) {
     bool isSmallScreen = MediaQuery.of(context).size.width <= 600;
     bool isScrollable = isSmallScreen;
-    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Drawer(
       backgroundColor: background,
@@ -75,15 +100,20 @@ class _SidePanel extends State<SidePanel> {
                           'Profil',
                           style: TextStyle(
                             fontSize: 18,
-                            color: textColor,
+                            color: black,
                           ),
                         ),
                         iconColor: primaryAppLightGreen,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
-                        ),
+                        onTap: () {
+                          // Save the current index
+                          currentIndex = 0;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(
@@ -94,7 +124,7 @@ class _SidePanel extends State<SidePanel> {
                           'Startseite',
                           style: TextStyle(
                             fontSize: 18,
-                            color: textColor,
+                            color: black,
                           ),
                         ),
                         iconColor: blue,
@@ -105,6 +135,61 @@ class _SidePanel extends State<SidePanel> {
                           } else {
                             throw 'Die Website $url konnte nicht geladen werden.';
                           }
+
+                          updateAppColors(_isDarkModeNotifier.value);
+                        },
+                      ),
+                      ListTile(
+                        leading: ValueListenableBuilder<bool>(
+                          valueListenable: _isDarkModeNotifier,
+                          builder: (BuildContext context, bool value,
+                              Widget? child) {
+                            return Icon(
+                              value
+                                  ? Icons.dark_mode_outlined
+                                  : Icons.wb_sunny_outlined,
+                              size: 28,
+                              color: value ? blue : yellow,
+                            );
+                          },
+                        ),
+                        title: Text(
+                          _isDarkModeNotifier.value
+                              ? 'Dunkler Modus'
+                              : 'Heller Modus',
+                          style: TextStyle(fontSize: 18, color: black),
+                        ),
+                        onTap: () async {
+                          final loggedInUsername =
+                              await _getLoggedInUsername(context);
+                          final loginService = LoginService();
+
+                          if (_isDarkModeNotifier.value) {
+                            await loginService.updateDarkModeStatus(
+                                loggedInUsername!, true);
+                          } else {
+                            await loginService.updateDarkModeStatus(
+                                loggedInUsername!, false);
+                          }
+
+                          _isDarkModeNotifier.value =
+                              !_isDarkModeNotifier.value;
+
+                          widget.onDarkModeChanged
+                              ?.call(); // Notify parent widget about dark mode change
+
+                          updateAppColors(_isDarkModeNotifier.value);
+
+                          // Save the current index
+                          currentIndex = 2;
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomBottomTabBar(
+                                trans_index: 0,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       ListTile(
@@ -112,40 +197,23 @@ class _SidePanel extends State<SidePanel> {
                           Icons.help_outline_outlined,
                           size: 28,
                         ),
-                        iconColor: buttonTextColor,
+                        iconColor: grey,
                         title: Text(
                           'Hilfe',
                           style: TextStyle(
                             fontSize: 18,
-                            color: textColor,
-                          ),
-                        ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => InstructionsScreen()),
-                        ),
-                      ),
-                      ListTile(
-                        leading: Icon(
-                          themeProvider.isNightMode
-                              ? Icons.dark_mode_outlined
-                              : Icons.light_mode_outlined,
-                          size: 28,
-                        ),
-                        iconColor: iconColor,
-                        title: Text(
-                          themeProvider.isNightMode
-                              ? 'Dunkler Modus'
-                              : 'Heller Modus',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: textColor,
+                            color: black,
                           ),
                         ),
                         onTap: () {
-                          themeProvider
-                              .toggleDarkMode(); // Switch back to light mode
+                          // Save the current index
+                          currentIndex = 3;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InstructionsScreen(),
+                            ),
+                          );
                         },
                       ),
                       const Spacer(),
@@ -156,7 +224,7 @@ class _SidePanel extends State<SidePanel> {
                         ),
                         title: Text(
                           'Ausloggen',
-                          style: TextStyle(fontSize: 18, color: textColor),
+                          style: TextStyle(fontSize: 18, color: black),
                         ),
                         iconColor: red,
                         onTap: () {
