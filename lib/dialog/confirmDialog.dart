@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 
 class ConfirmDialog extends StatelessWidget {
   String title;
@@ -25,13 +26,19 @@ class ConfirmDialog extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text("Ja"),
+              child: Text(
+                "Ja",
+                style: TextStyle(color: black),
+              ),
               onPressed: () {
                 continueCallBack();
               },
             ),
             TextButton(
-              child: Text("Nein"),
+              child: Text(
+                "Nein",
+                style: TextStyle(color: black),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

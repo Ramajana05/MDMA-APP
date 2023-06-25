@@ -42,6 +42,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: background,
       body: screens[widget.index],
       bottomNavigationBar: Container(
         decoration: bottomNavBarDecoration2,
@@ -49,7 +50,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           type: BottomNavigationBarType.shifting,
           currentIndex: widget.index,
           showUnselectedLabels: false,
-          unselectedItemColor: background,
+          unselectedItemColor: black,
           selectedItemColor: tabColors[widget.index],
           // Use the respective color for the selected tab
 
@@ -58,25 +59,30 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: background,
-          items: const [
+
+          items: [
             BottomNavigationBarItem(
+              backgroundColor: background,
               icon: Icon(Icons.dashboard_outlined),
               label: 'Dashbaord',
             ),
             BottomNavigationBarItem(
+              backgroundColor: background,
               icon: Icon(Icons.line_axis_outlined),
               label: 'Statistik',
             ),
             BottomNavigationBarItem(
+              backgroundColor: background,
               icon: Icon(Icons.pin_drop_outlined),
               label: 'Karte',
             ),
             BottomNavigationBarItem(
+              backgroundColor: background,
               icon: Icon(Icons.qr_code),
               label: 'QR Code',
             ),
             BottomNavigationBarItem(
+              backgroundColor: background,
               icon: Icon(Icons.sensors),
               label: 'Sensoren',
             ),

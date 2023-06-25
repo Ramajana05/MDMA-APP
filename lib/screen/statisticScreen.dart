@@ -129,7 +129,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(
-          color: boxShadowColor,
+          color: cardShadow,
           spreadRadius: 3,
           blurRadius: 4,
           offset: const Offset(0, 2),
@@ -208,15 +208,14 @@ class _StatisticsScreen extends State<StatisticsScreen>
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
             visibleMaximum: visibleMaximum,
             placeLabelsNearAxisLine: false,
             desiredIntervals: 12,
             title: AxisTitle(
               text: xAxisTitle,
-              textStyle:
-                  TextStyle(fontWeight: FontWeight.w700, color: textColor),
+              textStyle: TextStyle(fontWeight: FontWeight.w700, color: black),
             ),
           ),
           primaryYAxis: NumericAxis(
@@ -231,12 +230,11 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     : '',
             title: AxisTitle(
               text: yAxisTitle,
-              textStyle:
-                  TextStyle(fontWeight: FontWeight.w700, color: textColor),
+              textStyle: TextStyle(fontWeight: FontWeight.w700, color: black),
             ),
-            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: black),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
           ),
           //Scroll enabling
           zoomPanBehavior: ZoomPanBehavior(
@@ -310,7 +308,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             '  ${data.x} : '
                             '$formattedYWithUnit',
-                            style: TextStyle(color: textColor),
+                            style: TextStyle(color: black),
                           ),
                         ],
                       ),
@@ -362,7 +360,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: black,
                               ),
                             ),
                           ),
@@ -371,7 +369,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 visitorVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -425,7 +423,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
-                                color: textColor,
+                                color: black,
                               ),
                             ),
                           ),
@@ -434,7 +432,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               tempVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: textColor,
+                              color: black,
                             ),
                             onPressed: () {
                               setState(() {
@@ -487,7 +485,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -495,7 +493,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 airVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;
@@ -556,7 +554,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -564,7 +562,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 visitorVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -612,7 +610,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -620,7 +618,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 tempVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 tempVisible = !tempVisible;
@@ -668,7 +666,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -676,7 +674,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 airVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;
@@ -733,7 +731,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -741,7 +739,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 visitorVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 visitorVisible = !visitorVisible;
@@ -788,7 +786,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -796,7 +794,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 tempVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 tempVisible = !tempVisible;
@@ -844,7 +842,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
-                                  color: textColor),
+                                  color: black),
                             ),
                           ),
                           IconButton(
@@ -852,7 +850,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                                 airVisible
                                     ? Icons.arrow_drop_up
                                     : Icons.arrow_drop_down,
-                                color: textColor),
+                                color: black),
                             onPressed: () {
                               setState(() {
                                 airVisible = !airVisible;

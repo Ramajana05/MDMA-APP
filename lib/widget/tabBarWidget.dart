@@ -90,7 +90,8 @@ class _TabBarWidgetState extends State<TabBarWidget>
                 child: Text(
                   widget.tabTexts[index],
                   style: TextStyle(
-                      fontSize: 19), // Increase the font size as desired
+                    fontSize: 19,
+                  ), // Increase the font size as desired
                 ),
               ),
             ),

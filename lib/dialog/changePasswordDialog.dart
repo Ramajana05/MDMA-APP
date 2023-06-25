@@ -61,7 +61,8 @@ class _PasswordDialogState extends State<PasswordDialog> {
       title: Text(
         'Passwort Ändern',
         style: TextStyle(
-          fontSize: 24, // Hier kannst du die gewünschte Schriftgröße einstellen
+          fontSize: 24,
+          color: black, // Hier kannst du die gewünschte Schriftgröße einstellen
         ),
       ),
       content: SingleChildScrollView(
@@ -76,11 +77,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Aktuelles Passwort',
                     filled: true,
-                    fillColor: lighterBackground,
+                    fillColor: background,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: grey,
+                        color: black,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -91,7 +92,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: grey,
+                      color: black,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
@@ -103,8 +104,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurecurrentPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: black, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -128,11 +128,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Neues Passwort',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: background,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: black,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -143,7 +143,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: black,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(
@@ -155,8 +155,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                         _obscurenewPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Color.fromARGB(
-                            255, 173, 173, 173), // Set the color of the icon
+                        color: black, // Set the color of the icon
                       ),
                       onPressed: () {
                         setState(() {
@@ -179,11 +178,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                 decoration: InputDecoration(
                   labelText: 'Neues Passwort bestätigen',
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: background,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: Colors.grey,
+                      color: black,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -194,7 +193,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                     ),
                   ),
                   labelStyle: TextStyle(
-                    color: Colors.grey,
+                    color: black,
                   ),
                   focusColor: primaryAppLightGreen,
                   contentPadding: EdgeInsets.symmetric(
@@ -206,8 +205,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       _obscurenewPassword
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Color.fromARGB(
-                          255, 173, 173, 173), // Set the color of the icon
+                      color: black, // Set the color of the icon
                     ),
                     onPressed: () {
                       setState(() {
@@ -236,7 +234,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   child: Text(
                     errorMessage,
                     style: TextStyle(
-                      color: Colors.red,
+                      color: red,
                     ),
                   ),
                 ),
@@ -260,7 +258,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       Colors.grey,
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 255, 255),
+                      background,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -268,12 +266,12 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Abbrechen',
                     style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.w500,
-                    ),
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w500,
+                        color: black),
                   ),
                 ),
               ),
@@ -299,12 +297,12 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   ),
                   child: isLoading
                       ? CircularProgressIndicator()
-                      : const Text(
+                      : Text(
                           'Bestätigen',
                           style: TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.w500,
-                          ),
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w500,
+                              color: black),
                         ),
                 ),
               ),

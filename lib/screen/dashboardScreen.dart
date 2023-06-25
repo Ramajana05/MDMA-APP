@@ -6,9 +6,10 @@ import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import 'package:forestapp/widget/warningWidget.dart';
+import 'package:forestapp/provider/userProvider.dart';
 
 import '../colors/appColors.dart';
 import '../Model/ChartData.dart';
@@ -162,12 +163,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
+  bool _isDarkMode = false;
+
+  void checkDarkMode() async {
+    LoginService loginService = LoginService();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final loggedInUsername = userProvider.loggedInUsername;
+    final darkModeValue =
+        await loginService.fetchDarkModeValue(loggedInUsername!);
+
+    setState(() {
+      _isDarkMode = darkModeValue;
+    });
+
+    //updateAppColors(_isDarkMode);
+  }
+
   @override
   void initState() {
     super.initState();
+    checkDarkMode();
     fetchWeatherData();
     loadAlerts();
-
     updateSensorCounts();
 
     _statistics = [
@@ -237,7 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: black,
                       ),
                     ),
                     IconButton(
@@ -251,7 +268,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         showWarningWidget
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
-                        color: Colors.black,
+                        color: black,
                         size: 30.0,
                       ),
                     )
@@ -310,12 +327,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: buttonTextColor.withOpacity(0.5),
+                                        color: cardShadow,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -338,13 +354,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Besucher',
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
+                                            color: black,
                                           ),
                                         ),
                                       ),
@@ -374,7 +391,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: buttonTextColor.withOpacity(0.5),
+                                        color: cardShadow,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -397,13 +414,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Sensoren',
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
+                                            color: black,
                                           ),
                                         ),
                                       ),
@@ -437,7 +455,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: buttonTextColor.withOpacity(0.5),
+                                        color: cardShadow,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -460,13 +478,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "°C",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Temperatur',
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
+                                            color: black,
                                           ),
                                         ),
                                       ),
@@ -496,7 +515,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: buttonTextColor.withOpacity(0.5),
+                                        color: cardShadow,
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -517,13 +536,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "%",
                                       ),
                                       const SizedBox(height: 8),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(bottom: 12.0),
                                         child: Text(
                                           'Luftfeuchtigkeit',
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
+                                            color: black,
                                           ),
                                         ),
                                       ),
@@ -560,12 +580,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       builder: (context) =>
                                           CustomBottomTabBar(trans_index: 1)));
                             },
-                            child: const Text(
+                            child: Text(
                               "Statistiken",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                           ),
@@ -579,7 +599,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               showStatistics
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: black,
                               size: 30.0,
                             ),
                           ),
@@ -598,7 +618,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Visibility(
                       visible: showStatistics,
                       child: Container(
-                        color: Colors.white,
+                        color: background,
                         height: 250,
                         child: Stack(
                           children: [
@@ -648,19 +668,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Wettervorhersage",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: black,
                               ),
                             ),
                             Icon(
                               showWeatherForecast
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down,
-                              color: Colors.black,
+                              color: black,
                               size: 30.0,
                             ),
                           ],
@@ -784,8 +804,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           primaryXAxis: CategoryAxis(
             crossesAt: 0,
             placeLabelsNearAxisLine: false,
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
           ), // Set the maximum number of visible categories
           primaryYAxis: NumericAxis(
             labelFormat: (chartData == airHumidityChartDaily)
@@ -793,9 +813,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 : (chartData == tempChartDaily)
                     ? '{value}°C'
                     : '',
-            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
-            axisLine: AxisLine(color: textColor, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: textColor),
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: black),
+            axisLine: AxisLine(color: black, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: black),
           ),
           series: <ChartSeries>[
             LineSeries<ChartData, String>(
@@ -857,7 +877,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: buttonTextColor.withOpacity(0.5),
+            color: cardShadow,
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -873,7 +893,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: textColor,
+                color: black,
               ),
             ),
             const SizedBox(height: 10),
@@ -924,7 +944,7 @@ class WeatherItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: buttonTextColor.withOpacity(0.5),
+              color: cardShadow,
               spreadRadius: 2,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -937,18 +957,18 @@ class WeatherItemCard extends StatelessWidget {
             // Display the weekday
             Text(
               weatherData.weekday,
-              style: TextStyle(fontSize: 15, color: textColor),
+              style: TextStyle(fontSize: 15, color: black),
             ),
             // Display the date
             Text(
               DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
-              style: TextStyle(fontSize: 14, color: textColor),
+              style: TextStyle(fontSize: 14, color: black),
             ),
             // Display the temperature
             Text(
               '${weatherData.temperature}°C',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 20, color: textColor),
+                  fontWeight: FontWeight.bold, fontSize: 20, color: black),
             ),
             // Display the weather icon
             Image.network(
@@ -964,7 +984,7 @@ class WeatherItemCard extends StatelessWidget {
                 const Icon(Icons.water_drop, size: 20, color: blue),
                 Text(
                   '${weatherData.rainPercentage}%',
-                  style: TextStyle(fontSize: 16, color: textColor),
+                  style: TextStyle(fontSize: 16, color: black),
                 ),
               ],
             ),
@@ -975,7 +995,7 @@ class WeatherItemCard extends StatelessWidget {
                 const Icon(Icons.air, size: 24, color: grey),
                 Text(
                   '${weatherData.windSpeed} km/h',
-                  style: TextStyle(fontSize: 16, color: textColor),
+                  style: TextStyle(fontSize: 16, color: black),
                 ),
               ],
             ),

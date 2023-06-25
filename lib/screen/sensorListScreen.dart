@@ -110,15 +110,17 @@ class _SensorListScreenState extends State<SensorListScreen> {
             child: TextField(
               controller: searchController,
               onChanged: _filterDamages,
+              style: TextStyle(color: black),
               decoration: InputDecoration(
                 labelText: 'Suche',
-                labelStyle: TextStyle(color: buttonTextColor),
+                labelStyle: TextStyle(color: black),
                 prefixIcon: Icon(
                   Icons.search,
                   color: primaryAppLightGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: black),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),

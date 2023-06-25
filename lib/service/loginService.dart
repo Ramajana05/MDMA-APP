@@ -11,8 +11,8 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:intl/intl.dart';
-import 'package:forestapp/widget/warningWidget.dart';
 import '../colors/appColors.dart';
+import '../widget/warningWidget.dart';
 
 class LoginService {
   static const String tableName = 'Place';
@@ -21,6 +21,7 @@ class LoginService {
   static const String columnLatitude = 'Latitude';
   static const String columnLongitude = 'Longitude';
   List<Map<String, String>> _dropdownItems = [];
+  bool isDarkmode = false;
 
   void main() async {
     final userProvider = UserProvider(); // Create an instance of UserProvider
@@ -684,6 +685,55 @@ class LoginService {
       print('Place deleted successfully');
     } catch (e) {
       print('Error deleting place: $e');
+
+      fetchDarkModeValue(param0) {}
+      rethrow;
+    }
+  }
+
+  Future<void> updateDarkModeStatus(String username, bool isDarkMode) async {
+    try {
+      final database = await _initDatabase();
+
+      final updatedValue = isDarkMode ? 'False' : 'True';
+
+      await database.rawUpdate(
+        'UPDATE User SET DarkMode = ? WHERE Username = ?',
+        [updatedValue, username],
+      );
+
+      await database.close();
+
+      print(
+          'Dark mode status updated: username = $username, isDarkMode = $isDarkMode');
+    } catch (e) {
+      print('Updating dark mode status failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> fetchDarkModeValue(String username) async {
+    try {
+      final database = await _initDatabase();
+
+      final result = await database.rawQuery(
+        'SELECT * FROM User WHERE Username = ?',
+        [username],
+      );
+
+      if (result.isNotEmpty) {
+        final userData = result.first;
+        final darkModeValue = userData['DarkMode'];
+
+        await database.close();
+
+        return darkModeValue == 'True';
+      } else {
+        await database.close();
+        return false;
+      }
+    } catch (e) {
+      print('Fetching dark mode value failed: $e');
       rethrow;
     }
   }

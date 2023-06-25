@@ -209,7 +209,7 @@ class _MapScreen extends State<MapScreen> {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: textColor),
+                                        color: black),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
@@ -219,17 +219,17 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
                                         style: TextStyle(
-                                            fontSize: 16, color: textColor),
+                                            fontSize: 16, color: black),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
                                         style: TextStyle(
-                                            fontSize: 16, color: textColor),
+                                            fontSize: 16, color: black),
                                       ),
                                       const SizedBox(width: 8),
                                       Icon(
@@ -242,7 +242,7 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                     ],
                                   ),
@@ -273,7 +273,7 @@ class _MapScreen extends State<MapScreen> {
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: buttonTextColor,
+                            color: black,
                           ),
                         ),
                       ),
@@ -361,7 +361,7 @@ class _MapScreen extends State<MapScreen> {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: textColor),
+                                        color: black),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
@@ -377,7 +377,7 @@ class _MapScreen extends State<MapScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: textColor),
+                                            color: black),
                                       ),
                                     ],
                                   ),
@@ -408,7 +408,7 @@ class _MapScreen extends State<MapScreen> {
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: buttonTextColor,
+                            color: black,
                           ),
                         ),
                       ),

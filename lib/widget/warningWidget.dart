@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/service/loginService.dart';
+import 'package:forestapp/colors/appColors.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
   final bool isWarnung;
   final Color iconColor;
-  LoginService loginService = LoginService();
 
   WarningWidget({
     required this.message,
     this.isWarnung = true,
-    this.iconColor = Colors.yellow,
+    this.iconColor = yellow,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = const Color.fromARGB(255, 248, 250, 253);
-
-    Color textColor = const Color.fromARGB(255, 0, 0, 0);
-    Color titleColor = isWarnung ? Colors.orange : Colors.blue;
+    Color titleColor = isWarnung ? orange : blue;
 
     IconData iconData =
         isWarnung ? Icons.warning : Icons.notifications_active_outlined;
@@ -31,34 +27,31 @@ class WarningWidget extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0),
         child: const Icon(
           Icons.delete_outline,
-          color: Colors.red,
+          color: red,
           size: 32.0,
         ),
       ),
       onDismissed: (direction) {
-        () async {
-          await loginService.deleteAlertEntry(message);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.white,
-              content: Text(
-                'Neuigkeit gelöscht',
-                style: TextStyle(color: Colors.black),
-              ),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: background,
+            content: Text(
+              'Neuigkeit gelöscht',
+              style: TextStyle(color: black),
             ),
-          );
-        }();
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: background, // Set the background color
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(255, 170, 170, 170).withOpacity(0.5),
+                color: warningGrey.withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: const Offset(0, 2),
@@ -74,7 +67,6 @@ class WarningWidget extends StatelessWidget {
               ),
               const SizedBox(width: 16.0),
               Expanded(
-                // Wrap the message text in an Expanded widget
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,7 +84,7 @@ class WarningWidget extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
-                        color: textColor,
+                        color: black,
                       ),
                     ),
                   ],

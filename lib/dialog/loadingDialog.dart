@@ -149,9 +149,7 @@ class _LoadingDialogState extends State<LoadingDialog>
               Text(
                 dialogTexts[_currentIndex],
                 style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                    fontSize: 20.0, fontWeight: FontWeight.bold, color: black),
               ),
           ],
         ),
