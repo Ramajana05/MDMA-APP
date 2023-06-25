@@ -38,6 +38,13 @@ class _TopNavBarBasicState extends State<TopNavBarBasic> {
     });
   }
 
+  void reloadBackgroundColor() {
+    setState(() {
+      // Reload the background color from appColors.dart
+      backgroundColor = background;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -68,6 +75,14 @@ class _TopNavBarBasicState extends State<TopNavBarBasic> {
       iconTheme: IconThemeData(
         color: primaryAppLightGreen,
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () {
+            reloadBackgroundColor(); // Reload the background color
+          },
+        ),
+      ],
     );
   }
 }

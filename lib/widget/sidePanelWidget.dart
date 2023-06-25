@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forestapp/service/loginService.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 import 'package:forestapp/colors/appColors.dart';
+
+import 'package:forestapp/widget/bottomnavbar.dart';
 
 class SidePanel extends StatefulWidget {
   final VoidCallback? onDarkModeChanged;
@@ -29,6 +30,7 @@ class _SidePanelState extends State<SidePanel> {
   }
 
   ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
+  int currentIndex = 0; // Store the current index
 
   @override
   void initState() {
@@ -102,11 +104,16 @@ class _SidePanelState extends State<SidePanel> {
                           ),
                         ),
                         iconColor: primaryAppLightGreen,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
-                        ),
+                        onTap: () {
+                          // Save the current index
+                          currentIndex = 0;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(
@@ -172,6 +179,17 @@ class _SidePanelState extends State<SidePanel> {
                               ?.call(); // Notify parent widget about dark mode change
 
                           updateAppColors(_isDarkModeNotifier.value);
+
+                          // Save the current index
+                          currentIndex = 2;
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomBottomTabBar(
+                                trans_index: 0,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       ListTile(
@@ -187,11 +205,16 @@ class _SidePanelState extends State<SidePanel> {
                             color: black,
                           ),
                         ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => InstructionsScreen()),
-                        ),
+                        onTap: () {
+                          // Save the current index
+                          currentIndex = 3;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InstructionsScreen(),
+                            ),
+                          );
+                        },
                       ),
                       const Spacer(),
                       ListTile(
