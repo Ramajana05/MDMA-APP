@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/Model/sensorListItem.dart';
 
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:forestapp/widget/mapObjects.dart';
+
+import 'package:flutter/material.dart';
+import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/colors/appColors.dart';
 
@@ -57,7 +62,6 @@ class _SensorListScreenState extends State<SensorListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: background,
           title: Text(damage.sensorName),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +90,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close', style: TextStyle(color: textColor)),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -96,8 +100,9 @@ class _SensorListScreenState extends State<SensorListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
@@ -105,34 +110,61 @@ class _SensorListScreenState extends State<SensorListScreen> {
           // Add your side panel logic here
         },
       ),
-      body: DefaultTabController(
-        length: 1,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: damagesList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 7.0),
-                    child: SensorListItemWidget(
-                      sensorTitle: damagesList[index].sensorName,
-                      latitude: damagesList[index].latitude,
-                      longitude: damagesList[index].longitude,
-                      status: damagesList[index].status,
-                      createDate: damagesList[index].createDate,
-                      signalStrength: damagesList[index].signalStrength,
-                      chargerInfo: damagesList[index].chargerInfo,
-                      alignLeft: true,
-                      temperature: damagesList[index].temperatur,
-                      airPressure: damagesList[index].airPressure,
-                    ),
-                  );
-                },
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 13.0, bottom: 8, left: 8, right: 8),
+            child: TextField(
+              style: TextStyle(color: textColor),
+              controller: searchController,
+              onChanged: _filterDamages,
+              decoration: InputDecoration(
+                labelText: 'Suche',
+                labelStyle: TextStyle(color: buttonTextColor),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: primaryAppLightGreen,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: buttonTextColor),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: const BorderSide(color: primaryAppLightGreen),
+                ),
+                fillColor: background,
+                filled: true,
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredDamagesList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 7.0),
+                  child: SensorListItemWidget(
+                    sensorTitle: filteredDamagesList[index].sensorName,
+                    latitude: filteredDamagesList[index].latitude,
+                    longitude: filteredDamagesList[index].longitude,
+                    status: filteredDamagesList[index].status,
+                    createDate: filteredDamagesList[index].createDate,
+                    signalStrength: filteredDamagesList[index].signalStrength,
+                    chargerInfo: filteredDamagesList[index].chargerInfo,
+                    alignLeft: true,
+                    temperature: filteredDamagesList[index].temperatur,
+                    airPressure: filteredDamagesList[index].airPressure,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

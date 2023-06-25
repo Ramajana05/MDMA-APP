@@ -48,7 +48,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   Color getIconColor() {
-    return isNightMode ? black : yellow;
+    return isNightMode ? moonColor : yellow;
   }
 
   void toggleLightMode() {

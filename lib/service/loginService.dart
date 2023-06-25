@@ -496,21 +496,21 @@ class LoginService {
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
     DateTime now = DateTime.now();
-    DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
+    DateTime sevenDaysAgo = now.subtract(const Duration(days: 7));
 
     DateFormat dateFormat = DateFormat('yyyyMMdd');
     String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
     String todayFormatted = dateFormat.format(now);
 
     List<String> germanWeekdays = [
+      '',
+      'Di',
       'Mi',
       'Do',
       'Fr',
       'Sa',
       'So',
-      '',
       'Mo',
-      'Di',
     ];
 
     try {
@@ -527,8 +527,8 @@ class LoginService {
       return List.generate(statisticWeek.length, (index) {
         final data = statisticWeek[index];
         DateTime currentDate = sevenDaysAgo.add(Duration(days: index));
-        String germanWeekday = germanWeekdays[currentDate.weekday -
-            1]; // Subtract 1 from weekday to match the index in the germanWeekdays list
+        String germanWeekday = germanWeekdays[currentDate
+            .weekday]; // Subtract 1 from weekday to match the index in the germanWeekdays list
 
         return ChartData(
           germanWeekday, // Use German weekday as X value

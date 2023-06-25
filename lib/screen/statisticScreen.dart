@@ -25,7 +25,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
   var weekly = "Wöchentliche";
 
   double dailyMax = 5;
-  double weeklyMax = 5;
+  double weeklyMax = 6;
   double monthlyMax = 3;
 
   List<ChartData> visitorChartDaily = [];

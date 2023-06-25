@@ -107,7 +107,7 @@ class _SidePanel extends State<SidePanel> {
                           Icons.help_outline_outlined,
                           size: 28,
                         ),
-                        iconColor: textColor,
+                        iconColor: buttonTextColor,
                         title: Text(
                           'Hilfe',
                           style: TextStyle(

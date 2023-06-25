@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/getBatteryColors.dart';
 
 import '../colors/appColors.dart';
-import '../colors/getBatteryColors.dart';
 
 class SensorListItemWidget extends StatefulWidget {
   final String sensorTitle;
@@ -38,6 +38,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
 
   Widget _buildBatteryIcon(String chargerInfo, double size) {
     int batteryLevel = int.tryParse(chargerInfo) ?? 0;
+    Color batteryColor;
 
     if (batteryLevel >= 90) {
       return Icon(
@@ -132,8 +133,8 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? sensorGreen
-                                    : red,
+                                    ? primaryAppLightGreen
+                                    : grey,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -151,14 +152,11 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           alignment: Alignment.centerLeft,
                           child: Row(
                             children: [
-                              const SizedBox(
-                                height: 4,
-                                width: 4,
-                              ),
+                              const SizedBox(height: 4),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
                                 style:
-                                    TextStyle(fontSize: 16, color: textColor),
+                                    TextStyle(fontSize: 17, color: textColor),
                               ),
                             ],
                           ),
@@ -176,7 +174,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           size: 30,
                           color: textColor,
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         _buildBatteryIcon(widget.chargerInfo, 30),
                       ],
                     ),
@@ -192,39 +190,69 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'Sensor Werte:',
+                      'Aktuelle Werte:',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: textColor),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Aktuelle Temperatur: ${widget.temperature}°C',
-                      style: TextStyle(fontSize: 16, color: textColor),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.thermostat_outlined,
+                          color: red, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Temperatur: ${widget.temperature}°C',
+                          style: TextStyle(fontSize: 17, color: textColor),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
-                      style: TextStyle(fontSize: 16, color: textColor),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.water_drop_outlined,
+                          color: blue, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Luftfeuchtigkeit: ${widget.airPressure}%',
+                          style: TextStyle(fontSize: 17, color: textColor),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      'Aktuelle Signal Stärke: ${widget.signalStrength}',
-                      style: TextStyle(fontSize: 16, color: textColor),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.signal_cellular_alt_outlined,
+                          color: textColor, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Signalstärke: ${widget.signalStrength}',
+                          style: TextStyle(fontSize: 17, color: textColor),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     Row(
                       children: [
                         _buildBatteryIcon(widget.chargerInfo, 20),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         Text(
                           'Akkustand: ${widget.chargerInfo}%',
                           style: TextStyle(fontSize: 17, color: textColor),
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                   ],
                 ),
               ),

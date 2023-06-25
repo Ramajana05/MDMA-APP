@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/colors/appColors.dart';
+import 'package:forestapp/widget/topNavBarBasic.dart';
 
 class HelpListItemWidget extends StatefulWidget {
   final String title;
@@ -7,8 +8,9 @@ class HelpListItemWidget extends StatefulWidget {
   final VoidCallback onTap;
   final bool alignLeft;
   final String description;
+  final String section;
   final IconData icon;
-  final Color iconColor; // New property for icon color
+  final Color iconColor;
 
   HelpListItemWidget({
     required this.title,
@@ -16,8 +18,9 @@ class HelpListItemWidget extends StatefulWidget {
     required this.onTap,
     required this.alignLeft,
     required this.description,
+    required this.section,
     required this.icon,
-    required this.iconColor, // Initialize icon color
+    required this.iconColor,
   });
 
   @override
@@ -25,6 +28,14 @@ class HelpListItemWidget extends StatefulWidget {
 }
 
 class _HelpListItemWidgetState extends State<HelpListItemWidget> {
+  bool _expanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _expanded = widget.expanded;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -33,14 +44,25 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
       ),
       color: background,
       elevation: 6,
-      shadowColor: black54,
+      shadowColor: textInverted,
       child: InkWell(
-        onTap: widget.onTap, // Pass the onTap callback to the InkWell
+        onTap: () {
+          setState(() {
+            _expanded = !_expanded;
+          });
+          widget.onTap(); // Call the onTap callback provided by the parent
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              onTap: widget.onTap,
+              onTap: () {
+                setState(() {
+                  _expanded = !_expanded;
+                });
+                widget
+                    .onTap(); // Call the onTap callback provided by the parent
+              },
               title: Row(
                 children: [
                   Expanded(
@@ -55,7 +77,7 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                               Icon(
                                 widget.icon,
                                 size: 30,
-                                color: widget.iconColor, // Set icon color
+                                color: widget.iconColor,
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -77,11 +99,11 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Icon(
-                          widget.expanded
+                          _expanded
                               ? Icons.arrow_drop_up
                               : Icons.arrow_drop_down,
                           size: 36,
-                          color: textInverted,
+                          color: textColor,
                         ),
                         const SizedBox(height: 6),
                       ],
@@ -90,18 +112,18 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
                 ],
               ),
             ),
-            if (widget.expanded)
+            if (_expanded)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 4),
                     Text(
                       widget.description,
-                      style: TextStyle(fontSize: 22, color: textColor),
+                      style: TextStyle(fontSize: 21, color: textColor),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

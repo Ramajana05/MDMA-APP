@@ -10,8 +10,9 @@ const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
 const white = Colors.white;
 const black = Colors.black;
 const grey = Colors.grey;
-const yellow = Colors.yellow;
+const yellow = Color.fromARGB(255, 228, 210, 46);
 const green = Colors.green;
+const moonColor = Color(0xFF7CA2D8); // Helleres Blau-Weiß
 
 ///Login
 final gradientColors = [topGreen, primaryAppLightGreen];

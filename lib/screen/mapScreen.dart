@@ -1072,20 +1072,23 @@ class _MapScreen extends State<MapScreen> {
                             },
                           );
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: background,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: textColor,
-                                ),
-                              ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: background,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: textColor,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
