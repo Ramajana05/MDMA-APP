@@ -149,7 +149,7 @@ class _SidePanelState extends State<SidePanel> {
                                   ? Icons.dark_mode_outlined
                                   : Icons.wb_sunny_outlined,
                               size: 28,
-                              color: value ? blue : yellow,
+                              color: value ? moonColor : yellow,
                             );
                           },
                         ),

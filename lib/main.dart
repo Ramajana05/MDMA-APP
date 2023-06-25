@@ -8,6 +8,8 @@ import 'package:forestapp/db/databaseInitializer.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/splashScreen.dart';
 
+import 'colors/appColors.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Wakelock.enable();
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white, systemNavigationBarColor: Colors.white));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: background, systemNavigationBarColor: background));
     return ChangeNotifierProvider(
       create: (context) => UserProvider(),
       child: MaterialApp(

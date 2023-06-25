@@ -8,9 +8,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
+import 'package:provider/provider.dart';
 
 import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
+import '../colors/mapDarkMode.dart';
+import '../provider/userProvider.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -233,7 +236,26 @@ class _MapScreen extends State<MapScreen> {
                                       ),
                                       const SizedBox(width: 8),
                                       Icon(
-                                        Icons.battery_6_bar_outlined,
+                                        batteryLevel >= 90
+                                            ? Icons.battery_full
+                                            : batteryLevel >= 75
+                                                ? Icons.battery_5_bar
+                                                : batteryLevel >= 60
+                                                    ? Icons.battery_4_bar
+                                                    : batteryLevel >= 45
+                                                        ? Icons.battery_3_bar
+                                                        : batteryLevel >= 30
+                                                            ? Icons
+                                                                .battery_3_bar
+                                                            : batteryLevel >= 15
+                                                                ? Icons
+                                                                    .battery_2_bar
+                                                                : batteryLevel >=
+                                                                        5
+                                                                    ? Icons
+                                                                        .battery_1_bar
+                                                                    : Icons
+                                                                        .battery_0_bar,
                                         color: getBatteryColor(batteryLevel),
                                       ),
                                       const SizedBox(width: 2),
@@ -481,6 +503,23 @@ class _MapScreen extends State<MapScreen> {
     _mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
+  void _onMapCreated(GoogleMapController controller) async {
+    _controller.complete(controller);
+    ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
+
+    // Set custom map style
+    bool isDarkMode = _isDarkModeNotifier.value;
+    if (isDarkMode) {
+      controller.setMapStyle(lightMapStyle);
+    } else {
+      controller.setMapStyle(darkMapStyle);
+    }
+
+    setState(() {
+      _circles = {_currentLocationCircle};
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -510,20 +549,12 @@ class _MapScreen extends State<MapScreen> {
               ),
               Expanded(
                 child: GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: _kGooglePlex,
-                  zoomControlsEnabled: false,
-                  circles: _circles,
-                  polygons: _polygons,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    _mapController = controller;
-
-                    setState(() {
-                      _circles = Set.of([_currentLocationCircle]);
-                    });
-                  },
-                ),
+                    mapType: MapType.normal,
+                    initialCameraPosition: _kGooglePlex,
+                    zoomControlsEnabled: false,
+                    circles: _circles,
+                    polygons: _polygons,
+                    onMapCreated: _onMapCreated),
               ),
             ],
           ),
@@ -546,7 +577,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Voll',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -557,7 +588,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Mittel',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -568,7 +599,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Niedrig',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
@@ -596,7 +627,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '+10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -607,7 +638,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '5 - 10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -618,7 +649,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '< 5',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
@@ -676,7 +707,7 @@ class _MapScreen extends State<MapScreen> {
               child: Icon(
                 areItemsVisible ? Icons.forest_outlined : Icons.forest_outlined,
                 size: 35,
-                color: const Color.fromARGB(255, 0, 0, 0),
+                color: black,
               ),
             ),
           ),
@@ -1035,20 +1066,23 @@ class _MapScreen extends State<MapScreen> {
                             },
                           );
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: background,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: black,
-                                ),
-                              ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: background,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: black,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -527,8 +527,9 @@ class _ScanScreen extends State<ScanScreen> {
                     builder: (context, state, child) {
                       switch (state) {
                         case TorchState.off:
-                          return const Icon(Icons.flash_off_outlined,
-                              color: Colors.grey);
+                          return const Icon(
+                            Icons.flash_off_outlined,
+                          );
                         case TorchState.on:
                           return const Icon(Icons.flash_on_outlined,
                               color: Color.fromARGB(255, 255, 255, 255));

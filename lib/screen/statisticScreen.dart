@@ -69,7 +69,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
 
-    //get the statistics data hourly
     final fetchStatisticsDataHourVisitor =
         await loginService.fetchStatisticDataHourFromDatabase('Visitor');
 
@@ -286,7 +285,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: black,
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
@@ -308,7 +307,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                           Text(
                             '  ${data.x} : '
                             '$formattedYWithUnit',
-                            style: TextStyle(color: black),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
