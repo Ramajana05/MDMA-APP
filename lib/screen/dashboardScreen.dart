@@ -277,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Colors.white,
+      backgroundColor: background,
       appBar: const TopNavBar(
         title: 'DASHBOARD',
       ),
@@ -315,7 +315,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: buttonTextColor.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -327,10 +327,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
+                                        transparent,
                                         primaryVisitorShadowColor,
                                         primaryVisitorColor,
-                                        maxVisitors.toDouble(),
+                                        maxVisitors.toInt(),
                                         currentVisitors.toInt(),
                                         [
                                           Icons.person,
@@ -370,11 +370,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: buttonTextColor.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -386,11 +386,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 194, 255, 241),
+                                        transparent,
+                                        turquoise,
                                         primaryGreen,
-                                        maxSensors.toDouble(),
+                                        maxSensors.toInt(),
                                         currentSensors.toInt(),
                                         [
                                           Icons.sensors,
@@ -434,11 +433,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: buttonTextColor.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -450,11 +449,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 255, 199, 199),
-                                        Colors.red,
-                                        maxTemperature,
+                                        transparent,
+                                        primaryTempShadowColor,
+                                        red,
+                                        40,
                                         currentTemperature.toInt(),
                                         [
                                           Icons.thermostat,
@@ -494,12 +492,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
+                                    color: background,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: primarygrey.withOpacity(0.5),
+                                        color: buttonTextColor.withOpacity(0.5),
                                         spreadRadius: 2,
                                         blurRadius: 4,
                                         offset: Offset(0, 2),
@@ -511,11 +508,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: [
                                       _buildCircularChart(
                                         context,
-                                        Colors.transparent,
-                                        const Color.fromARGB(
-                                            255, 196, 236, 255),
-                                        Colors.blue,
-                                        avgAirHumidity,
+                                        transparent,
+                                        lightblue,
+                                        blue,
+                                        100,
                                         airHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
@@ -781,48 +777,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<ChartData> chartData,
     Color chartColor,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 5,
-      child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(
-          crossesAt: 0,
-          placeLabelsNearAxisLine: false,
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          desiredIntervals: 12,
-        ),
-        primaryYAxis: NumericAxis(
-          labelFormat: (chartData == airHumidityChartDaily)
-              ? '{value}%'
-              : (chartData == tempChartDaily)
-                  ? '{value}°C'
-                  : '',
-          majorTickLines:
-              const MajorTickLines(size: 6, width: 2, color: Colors.black),
-          axisLine: const AxisLine(color: Colors.black, width: 1.5),
-          labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
-        ),
-        series: <ChartSeries>[
-          LineSeries<ChartData, String>(
-            dataSource: chartData,
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y,
-            markerSettings: const MarkerSettings(
-              borderColor: Colors.deepPurple,
-              isVisible: true,
-              color: Colors.grey,
-              shape: DataMarkerType.circle,
-            ),
-            color: chartColor,
-            dataLabelMapper: (ChartData data, _) => '${data.y}',
+    return Flexible(
+      child: Container(
+        color: background,
+        child: SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            crossesAt: 0,
+            placeLabelsNearAxisLine: false,
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
+          ), // Set the maximum number of visible categories
+          primaryYAxis: NumericAxis(
+            labelFormat: (chartData == airHumidityChartDaily)
+                ? '{value}%'
+                : (chartData == tempChartDaily)
+                    ? '{value}°C'
+                    : '',
+            majorTickLines: MajorTickLines(size: 6, width: 2, color: textColor),
+            axisLine: AxisLine(color: textColor, width: 1.5),
+            labelStyle: TextStyle(fontSize: 15, color: textColor),
           ),
-        ],
+          series: <ChartSeries>[
+            LineSeries<ChartData, String>(
+              dataSource: chartData,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              markerSettings: const MarkerSettings(
+                borderColor: deepPurple,
+                isVisible: true,
+                color: grey,
+                shape: DataMarkerType.circle,
+              ),
+              color: chartColor,
+              dataLabelMapper: (ChartData data, _) => '${data.y}',
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildStatisticItem(Statistic statistic) {
-    Widget chartWidget = Container();
+    Widget chartWidget = Container(
+      color: background,
+    );
 
     List<Map<String, dynamic>> statistics = [
       {
@@ -833,12 +831,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {
         'title': dailyTemps,
         'chartData': tempChartDaily,
-        'chartColor': primaryTempColor,
+        'chartColor': red,
       },
       {
         'title': dailyAir,
         'chartData': airHumidityChartDaily,
-        'chartColor': primaryHumidityColor,
+        'chartColor': blue,
       },
     ];
 
@@ -855,11 +853,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: background,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: buttonTextColor.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -872,10 +870,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               statistic.title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: Colors.black,
+                color: textColor,
               ),
             ),
             const SizedBox(height: 10),
@@ -922,11 +920,11 @@ class WeatherItemCard extends StatelessWidget {
       child: Container(
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: background,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: buttonTextColor.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -939,24 +937,18 @@ class WeatherItemCard extends StatelessWidget {
             // Display the weekday
             Text(
               weatherData.weekday,
-              style: const TextStyle(
-                fontSize: 15,
-              ),
+              style: TextStyle(fontSize: 15, color: textColor),
             ),
             // Display the date
             Text(
               DateFormat('dd.MM.').format(DateTime.parse(weatherData.date)),
-              style: const TextStyle(
-                fontSize: 14,
-              ),
+              style: TextStyle(fontSize: 14, color: textColor),
             ),
             // Display the temperature
             Text(
               '${weatherData.temperature}°C',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 20, color: textColor),
             ),
             // Display the weather icon
             Image.network(
@@ -969,10 +961,10 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.water_drop, size: 20, color: Colors.blue),
+                const Icon(Icons.water_drop, size: 20, color: blue),
                 Text(
                   '${weatherData.rainPercentage}%',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: textColor),
                 ),
               ],
             ),
@@ -980,10 +972,10 @@ class WeatherItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.air, size: 24, color: Colors.grey),
+                const Icon(Icons.air, size: 24, color: grey),
                 Text(
                   '${weatherData.windSpeed} km/h',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: textColor),
                 ),
               ],
             ),
@@ -1007,7 +999,7 @@ Widget _buildCircularChart(
   Color chartColor,
   Color trackColor,
   Color pointColor,
-  double maxValue,
+  int maxValue,
   int value,
   List<IconData> icons,
   String additionalString,
@@ -1024,7 +1016,7 @@ Widget _buildCircularChart(
     width: chartSize,
     height: chartSize,
     decoration: BoxDecoration(
-      color: primarybackgroundColor,
+      color: background,
       borderRadius: BorderRadius.circular(16.0),
       boxShadow: [
         BoxShadow(

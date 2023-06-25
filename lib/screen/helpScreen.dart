@@ -197,7 +197,7 @@ class BuildWebsite extends StatelessWidget {
       description: 'Hier ist die Website verlinkt.',
       section: 'Kreis Statistiken',
       icon: Icons.public,
-      iconColor: primaryHumidityColor, // Adjust the icon color
+      iconColor: blue, // Adjust the icon color
     );
   }
 }
@@ -216,7 +216,7 @@ class BuildHelp extends StatelessWidget {
           'Auf der Hilfeseite findet man eine Liste aller Funktionen dieser App. Jeder Hilfebeitrag enthält eine kurze Beschreibung der Features.',
       section: 'Kreis Statistiken',
       icon: Icons.help_outline_outlined,
-      iconColor: primarygrey, // Adjust the icon color
+      iconColor: grey, // Adjust the icon color
     );
   }
 }

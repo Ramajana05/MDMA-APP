@@ -156,12 +156,13 @@ class _MapScreen extends State<MapScreen> {
             return true;
           },
           child: GestureDetector(
+            /// Disable dragging gesture to prevent unintended behavior
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
                   ),
@@ -172,70 +173,65 @@ class _MapScreen extends State<MapScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 8.0),
+                          padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
                         ),
                         Row(
                           children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    shape: BoxShape.circle,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: background,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const Positioned.fill(
-                                  child: Icon(
-                                    Icons.sensors,
-                                    size: 32,
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  const Positioned.fill(
+                                    child: Icon(
+                                      Icons.sensors,
+                                      size: 32,
+                                      color: mapGreen,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            SizedBox(width: 8),
-                            Expanded(
+                            const SizedBox(width: 8),
+                            Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     circle.circleId.value,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Standort: ',
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                       Text(
                                         '${circle.center.latitude}, ',
-                                        style: TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                            fontSize: 16, color: textColor),
                                       ),
                                       Text(
                                         '${circle.center.longitude}',
-                                        style: const TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                            fontSize: 16, color: textColor),
                                       ),
                                       const SizedBox(width: 8),
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        child: const Icon(
-                                          Icons.battery_full,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 2),
                                       Icon(
                                         Icons.battery_6_bar_outlined,
                                         color: getBatteryColor(batteryLevel),
@@ -243,10 +239,10 @@ class _MapScreen extends State<MapScreen> {
                                       const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                     ],
                                   ),
@@ -272,13 +268,12 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: background.withOpacity(0.3),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 24,
-                            color: Colors.grey,
+                            color: buttonTextColor,
                           ),
                         ),
                       ),
@@ -296,14 +291,14 @@ class _MapScreen extends State<MapScreen> {
   void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
         ),
       ),
       builder: (BuildContext context) {
-        Timer(Duration(seconds: 2), () {
+        Timer(const Duration(seconds: 2), () {
           Navigator.of(context).pop();
         });
 
@@ -317,8 +312,8 @@ class _MapScreen extends State<MapScreen> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                  color: background,
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0),
                   ),
@@ -328,56 +323,61 @@ class _MapScreen extends State<MapScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(
                               4.0, 16.0, 8.0, 8.0), // Reduce the bottom padding
                         ),
                         Row(
                           children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    shape: BoxShape.circle,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: background,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                Positioned.fill(
-                                  child: Icon(
-                                    Icons.place,
-                                    size: 32,
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  const Positioned.fill(
+                                    child: Icon(
+                                      Icons.place,
+                                      size: 32,
+                                      color: mapGreen,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            SizedBox(width: 8),
-                            Expanded(
+                            const SizedBox(width: 8),
+                            Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Standort: ${polygon.polygonId.value}',
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
                                       Icon(
                                         Icons.person,
+                                        color:
+                                            getVisitorColor(polygon.visitors),
                                       ),
-                                      SizedBox(width: 2),
+                                      const SizedBox(width: 2),
                                       Text(
                                         '${polygon.visitors.toString()} Besucher',
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor),
                                       ),
                                     ],
                                   ),
@@ -386,8 +386,8 @@ class _MapScreen extends State<MapScreen> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
                         ),
                       ],
                     ),
@@ -403,13 +403,12 @@ class _MapScreen extends State<MapScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.3),
+                            color: background.withOpacity(0.3),
                           ),
                           child: Icon(
                             Icons.close,
                             size: 24,
-                            color: Colors.grey,
+                            color: buttonTextColor,
                           ),
                         ),
                       ),
@@ -494,7 +493,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: mapScreen_background_Color,
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {
@@ -1040,7 +1039,7 @@ class _MapScreen extends State<MapScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            color: Colors.white,
+                            color: background,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -1048,7 +1047,7 @@ class _MapScreen extends State<MapScreen> {
                               children: [
                                 Icon(
                                   Icons.add,
-                                  color: Colors.black,
+                                  color: black,
                                 ),
                               ],
                             ),
@@ -1223,7 +1222,7 @@ class _MapScreen extends State<MapScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            color: Colors.white,
+                            color: background,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -1231,7 +1230,7 @@ class _MapScreen extends State<MapScreen> {
                               children: [
                                 Icon(
                                   Icons.delete_outlined,
-                                  color: primaryTempColor,
+                                  color: red,
                                 ),
                               ],
                             ),

@@ -96,7 +96,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
         onMenuPressed: () {
@@ -112,7 +112,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
               onChanged: _filterDamages,
               decoration: InputDecoration(
                 labelText: 'Suche',
-                labelStyle: TextStyle(color: primarygrey),
+                labelStyle: TextStyle(color: buttonTextColor),
                 prefixIcon: Icon(
                   Icons.search,
                   color: primaryAppLightGreen,

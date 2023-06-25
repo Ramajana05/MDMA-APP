@@ -390,8 +390,7 @@ class LoginService {
       for (final alertData in alertsData) {
         final String type = alertData['Type'];
         final String message = alertData['Message'];
-        final Color iconColor =
-            type == 'Warnung' ? primaryWarningOrange : primaryNewsBlue;
+        final Color iconColor = type == 'Warnung' ? orange : blue;
 
         final WarningWidget alertWidget = WarningWidget(
           message: message,
