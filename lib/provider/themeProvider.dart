@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../colors/appColors.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  bool isNightMode = true;
+  bool isNightMode = false;
 
   ThemeData get themeData => isNightMode ? ThemeData.dark() : ThemeData.light();
 

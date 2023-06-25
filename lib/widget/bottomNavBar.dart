@@ -49,7 +49,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
           type: BottomNavigationBarType.shifting,
           currentIndex: widget.index,
           showUnselectedLabels: false,
-          unselectedItemColor: Colors.black,
+          unselectedItemColor: background,
           selectedItemColor: tabColors[widget.index],
           // Use the respective color for the selected tab
 
@@ -58,7 +58,7 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: background,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),

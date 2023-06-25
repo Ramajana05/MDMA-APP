@@ -10,8 +10,6 @@ import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
 import 'package:forestapp/provider/themeProvider.dart';
 
-import 'bottomNavBar.dart';
-
 class SidePanel extends StatefulWidget {
   const SidePanel({Key? key}) : super(key: key);
 

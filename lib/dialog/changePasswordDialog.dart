@@ -57,6 +57,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: background,
       title: Text(
         'Passwort Ändern',
         style: TextStyle(
@@ -75,11 +76,11 @@ class _PasswordDialogState extends State<PasswordDialog> {
                   decoration: InputDecoration(
                     labelText: 'Aktuelles Passwort',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: lighterBackground,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -90,7 +91,7 @@ class _PasswordDialogState extends State<PasswordDialog> {
                       ),
                     ),
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: grey,
                     ),
                     focusColor: primaryAppLightGreen,
                     contentPadding: EdgeInsets.symmetric(

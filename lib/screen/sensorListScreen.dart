@@ -95,7 +95,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: SidePanel(),
+      drawer: const SidePanel(),
       backgroundColor: background,
       appBar: TopNavBar(
         title: 'SENSOREN',
@@ -124,7 +124,7 @@ class _SensorListScreenState extends State<SensorListScreen> {
                   borderRadius: BorderRadius.circular(12.0),
                   borderSide: BorderSide(color: primaryAppLightGreen),
                 ),
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                fillColor: background,
                 filled: true,
               ),
             ),
