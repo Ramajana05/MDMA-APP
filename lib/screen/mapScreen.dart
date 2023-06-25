@@ -233,17 +233,6 @@ class _MapScreen extends State<MapScreen> {
                                             fontSize: 16, color: textColor),
                                       ),
                                       const SizedBox(width: 8),
-                                      // Container(
-                                      //   color: background,
-                                      //   width: 24,
-                                      //   height: 24,
-                                      //   child: Icon(
-                                      //     Icons.battery_full,
-                                      //     color: green,
-                                      //     size: 16,
-                                      //   ),
-                                      // ),
-                                      //  SizedBox(width: 2),
                                       Icon(
                                         batteryLevel >= 90
                                             ? Icons.battery_full
@@ -267,7 +256,6 @@ class _MapScreen extends State<MapScreen> {
                                                                         .battery_0_bar,
                                         color: getBatteryColor(batteryLevel),
                                       ),
-
                                       const SizedBox(width: 2),
                                       Text(
                                         '$batteryLevel%',
@@ -361,6 +349,30 @@ class _MapScreen extends State<MapScreen> {
                         ),
                         Row(
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: background,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const Positioned.fill(
+                                    child: Icon(
+                                      Icons.place,
+                                      size: 32,
+                                      color: mapGreen,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Stack(

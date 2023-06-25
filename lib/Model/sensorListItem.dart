@@ -102,6 +102,7 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
 
     return Card(
       color: background,
+      color: background,
       elevation: 6,
       shadowColor: buttonTextColor.withOpacity(0.5),
       shape: RoundedRectangleBorder(

@@ -91,13 +91,22 @@ class _LoadingDialogState extends State<LoadingDialog>
               },
             ),
             const SizedBox(height: 16.0),
-            Text(
-              dialogTexts[_currentIndex],
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: textColor),
-            ),
+            if (_errorMessage != null) // Display error message if available
+              Text(
+                _errorMessage!,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.red,
+                ),
+              ),
+            if (_errorMessage == null) // Display dialog text if no error
+              Text(
+                dialogTexts[_currentIndex],
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor),
+              ),
           ],
         ),
       ),
@@ -106,7 +115,6 @@ class _LoadingDialogState extends State<LoadingDialog>
 }
 
 void main() {
-  // Create an instance of ApiService
   final apiService = ApiService();
 
   // Wrap the LoadingDialog widget with MaterialApp

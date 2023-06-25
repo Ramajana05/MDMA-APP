@@ -50,7 +50,8 @@ class _CustomBottomTabBarState extends State<CustomBottomTabBar> {
               widget.index = value;
             });
           },
-          items: [
+          backgroundColor: background,
+          items: const [
             BottomNavigationBarItem(
               backgroundColor: background,
               icon: const Icon(Icons.dashboard),

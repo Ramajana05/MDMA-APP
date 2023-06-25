@@ -52,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
+      backgroundColor: background,
       appBar: TopNavBarBasic(
         title: 'Mein Profil',
         returnStatus: true,

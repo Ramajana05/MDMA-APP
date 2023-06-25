@@ -6,7 +6,7 @@ import '../screen/profileScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:forestapp/screen/helpScreen.dart';
-import 'package:forestapp/provider/ThemeProvider.dart';
+import 'package:forestapp/provider/themeProvider.dart';
 
 class SidePanel extends StatefulWidget {
   const SidePanel({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class _SidePanel extends State<SidePanel> {
   Future<String?> _getLoggedInUsername(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context);
     final loggedInUsername = userProvider.loggedInUsername;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return loggedInUsername ?? ''; // Replace with your actual logic
   }
