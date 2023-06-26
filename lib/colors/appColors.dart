@@ -6,6 +6,7 @@ import 'package:forestapp/service/LoginService.dart';
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
 
+//Basic Colors
 const grey = Colors.grey;
 const yellow = Color.fromARGB(255, 228, 210, 46);
 const green = Colors.green;
@@ -43,7 +44,7 @@ const infoGrey = Color.fromARGB(255, 170, 169, 169);
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
-const red = Color.fromARGB(255, 255, 89, 77);
+const red = Colors.red;
 const blue = Colors.blue;
 
 ///Colors of the map
@@ -131,3 +132,115 @@ const gradient = [
 ///Map
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
+
+String darkMapStyle = '''
+[
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  // Add more styles for different map features if desired
+]
+''';
+
+String normalMapStyle = '''
+[
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#fefefe"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  // Add more styles for different map features if desired
+]
+''';
