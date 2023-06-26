@@ -61,7 +61,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool isMapDataLoaded =
       false; // Add a boolean variable to track if map data is loaded
 
-  List<WeatherItem> weatherForecast = [];
+  List<WeatherItem> weatherForecast = [WeatherItem(
+      weekday: "Freitag",
+      date: DateTime.now().toString(),
+      weatherIcon: "Kein Bild verfügbar", 
+      temperature: 20.0,
+      rainPercentage: 42.0,
+      windSpeed: 18.0,
+    ),];
 
   List<Widget> alertWidgets = []; // Store the alert widgets
 
@@ -120,8 +127,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
 
-    return [];
-  }
+    return  [WeatherItem(
+            weekday: "Freitag",
+            date: DateTime.now().toString(),
+            weatherIcon: "Kein Bild verfügbar",
+            temperature: 21,
+            rainPercentage: 23,
+            windSpeed: 24.9,
+          )
+          ];
+    }
 
   String getGermanWeekday(int weekday) {
     switch (weekday) {
