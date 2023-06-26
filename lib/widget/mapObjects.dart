@@ -8,6 +8,8 @@ import 'dart:io';
 
 import 'package:forestapp/service/loginService.dart';
 
+import '../colors/appColors.dart';
+
 class CircleData {
   final CircleId circleId;
   final LatLng center;
@@ -45,8 +47,8 @@ class CircleData {
     final batteryLevel = map['Battery'];
 
     if (batteryLevel > 60) {
-      fillColor = Color.fromARGB(255, 46, 202, 51).withOpacity(0.4);
-      strokeColor = Color.fromARGB(255, 46, 202, 51);
+      fillColor = primaryGreen.withOpacity(0.4);
+      strokeColor = primaryGreen;
     } else if (batteryLevel <= 60 && batteryLevel > 30) {
       fillColor = Colors.orange.withOpacity(0.4);
       strokeColor = Colors.orange;
@@ -90,14 +92,14 @@ class PolygonData {
     final visitors = map['Visitor'];
 
     if (visitors < 5) {
-      fillColor = Color.fromARGB(255, 170, 169, 169);
-      strokeColor = Color.fromARGB(255, 170, 169, 169);
+      fillColor = primaryVisitorLowCountColor;
+      strokeColor = primaryVisitorLowCountColor;
     } else if (visitors >= 5 && visitors <= 10) {
-      fillColor = Color.fromARGB(255, 128, 197, 130);
-      strokeColor = Color.fromARGB(255, 128, 197, 130);
+      fillColor = primaryVisitorModerateCountColor;
+      strokeColor = primaryVisitorModerateCountColor;
     } else {
-      fillColor = Color.fromARGB(255, 46, 202, 51);
-      strokeColor = Color.fromARGB(255, 46, 202, 51);
+      fillColor = primaryGreen;
+      strokeColor = primaryGreen;
     }
 
     return PolygonData(
@@ -127,7 +129,6 @@ class PolygonData {
 }
 
 class MapObjects {
-  Set<Marker> _markers = {};
   Future<Set<Circle>> getCircles(Function(CircleData) onTap) async {
     LoginService loginService = LoginService();
     final fetchedCircles = await loginService.fetchCirclesFromDatabase();
@@ -151,30 +152,13 @@ class MapObjects {
     final fetchedPolygons = await loginService.fetchPolygonsFromDatabase();
 
     return Set.from(fetchedPolygons.map((polygonData) {
-      // Calculate the center of the polygon
-      LatLng center = calculatePolygonCenter(polygonData.points);
-
-      // Create a new Marker with the visitor count as the label
-      Marker marker = Marker(
-        markerId: MarkerId(polygonData.polygonId.value),
-        position: center,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-        infoWindow: InfoWindow(
-          title: 'Visitors',
-          snippet: polygonData.visitors.toString(),
-        ),
-      );
-
-      // Add the marker to the map
-      _markers.add(marker);
-
-      // Create a new instance of Polygon using the PolygonData
       Polygon polygon = Polygon(
         polygonId: polygonData.polygonId,
         points: polygonData.points,
         fillColor: polygonData.fillColor,
         strokeColor: polygonData.strokeColor,
         strokeWidth: polygonData.strokeWidth,
+        consumeTapEvents: true,
         onTap: () => onTap(polygonData),
       );
 

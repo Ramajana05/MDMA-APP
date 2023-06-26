@@ -1,8 +1,9 @@
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class SensorListItemWidget extends StatefulWidget {
-  final String damageTitle;
+  final String sensorTitle;
   final double latitude;
   final double longitude;
   final String status;
@@ -10,18 +11,19 @@ class SensorListItemWidget extends StatefulWidget {
   final String signalStrength;
   final String chargerInfo;
   final bool alignLeft;
-  final double temperatur;
+  final double temperature;
   final int airPressure;
 
-  SensorListItemWidget({
-    required this.damageTitle,
+  const SensorListItemWidget({
+    super.key,
+    required this.sensorTitle,
     required this.latitude,
     required this.longitude,
     required this.status,
     required this.createDate,
     required this.signalStrength,
     required this.chargerInfo,
-    required this.temperatur,
+    required this.temperature,
     required this.airPressure,
     this.alignLeft = false,
   });
@@ -33,56 +35,57 @@ class SensorListItemWidget extends StatefulWidget {
 class _SensorListItemWidgetState extends State<SensorListItemWidget> {
   bool expanded = false;
 
-  Widget _buildBatteryIcon(String chargerInfo) {
+  Widget _buildBatteryIcon(String chargerInfo, double size) {
     int batteryLevel = int.tryParse(chargerInfo) ?? 0;
+    Color batteryColor;
 
     if (batteryLevel >= 90) {
       return Icon(
         Icons.battery_full,
-        size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        size: size,
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 75) {
       return Icon(
         Icons.battery_5_bar,
-        size: 30,
-        color: Color.fromARGB(255, 46, 202, 51),
+        size: size,
+        color: primaryGreen,
       );
     } else if (batteryLevel >= 60) {
       return Icon(
         Icons.battery_4_bar,
-        size: 30,
-        color: Colors.orange,
+        size: size,
+        color: orange,
       );
     } else if (batteryLevel >= 45) {
       return Icon(
         Icons.battery_3_bar,
-        size: 30,
-        color: Colors.orange,
+        size: size,
+        color: orange,
       );
     } else if (batteryLevel >= 30) {
       return Icon(
         Icons.battery_3_bar,
-        size: 30,
-        color: Colors.red,
+        size: size,
+        color: orange,
       );
     } else if (batteryLevel >= 15) {
       return Icon(
         Icons.battery_2_bar,
-        size: 30,
-        color: Colors.red,
+        size: size,
+        color: red,
       );
     } else if (batteryLevel >= 5) {
       return Icon(
         Icons.battery_1_bar,
-        size: 30,
-        color: Colors.red,
+        size: size,
+        color: red,
       );
     } else {
       return Icon(
         Icons.battery_0_bar,
-        size: 30,
-        color: Colors.red,
+        size: size,
+        color: red,
       );
     }
   }
@@ -97,9 +100,13 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
     final formattedLongitude = _formatCoordinate(widget.longitude);
 
     return Card(
-      color: Color.fromARGB(249, 255, 255, 255),
-      elevation: 6,
-      shadowColor: Colors.black54,
+      color: background,
+      elevation: 12,
+      shadowColor: cardShadow,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(12.0), // Adjust the border radius as needed
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 11),
         child: Column(
@@ -125,16 +132,16 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                               Icon(
                                 Icons.sensors,
                                 color: widget.status == 'Online'
-                                    ? Color.fromARGB(255, 64, 236, 73)
-                                    : Colors.black,
+                                    ? primaryAppLightGreen
+                                    : grey,
                               ),
                               SizedBox(width: 4),
                               Text(
-                                widget.damageTitle,
+                                widget.sensorTitle,
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: black),
                               ),
                             ],
                           ),
@@ -145,12 +152,9 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                           child: Row(
                             children: [
                               SizedBox(height: 4),
-                              SizedBox(width: 4),
                               Text(
                                 'Standort: $formattedLatitude, $formattedLongitude',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                                style: TextStyle(fontSize: 17, color: black),
                               ),
                             ],
                           ),
@@ -166,10 +170,10 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                         Icon(
                           Icons.arrow_drop_down,
                           size: 30,
-                          color: Colors.black,
+                          color: black,
                         ),
                         SizedBox(height: 6),
-                        _buildBatteryIcon(widget.chargerInfo),
+                        _buildBatteryIcon(widget.chargerInfo, 30),
                       ],
                     ),
                   ),
@@ -184,37 +188,79 @@ class _SensorListItemWidgetState extends State<SensorListItemWidget> {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      'Sensor Werte:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      'Aktuelle Werte:',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: black),
+                    ),
+                    SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.thermostat_outlined,
+                          color: red, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Temperatur: ${widget.temperature}°C',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: black,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 6),
-                    Text(
-                      'Aktuelle Temperatur: ${widget.temperatur}°C',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.water_drop_outlined,
+                          color: blue, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Luftfeuchtigkeit: ${widget.airPressure}%',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: black,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 6),
-                    Text(
-                      'Aktueller Luftfeuchtigkeit: ${widget.airPressure}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.signal_cellular_alt_outlined,
+                          color: black, // Adjust the color as needed
+                          size: 20,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Signalstärke: ${widget.signalStrength}',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: black,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 6),
-                    Text(
-                      'Aktuelle Signal Stärke: ${widget.signalStrength}',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      'Aktueller Akku Stand: ${widget.chargerInfo}%',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        _buildBatteryIcon(widget.chargerInfo, 20),
+                        SizedBox(width: 6),
+                        Text(
+                          'Akkustand: ${widget.chargerInfo}%',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: black,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 12),
                   ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors/appColors.dart';
+
 class TabBarWidget extends StatefulWidget {
   final List<String> tabTexts;
   final Color labelColor;
@@ -11,9 +13,9 @@ class TabBarWidget extends StatefulWidget {
   const TabBarWidget({
     Key? key,
     required this.tabTexts,
-    this.labelColor = const Color.fromARGB(255, 40, 233, 127),
-    this.unselectedLabelColor = const Color.fromARGB(255, 110, 110, 110),
-    this.indicatorColor = const Color.fromARGB(255, 40, 233, 127),
+    this.labelColor = primaryAppLightGreen,
+    this.unselectedLabelColor = primaryUnselectedLabelColor,
+    this.indicatorColor = primaryAppLightGreen,
     this.labelStyle = const TextStyle(fontWeight: FontWeight.bold),
     required this.onTabSelected, // Add this line
   }) : super(key: key);
@@ -59,7 +61,7 @@ class _TabBarWidgetState extends State<TabBarWidget>
       elevation: 2, // Apply desired elevation for shadow effect
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: background,
         ),
         child: TabBar(
           controller: _tabController,
@@ -88,7 +90,8 @@ class _TabBarWidgetState extends State<TabBarWidget>
                 child: Text(
                   widget.tabTexts[index],
                   style: TextStyle(
-                      fontSize: 19), // Increase the font size as desired
+                    fontSize: 19,
+                  ), // Increase the font size as desired
                 ),
               ),
             ),

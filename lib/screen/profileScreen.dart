@@ -8,6 +8,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/service/LoginService.dart';
 
+import '../colors/appColors.dart';
+
 class ProfileScreen extends StatefulWidget {
   final String? currentUsername;
 
@@ -52,8 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final headerHeight = screenHeight * 0.18;
 
     return Scaffold(
+      backgroundColor: background,
       appBar: TopNavBarBasic(
-        title: 'Mein Profil',
+        title: 'Mein Profil ',
         returnStatus: true,
         onMenuPressed: () {
           // Add your side panel logic here
@@ -63,11 +66,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Informationen',
+                'Persönliche Daten',
                 style: TextStyle(
+                  color: black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -77,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 1.0,
-                color: Colors.grey[150], // Soft grey color
+                color: background, // Soft grey color
                 child: Column(
                   children: [
                     buildProfileItem(Icons.person, loggedInUsername ?? ''),
@@ -103,11 +107,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20.0, 24.0, 24.0, 0),
               child: Text(
-                'Aktionen',
+                'Kontoaktionen',
                 style: TextStyle(
+                  color: black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -117,8 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Card(
                 elevation: 2.0,
-                color:
-                    const Color.fromARGB(255, 255, 255, 255), // Soft grey color
+                color: background, // Soft grey color
                 child: Column(
                   children: [
                     GestureDetector(
@@ -195,9 +199,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         );
                       },
-                      child: buildProfileItem(Icons.lock, 'Passwort Ändern'),
+                      child: buildProfileItem(Icons.lock, 'Passwort Ändern',
+                          iconColor: red, textColor: red),
                     ),
                   ],
+                ),
+              ),
+            ),
+            SizedBox(height: 13),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                'Powered by',
+                style: TextStyle(
+                  color: black,
+                  fontSize: 24.0,
                 ),
               ),
             ),
@@ -237,14 +254,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListTile(
       leading: Icon(
         iconData,
-        color: iconColor ?? const Color.fromARGB(255, 24, 23, 23),
+        color: iconColor ?? black,
         size: 24.0,
       ),
       title: Text(
         text,
         style: TextStyle(
           fontSize: 19.0,
-          color: textColor ?? const Color.fromARGB(255, 20, 20, 20),
+          color: textColor ?? black,
         ),
       ),
     );

@@ -1,36 +1,44 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/appColors.dart';
 
 class ConfirmDialog extends StatelessWidget {
   String title;
   String content;
   VoidCallback continueCallBack;
 
-  ConfirmDialog(this.title, this.content, this.continueCallBack);
-  TextStyle textStyle = TextStyle(color: Colors.black);
+  ConfirmDialog(this.title, this.content, this.continueCallBack, {super.key});
+
+  TextStyle textStyle = const TextStyle(color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: AlertDialog(
-          title: new Text(
+          title: Text(
             title,
             style: textStyle,
           ),
-          content: new Text(
+          content: Text(
             content,
             style: textStyle,
           ),
           actions: <Widget>[
             TextButton(
-              child: new Text("Ja"),
+              child: Text(
+                "Ja",
+                style: TextStyle(color: black),
+              ),
               onPressed: () {
                 continueCallBack();
               },
             ),
             TextButton(
-              child: Text("Nein"),
+              child: Text(
+                "Nein",
+                style: TextStyle(color: black),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
