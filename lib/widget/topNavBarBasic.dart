@@ -77,7 +77,7 @@ class _TopNavBarBasicState extends State<TopNavBarBasic> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(Icons.refresh, size: 35),
           onPressed: () {
             reloadBackgroundColor(); // Reload the background color
           },

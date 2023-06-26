@@ -43,8 +43,8 @@ class _HelpListItemWidgetState extends State<HelpListItemWidget> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       color: background,
-      elevation: 6,
-      shadowColor: Colors.black54,
+      elevation: 12,
+      shadowColor: cardShadow,
       child: InkWell(
         onTap: () {
           setState(() {

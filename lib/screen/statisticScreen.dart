@@ -69,7 +69,6 @@ class _StatisticsScreen extends State<StatisticsScreen>
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
 
-    //get the statistics data hourly
     final fetchStatisticsDataHourVisitor =
         await loginService.fetchStatisticDataHourFromDatabase('Visitor');
 
@@ -253,6 +252,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
               color: chartColor,
               dataLabelMapper: (ChartData data, _) => data.x,
+              width: 5,
             )
           ],
           tooltipBehavior: TooltipBehavior(
@@ -286,7 +286,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: black,
+                    color: backgroundCard,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
@@ -306,9 +306,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             ),
                           ),
                           Text(
-                            '  ${data.x} : '
-                            '$formattedYWithUnit',
-                            style: TextStyle(color: black),
+                            '  ${data.x} : $formattedYWithUnit',
+                            style: TextStyle(
+                                color:
+                                    black), // Set tooltip font color to "black"
                           ),
                         ],
                       ),
