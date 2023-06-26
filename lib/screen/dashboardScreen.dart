@@ -1,10 +1,6 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -17,10 +13,6 @@ import '../widget/sidePanelWidget.dart';
 import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
 import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:forestapp/screen/mapScreen.dart';
 
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/service/loginService.dart';
@@ -50,10 +42,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool showStatistics = true;
   bool showWeatherForecast = true;
 
-  late List<ChartData> visitorChartDaily;
-  late List<ChartData> tempChartDaily;
-  late List<ChartData> airHumidityChartDaily;
-  late List<ChartData> rainPercentChartDaily;
+  List<ChartData> visitorChartDaily = [];
+  late List<ChartData> tempChartDaily = [];
+  late List<ChartData> airHumidityChartDaily = [];
 
   late PageController _pageController;
   int _currentPage = 0;
@@ -195,8 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: _statistics.length);
     _currentPage = _statistics.length;
     _startAutoScroll();
-    generateData();
-
+    _loadChartData();
     super.initState();
   }
 
@@ -206,6 +196,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _scrollTimer?.cancel();
 
     super.dispose();
+  }
+
+  Future<void> _loadChartData() async {
+    LoginService loginService = LoginService();
+
+    // Get the statistics data hourly
+    final fetchStatisticsDataHourVisitor = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('Visitor', 6, 12);
+
+    final fetchStatisticsDataHourTemp = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('Temperatur', 6, 12);
+
+    final fetchStatisticsDataHourHumidity = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('AirHumidity', 6, 12);
+
+    setState(() {
+      // Day charts of yesterday
+      visitorChartDaily = fetchStatisticsDataHourVisitor;
+      tempChartDaily = fetchStatisticsDataHourTemp;
+      airHumidityChartDaily = fetchStatisticsDataHourHumidity;
+    });
   }
 
   Future<void> loadAlerts() async {
@@ -731,6 +742,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (!_userScrolled) {
         if (_currentPage < _statistics.length * 3 - 1) {
           _currentPage++;
+          _loadChartData();
         } else {
           _currentPage = _statistics.length;
         }
@@ -743,37 +755,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _userScrolled = false; // Reset the user scrolling flag
       }
     });
-  }
-
-  void generateData() {
-    visitorChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(50) + 100);
-    });
-
-    tempChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(15) - 5);
-    });
-
-    airHumidityChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(10) + 50);
-    });
-
-    rainPercentChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(40) + 10);
-    });
-  }
-
-  List<ChartData> generateChartData(
-      int count, ChartData Function(int) generator) {
-    return List.generate(count, generator);
-  }
-
-  String getHours(int hour) {
-    if (hour >= 6 && hour <= 12) {
-      String hourString = hour.toString().padLeft(2, '0');
-      return '$hourString:00';
-    }
-    return '';
   }
 
   void _handleCircleTap(CircleData circle) {

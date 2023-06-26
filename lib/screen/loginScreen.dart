@@ -3,7 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/widget/bottomNavBar.dart';
-import 'package:forestapp/widget/TopNavBarBasic.dart';
 import 'package:forestapp/dialog/problemsDialog.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   late Database _database;
-
-  final gradientColors = [
-    const Color.fromARGB(255, 86, 252, 108),
-    const Color.fromARGB(255, 40, 233, 127)
-  ];
 
   @override
   void initState() {
@@ -91,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Ungültige E-Mail oder Passwort.'),
+            content: Text('Ungültiger Benutzername oder Passwort.'),
           ),
         );
       }
