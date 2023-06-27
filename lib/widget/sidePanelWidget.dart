@@ -11,6 +11,7 @@ import 'package:forestapp/screen/helpScreen.dart';
 import 'package:forestapp/colors/appColors.dart';
 
 import 'package:forestapp/widget/bottomnavbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SidePanel extends StatefulWidget {
   final VoidCallback? onDarkModeChanged;
@@ -29,7 +30,7 @@ class _SidePanelState extends State<SidePanel> {
     return loggedInUsername ?? '';
   }
 
-  ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
   int currentIndex = 0; // Store the current index
 
   @override
@@ -45,15 +46,31 @@ class _SidePanelState extends State<SidePanel> {
   }
 
   void checkDarkMode() async {
-    LoginService loginService = LoginService();
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final loggedInUsername = userProvider.loggedInUsername;
-    final darkModeValue =
-        await loginService.fetchDarkModeValue(loggedInUsername!);
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstStart = prefs.getBool('isFirstStart') ?? true;
 
-    setState(() {
-      _isDarkModeNotifier.value = darkModeValue;
-    });
+    if (isFirstStart) {
+      // First app start, default to light mode
+      prefs.setBool('isFirstStart', false);
+      setState(() {
+        _isDarkModeNotifier.value = false;
+      });
+    } else {
+      // Retrieve dark mode preference from storage
+      final loginService = LoginService();
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final loggedInUsername = userProvider.loggedInUsername;
+      final darkModeValue =
+          await loginService.fetchDarkModeValue(loggedInUsername!);
+
+      if (!_isDarkModeNotifier.value) {
+        setState(() {
+          _isDarkModeNotifier.value = darkModeValue;
+        });
+      }
+    }
+
+    print('_isDarkModeNotifier: ${_isDarkModeNotifier.value}');
   }
 
   @override
