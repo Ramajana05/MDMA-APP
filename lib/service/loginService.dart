@@ -359,8 +359,7 @@ class LoginService {
     }
   }
 
-//Alerts
-
+  ///Alerts
   Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
     try {
       // Open the database
@@ -466,19 +465,27 @@ class LoginService {
     }
   }
 
+  ///fetches the data for today hourly until current hour
   Future<List<ChartData>> fetchStatisticDataHourFromDatabase(
       String type) async {
     try {
       final database = await _initDatabase();
 
-      final statisticHourly =
-          await database.query('StaitsicsDataHour', columns: ['Hour', type]);
-      await database.close();
+      final DateTime now = DateTime.now();
+      final DateFormat hourFormat = DateFormat('HH:mm');
 
-      //print('Fetched StatisticsHour: $statisticHourly');
+      final statisticHourly = await database.query(
+        'StaitsicsDataHour',
+        columns: ['Hour', type],
+        where: 'Hour <= ?',
+        whereArgs: [hourFormat.format(now)],
+      );
+
+      await database.close();
 
       return List.generate(statisticHourly.length, (index) {
         final data = statisticHourly[index];
+
         return ChartData(
           data['Hour'] as String,
           (data[type] as num?)?.toDouble() ?? 0.0,
@@ -490,6 +497,7 @@ class LoginService {
     }
   }
 
+  ///fetches the data für a week until today
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
     DateTime now = DateTime.now();
@@ -526,6 +534,8 @@ class LoginService {
     }
   }
 
+
+  ///fetches the data for the weeks of the month as average values
   Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
       String type, int startHour, int endHour) async {
     try {
@@ -644,29 +654,6 @@ class LoginService {
       print('Error fetching statistics data of the month from database: $e');
       return [];
     }
-  }
-
-  Future<List<String>> fetchPreviousWeekDatesFromDatabase(
-      Database database) async {
-    final DateFormat dateFormat = DateFormat('dd.MM.yyyy');
-
-    DateTime now = DateTime.now();
-    int currentWeek = weekNumber(now);
-
-    List<String> previousWeekDates = [];
-    for (int i = 1; i <= 4; i++) {
-      DateTime previousWeekStart =
-          now.subtract(Duration(days: (currentWeek - i) * 7));
-      DateTime previousWeekEnd = previousWeekStart.add(Duration(days: 6));
-
-      String previousWeekStartFormatted = dateFormat.format(previousWeekStart);
-      String previousWeekEndFormatted = dateFormat.format(previousWeekEnd);
-
-      previousWeekDates
-          .add('$previousWeekStartFormatted - $previousWeekEndFormatted');
-    }
-
-    return previousWeekDates;
   }
 
   Future<List<Map<String, String>>> loadPlacesFromDatabase() async {
