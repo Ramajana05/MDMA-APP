@@ -13,12 +13,12 @@ const yellow = Color.fromARGB(255, 228, 210, 46);
 const green = Colors.green;
 const moonColor = Color(0xFF7CA2D8);
 
-Color background = Color.fromARGB(255, 48, 47, 47);
-Color backgroundCard = Color.fromARGB(255, 65, 64, 64);
-Color white = Color.fromARGB(255, 0, 0, 0); //For some buttons
-Color black = Color.fromARGB(255, 255, 255, 255); //Fonts
-Color cardShadow = Color.fromARGB(255, 0, 0, 0);
-String MapStyle = darkMapStyle;
+Color background = Colors.white;
+Color backgroundCard = Colors.white;
+Color white = Colors.white;
+Color black = const Color.fromARGB(255, 0, 0, 0); //Fonts
+Color cardShadow = Color.fromARGB(255, 145, 143, 143);
+String MapStyle = lightMapStyle;
 
 void updateAppColors(bool isDarkMode) {
   if (isDarkMode) {

@@ -74,7 +74,7 @@ class _MapScreen extends State<MapScreen> {
       strokeWidth: 2,
     );
     _dropdownItems = [];
-    loadPlacesFromDatabase(); // Load the places from the database immediately
+    //loadPlacesFromDatabase(); // Load the places from the database immediately
   }
 
   Future<void> loadPlacesFromDatabase() async {
@@ -547,7 +547,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Voll',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -558,7 +558,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Mittel',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -569,7 +569,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Niedrig',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
@@ -597,7 +597,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '+10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -608,7 +608,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '5 - 10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -619,7 +619,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '< 5',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
