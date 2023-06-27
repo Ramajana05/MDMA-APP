@@ -1,21 +1,24 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forestapp/colors/mapDarkMode.dart';
 import 'package:forestapp/service/LoginService.dart';
 
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
 
+//Basic Colors
 const grey = Colors.grey;
 const yellow = Color.fromARGB(255, 228, 210, 46);
 const green = Colors.green;
 const moonColor = Color(0xFF7CA2D8);
 
-Color background = Color.fromARGB(255, 48, 47, 47);
-Color backgroundCard = Color.fromARGB(255, 65, 64, 64);
-Color white = Color.fromARGB(255, 0, 0, 0); //For some buttons
-Color black = Color.fromARGB(255, 255, 255, 255); //Fonts
-Color cardShadow = Color.fromARGB(255, 0, 0, 0); //Fonts//CardShadow
+Color background = Colors.white;
+Color backgroundCard = Colors.white;
+Color white = Colors.white;
+Color black = const Color.fromARGB(255, 0, 0, 0); //Fonts
+Color cardShadow = Color.fromARGB(255, 145, 143, 143);
+String MapStyle = lightMapStyle;
 
 void updateAppColors(bool isDarkMode) {
   if (isDarkMode) {
@@ -24,12 +27,14 @@ void updateAppColors(bool isDarkMode) {
     white = Colors.black;
     black = Colors.white;
     cardShadow = Colors.black;
+    MapStyle = darkMapStyle;
   } else {
     background = Colors.white;
     backgroundCard = Colors.white;
     white = const Color.fromARGB(255, 255, 255, 255);
     black = const Color.fromARGB(255, 0, 0, 0);
     cardShadow = Color.fromARGB(255, 145, 143, 143);
+    MapStyle = lightMapStyle;
   }
 }
 
@@ -43,7 +48,7 @@ const infoGrey = Color.fromARGB(255, 170, 169, 169);
 
 ///Visitor, Sensor, Humidity, Temperature Colors
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
-const red = Color.fromARGB(255, 255, 89, 77);
+const red = Colors.red;
 const blue = Colors.blue;
 
 ///Colors of the map
@@ -131,3 +136,303 @@ const gradient = [
 ///Map
 const mapGreen = Color.fromARGB(255, 58, 216, 10);
 const mapBlue = Color.fromARGB(255, 0, 112, 204);
+
+String darkMapStyle = '''
+[
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#181818"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#2c2c2c"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8a8a8a"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#373737"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#3c3c3c"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#4e4e4e"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#000033"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#3d3d3d"
+      }
+    ]
+  }
+]
+''';
+
+String normalMapStyle = '''
+[
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#fefefe"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#ffffff"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#d9d9d9"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e5e5e5"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#eeeeee"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#c9c9c9"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  }
+]
+''';

@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/colors/appColors.dart';
 
 class WarningWidget extends StatelessWidget {
   final String message;
   final bool isWarnung;
   final Color iconColor;
+  LoginService loginService = LoginService();
 
   WarningWidget({
     required this.message,
     this.isWarnung = true,
-    this.iconColor = yellow,
+    this.iconColor = Colors.yellow,
   });
 
   @override
   Widget build(BuildContext context) {
+    Color backgroundColor = background;
+
+    Color textColor = black;
     Color titleColor = isWarnung ? orange : blue;
 
     IconData iconData =
@@ -32,22 +37,25 @@ class WarningWidget extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: background,
-            content: Text(
-              'Neuigkeit gelöscht',
-              style: TextStyle(color: black),
+        () async {
+          await loginService.deleteAlertEntry(message);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: white,
+              content: Text(
+                'Neuigkeit gelöscht',
+                style: TextStyle(color: black),
+              ),
             ),
-          ),
-        );
+          );
+        }();
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: background, // Set the background color
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
@@ -67,6 +75,7 @@ class WarningWidget extends StatelessWidget {
               ),
               const SizedBox(width: 16.0),
               Expanded(
+                // Wrap the message text in an Expanded widget
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -84,7 +93,7 @@ class WarningWidget extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
-                        color: black,
+                        color: textColor,
                       ),
                     ),
                   ],
