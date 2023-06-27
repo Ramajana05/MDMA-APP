@@ -11,8 +11,10 @@ import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/screen/sensorListScreen.dart';
 import 'package:forestapp/provider/userProvider.dart';
 import 'package:intl/intl.dart';
+import '../Model/dateHelper.dart';
 import '../colors/appColors.dart';
 import '../widget/warningWidget.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class LoginService {
   static const String tableName = 'Place';
@@ -473,12 +475,13 @@ class LoginService {
 
       final DateTime now = DateTime.now();
       final DateFormat hourFormat = DateFormat('HH:mm');
+      final DateTime previousHour = now.subtract(const Duration(hours: 1));
 
       final statisticHourly = await database.query(
         'StaitsicsDataHour',
         columns: ['Hour', type],
         where: 'Hour <= ?',
-        whereArgs: [hourFormat.format(now)],
+        whereArgs: [hourFormat.format(previousHour)],
       );
 
       await database.close();
@@ -500,7 +503,7 @@ class LoginService {
   ///fetches the data für a week until today
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().subtract(Duration(days: 1));
     print(now);
     DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
 
@@ -509,9 +512,10 @@ class LoginService {
     String todayFormatted = dateFormat.format(now);
     print(sevenDaysAgoFormatted);
 
-    print("object");
     print(todayFormatted);
     try {
+      await initializeDateFormatting('de_DE', null);
+
       final database = await _initDatabase();
 
       // Query the database
@@ -520,11 +524,23 @@ class LoginService {
           [sevenDaysAgoFormatted, todayFormatted]);
 
       print('Fetched StatisticsWeek: $statisticWeek');
+      DateFormat dateFormat1 = DateFormat('dd.MM.yyyy');
 
       return List.generate(statisticWeek.length, (index) {
         final data = statisticWeek[index];
+        final date = data['Date'] as String;
+
+        final DateTime parsedDate = dateFormat1.parse(date);
+
+        print("parsedDate: $parsedDate");
+
+        final dayName = DateFormat.EEEE('de_DE').format(parsedDate);
+        print("dayName $dayName");
+
+        final String weekDayGermanShort = getWeekday(dayName);
+
         return ChartData(
-          data['Date'] as String,
+          weekDayGermanShort,
           (data[type] as num?)?.toDouble() ?? 0.0,
         );
       });
@@ -533,7 +549,6 @@ class LoginService {
       return [];
     }
   }
-
 
   ///fetches the data for the weeks of the month as average values
   Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
@@ -567,28 +582,6 @@ class LoginService {
           'Error fetching StaitsicsDataYesterdayHour data from database: $type:$e');
       return [];
     }
-  }
-
-  int numOfWeeks(int year) {
-    DateTime lastDayOfYear = DateTime(year, 12, 31);
-    int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
-    if (weekNumberLastDay == 1) {
-      return int.parse(
-          DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
-    } else {
-      return weekNumberLastDay;
-    }
-  }
-
-  int weekNumber(DateTime date) {
-    int dayOfYear = int.parse(DateFormat("D").format(date));
-    int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
-    if (woy < 1) {
-      woy = numOfWeeks(date.year - 1);
-    } else if (woy > numOfWeeks(date.year)) {
-      woy = 1;
-    }
-    return woy;
   }
 
   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
