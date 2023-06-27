@@ -359,8 +359,7 @@ class LoginService {
     }
   }
 
-//Alerts
-
+  ///Alerts
   Future<List<Map<String, dynamic>>> loadAlertsFromDatabase() async {
     try {
       // Open the database
@@ -466,72 +465,30 @@ class LoginService {
     }
   }
 
+  ///fetches the data for today hourly until current hour
   Future<List<ChartData>> fetchStatisticDataHourFromDatabase(
       String type) async {
     try {
       final database = await _initDatabase();
 
-      final statisticHourly =
-          await database.query('StaitsicsDataHour', columns: ['Hour', type]);
-      await database.close();
+      final DateTime now = DateTime.now();
+      final DateFormat hourFormat = DateFormat('HH:mm');
 
-      //print('Fetched StatisticsHour: $statisticHourly');
-
-      return List.generate(statisticHourly.length, (index) {
-        final data = statisticHourly[index];
-        return ChartData(
-          data['Hour'] as String,
-          (data[type] as num?)?.toDouble() ?? 0.0,
-        );
-      });
-    } catch (e) {
-      print('Error fetching StaitsicsDataHour data from database:$type:  $e');
-      return [];
-    }
-  }
-
-  ///returns the data daily for a week
-  ///type: String , Column that holds the data required , e.g. : Visitor
-  Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
-      String type) async {
-    DateTime now = DateTime.now();
-    DateTime sevenDaysAgo = now.subtract(const Duration(days: 7));
-
-    DateFormat dateFormat = DateFormat('yyyyMMdd');
-    String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
-    String todayFormatted = dateFormat.format(now);
-
-    List<String> germanWeekdays = [
-      '',
-      'Mo',
-      'Di',
-      'Mi',
-      'Do',
-      'Fr',
-      'Sa',
-      'So',
-    ];
-
-    try {
-      final database = await _initDatabase();
-
-      // Query the database
-      final statisticWeek = await database.rawQuery(
-        'SELECT Date,$type FROM StatisticsDataDay WHERE substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) BETWEEN ? AND ?',
-        [sevenDaysAgoFormatted, todayFormatted],
+      final statisticHourly = await database.query(
+        'StaitsicsDataHour',
+        columns: ['Hour', type],
+        where: 'Hour <= ?',
+        whereArgs: [hourFormat.format(now)],
       );
 
       await database.close();
 
-      return List.generate(statisticWeek.length, (index) {
-        final data = statisticWeek[index];
-        DateTime currentDate = sevenDaysAgo.add(Duration(days: index));
-        String germanWeekday = germanWeekdays[currentDate
-            .weekday]; // Subtract 1 from weekday to match the index in the germanWeekdays list
+      return List.generate(statisticHourly.length, (index) {
+        final data = statisticHourly[index];
 
         return ChartData(
-          germanWeekday, // Use German weekday as X value
-          (data[type] as num?)?.toDouble() ?? 0.0, // Use type value as Y value
+          data['Hour'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
         );
       });
     } catch (e) {
@@ -540,35 +497,45 @@ class LoginService {
     }
   }
 
-  ///returns the data hourly of yesterday
-  ///type: String , Column that holds the data required , e.g. : Visitor
-  Future<List<ChartData>> fetchStatisticDataHourYesterdayFromDatabase(
+  ///fetches the data für a week until today
+  Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
+    DateTime now = DateTime.now();
+    print(now);
+    DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
+
+    DateFormat dateFormat = DateFormat('yyyyMMdd');
+    String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
+    String todayFormatted = dateFormat.format(now);
+    print(sevenDaysAgoFormatted);
+
+    print("object");
+    print(todayFormatted);
     try {
       final database = await _initDatabase();
 
-      final statisticHourly = await database
-          .query('StaitsicsDataYesterdayHour', columns: ['Hour', type]);
-      await database.close();
+      // Query the database
+      final statisticWeek = await database.rawQuery(
+          'SELECT Date,$type FROM StatisticsDataDay where substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) BETWEEN ? AND ?',
+          [sevenDaysAgoFormatted, todayFormatted]);
 
-      //print('Fetched StatisticsHourYesterday: $statisticHourly');
+      print('Fetched StatisticsWeek: $statisticWeek');
 
-      return List.generate(statisticHourly.length, (index) {
-        final data = statisticHourly[index];
-        //var dataType = data[type];
-        //print("data type: $type:--  $dataType");
+      return List.generate(statisticWeek.length, (index) {
+        final data = statisticWeek[index];
         return ChartData(
-          data['Hour'] as String,
+          data['Date'] as String,
           (data[type] as num?)?.toDouble() ?? 0.0,
         );
       });
     } catch (e) {
-      print(
-          'Error fetching StaitsicsDataYesterdayHour data from database: $type:$e');
+      print('Error fetching statistics data from database: $e');
       return [];
     }
   }
 
+
+  ///fetches the data for the weeks of the month as average values
   Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
       String type, int startHour, int endHour) async {
     try {
@@ -600,6 +567,28 @@ class LoginService {
           'Error fetching StaitsicsDataYesterdayHour data from database: $type:$e');
       return [];
     }
+  }
+
+  int numOfWeeks(int year) {
+    DateTime lastDayOfYear = DateTime(year, 12, 31);
+    int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
+    if (weekNumberLastDay == 1) {
+      return int.parse(
+          DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
+    } else {
+      return weekNumberLastDay;
+    }
+  }
+
+  int weekNumber(DateTime date) {
+    int dayOfYear = int.parse(DateFormat("D").format(date));
+    int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
+    if (woy < 1) {
+      woy = numOfWeeks(date.year - 1);
+    } else if (woy > numOfWeeks(date.year)) {
+      woy = 1;
+    }
+    return woy;
   }
 
   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
@@ -665,30 +654,6 @@ class LoginService {
       print('Error fetching statistics data of the month from database: $e');
       return [];
     }
-  }
-
-  int weekNumber(DateTime date) {
-    DateTime firstDayOfYear = DateTime(date.year, 1, 1);
-    int daysOffset = DateTime.thursday - firstDayOfYear.weekday;
-    DateTime firstThursday = firstDayOfYear.add(Duration(days: daysOffset));
-    DateTime targetDate = date.subtract(Duration(days: daysOffset));
-
-    int weekNumber = targetDate.difference(firstThursday).inDays ~/ 7 + 1;
-    if (weekNumber < 1) {
-      weekNumber = numOfWeeks(date.year - 1, 12);
-    } else if (weekNumber > numOfWeeks(date.year, date.month)) {
-      weekNumber = 1;
-    }
-
-    return weekNumber;
-  }
-
-  int numOfWeeks(int year, int month) {
-    DateTime lastDayOfMonth = DateTime(year, month + 1, 0);
-    int weekNumberLastDay =
-        lastDayOfMonth.weekday == DateTime.saturday ? 53 : 52;
-
-    return weekNumberLastDay;
   }
 
   Future<List<Map<String, String>>> loadPlacesFromDatabase() async {

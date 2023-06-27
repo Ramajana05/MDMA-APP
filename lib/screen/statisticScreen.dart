@@ -252,6 +252,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
               ),
               color: chartColor,
               dataLabelMapper: (ChartData data, _) => data.x,
+              width: 5,
             )
           ],
           tooltipBehavior: TooltipBehavior(
@@ -285,7 +286,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                 return Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: backgroundCard,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Column(
@@ -305,9 +306,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
                             ),
                           ),
                           Text(
-                            '  ${data.x} : '
-                            '$formattedYWithUnit',
-                            style: TextStyle(color: Colors.white),
+                            '  ${data.x} : $formattedYWithUnit',
+                            style: TextStyle(
+                                color:
+                                    black), // Set tooltip font color to "black"
                           ),
                         ],
                       ),

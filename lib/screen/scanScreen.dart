@@ -106,13 +106,13 @@ class _ScanScreen extends State<ScanScreen> {
                   const SizedBox(width: 8),
                   Text(
                     'Hinweis',
-                    style: TextStyle(color: background),
+                    style: TextStyle(color: orange),
                   ),
                 ],
               ),
               content: Text(
                 'Dieser Sensor wurde bereits angelegt.',
-                style: TextStyle(color: background),
+                style: TextStyle(color: black),
               ),
               actions: [
                 ElevatedButton(
