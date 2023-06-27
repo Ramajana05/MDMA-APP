@@ -534,42 +534,124 @@ class LoginService {
     }
   }
 
+
   ///fetches the data for the weeks of the month as average values
-  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
-      String type) async {
-    DateTime now = DateTime.now();
-    DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
-    DateTime lastDayOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
-
-    DateFormat dateFormat = DateFormat('yyyyMMdd');
-    String firstDayOfCurrentMonthFormatted =
-        dateFormat.format(firstDayOfCurrentMonth);
-    String lastDayOfCurrentMonthFormatted =
-        dateFormat.format(lastDayOfCurrentMonth);
-
+  Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
+      String type, int startHour, int endHour) async {
     try {
       final database = await _initDatabase();
 
-      final statisticMonth = await database.rawQuery('''
-      SELECT AVG($type) AS average_value, 
-             'Week ' || strftime('%W', date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch')) || ' in ' || strftime('%B', date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch'))) AS week_month
-      FROM StatisticsDataDay
-      WHERE date(substr(Date, 5, 4) || '-' || substr(Date, 3, 2) || '-' || substr(Date, 1, 2), 'unixepoch') BETWEEN date(?, 'localtime') AND date(?, 'localtime')
-      GROUP BY week_month
-    ''', [firstDayOfCurrentMonthFormatted, lastDayOfCurrentMonthFormatted]);
+      final statisticHourly = await database.query(
+        'StaitsicsDataYesterdayHour',
+        columns: ['Hour', type],
+        where: 'Hour >= ? AND Hour < ?',
+        whereArgs: [
+          startHour.toString().padLeft(2, '0'), // Convert to 2-digit format
+          (startHour + 7)
+              .toString()
+              .padLeft(2, '0'), // Convert to 2-digit format
+        ],
+      );
 
       await database.close();
 
-      return List.generate(statisticMonth.length, (index) {
-        final data = statisticMonth[index];
-
+      return List.generate(statisticHourly.length, (index) {
+        final data = statisticHourly[index];
         return ChartData(
-          data['week_month'] as String,
-          (data['average_value'] as num?)?.toDouble() ?? 0.0,
+          data['Hour'] as String,
+          (data[type] as num?)?.toDouble() ?? 0.0,
         );
       });
     } catch (e) {
-      print('Error fetching statistics data from database: $e');
+      print(
+          'Error fetching StaitsicsDataYesterdayHour data from database: $type:$e');
+      return [];
+    }
+  }
+
+  int numOfWeeks(int year) {
+    DateTime lastDayOfYear = DateTime(year, 12, 31);
+    int weekNumberLastDay = int.parse(DateFormat("w").format(lastDayOfYear));
+    if (weekNumberLastDay == 1) {
+      return int.parse(
+          DateFormat("W").format(lastDayOfYear.subtract(Duration(days: 7))));
+    } else {
+      return weekNumberLastDay;
+    }
+  }
+
+  int weekNumber(DateTime date) {
+    int dayOfYear = int.parse(DateFormat("D").format(date));
+    int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
+    if (woy < 1) {
+      woy = numOfWeeks(date.year - 1);
+    } else if (woy > numOfWeeks(date.year)) {
+      woy = 1;
+    }
+    return woy;
+  }
+
+  Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
+      String type) async {
+    try {
+      final database = await _initDatabase();
+
+      final DateTime now = DateTime.now();
+      final DateTime previousMonth = DateTime(now.year, now.month - 1, 1);
+      final DateTime lastDayPreviousMonth = DateTime(now.year, now.month, 0);
+      final DateFormat dateFormat = DateFormat('yyyyMMdd');
+
+      List<ChartData> statisticData = [];
+
+      // Get the first and last date of each week in the previous month
+      DateTime weekStart = previousMonth;
+      DateTime weekEnd;
+      for (int i = 0; i < 4; i++) {
+        weekEnd = weekStart.add(const Duration(days: 6));
+
+        // If the weekEnd exceeds the last day of the previous month, set it to the last day
+        if (weekEnd.isAfter(lastDayPreviousMonth)) {
+          weekEnd = lastDayPreviousMonth;
+        }
+
+        // If it's the last iteration and there are remaining days, add them to the last week
+        if (i == 3 && weekEnd != lastDayPreviousMonth) {
+          final remainingDays = lastDayPreviousMonth.difference(weekEnd).inDays;
+          weekEnd = lastDayPreviousMonth;
+          weekStart = weekStart.subtract(Duration(days: remainingDays));
+        }
+
+        final String weekStartFormatted =
+            DateFormat('dd.MM.').format(weekStart);
+        final String weekEndFormatted = DateFormat('dd.MM.').format(weekEnd);
+
+        final statisticWeek = await database.rawQuery('''
+        SELECT AVG($type) AS average
+        FROM StatisticsDataDay
+        WHERE substr(Date, 7) || substr(Date, 4, 2) || substr(Date, 1, 2) BETWEEN ? AND ?
+      ''', [dateFormat.format(weekStart), dateFormat.format(weekEnd)]);
+
+        double average =
+            (statisticWeek.first['average'] as num?)?.toDouble() ?? 0.0;
+
+        if (type == "Visitor") {
+          average = average.roundToDouble();
+        } else {
+          average = double.parse(average.toStringAsFixed(2));
+        }
+
+        ChartData chartData =
+            ChartData('$weekStartFormatted - $weekEndFormatted', average);
+        statisticData.add(chartData);
+
+        weekStart = weekEnd.add(const Duration(days: 1));
+      }
+
+      await database.close();
+
+      return statisticData;
+    } catch (e) {
+      print('Error fetching statistics data of the month from database: $e');
       return [];
     }
   }
