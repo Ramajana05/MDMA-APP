@@ -46,28 +46,16 @@ class _SidePanelState extends State<SidePanel> {
   }
 
   void checkDarkMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isFirstStart = prefs.getBool('isFirstStart') ?? true;
+    final loginService = LoginService();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final loggedInUsername = userProvider.loggedInUsername;
+    final darkModeValue =
+        await loginService.fetchDarkModeValue(loggedInUsername!);
 
-    if (isFirstStart) {
-      // First app start, default to light mode
-      prefs.setBool('isFirstStart', false);
+    if (!_isDarkModeNotifier.value) {
       setState(() {
-        _isDarkModeNotifier.value = false;
+        _isDarkModeNotifier.value = darkModeValue;
       });
-    } else {
-      // Retrieve dark mode preference from storage
-      final loginService = LoginService();
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final loggedInUsername = userProvider.loggedInUsername;
-      final darkModeValue =
-          await loginService.fetchDarkModeValue(loggedInUsername!);
-
-      if (!_isDarkModeNotifier.value) {
-        setState(() {
-          _isDarkModeNotifier.value = darkModeValue;
-        });
-      }
     }
 
     print('_isDarkModeNotifier: ${_isDarkModeNotifier.value}');
