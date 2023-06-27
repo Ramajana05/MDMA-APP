@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forestapp/design/topNavBarDecoration.dart';
 import 'package:forestapp/dialog/logoutDialog.dart';
-
 import '../colors/appColors.dart';
 
 class TopNavBarBasic extends StatefulWidget implements PreferredSizeWidget {
