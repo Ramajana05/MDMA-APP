@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
     ));
 
     return FutureBuilder(
-      future: checkDarkMode(context),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(); // You can display a loading indicator here
@@ -66,25 +65,5 @@ class MyApp extends StatelessWidget {
         );
       },
     );
-  }
-
-  Future<bool> checkDarkMode(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    final isFirstStart = prefs.getBool('isFirstStart') ?? true;
-
-    if (isFirstStart) {
-      // First app start, default to light mode
-      prefs.setBool('isFirstStart', false);
-      return false;
-    } else {
-      // Retrieve dark mode preference from storage
-      final loginService = LoginService();
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final loggedInUsername = "MDMA";
-
-      final darkModeValue =
-          await loginService.fetchDarkModeValue(loggedInUsername!);
-      return darkModeValue;
-    }
   }
 }
