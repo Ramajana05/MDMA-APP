@@ -67,6 +67,17 @@ class _MapScreen extends State<MapScreen> {
     _dropdownItems = [];
   }
 
+  @override
+  void dispose() {
+    // Dispose of the circles and polygons
+    setState(() {
+      _circles = Set<Circle>();
+      _polygons = Set<Polygon>();
+    });
+
+    super.dispose();
+  }
+
   void fetchCirclesAndPolygons() async {
     final circles = await MapObjects().getCircles(_handleCircleTap);
     final polygons = await MapObjects().getPolygons(_handlePolygonTap);
@@ -102,6 +113,7 @@ class _MapScreen extends State<MapScreen> {
       case 'alle':
         final circles = await MapObjects().getCircles(_handleCircleTap);
         final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+
         setState(() {
           _circles = circles;
           _polygons = polygons;
@@ -122,9 +134,11 @@ class _MapScreen extends State<MapScreen> {
         });
         break;
       default:
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
         setState(() {
-          _circles = Set<Circle>();
-          _polygons = Set<Polygon>();
+          _circles = circles;
+          _polygons = polygons;
         });
         break;
     }
@@ -824,19 +838,27 @@ class _MapScreen extends State<MapScreen> {
                                                     fontSize: 17.0,
                                                     color: black),
                                               ),
-                                              Checkbox(
-                                                value: useCurrentLocation,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    useCurrentLocation = value!;
-                                                    if (useCurrentLocation) {
-                                                      latitude = '';
-                                                      longitude = '';
-                                                    }
-                                                  });
-                                                },
-                                                activeColor:
-                                                    primaryAppLightGreen,
+                                              Theme(
+                                                data:
+                                                    Theme.of(context).copyWith(
+                                                  unselectedWidgetColor:
+                                                      Colors.black,
+                                                ),
+                                                child: Checkbox(
+                                                  value: useCurrentLocation,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      useCurrentLocation =
+                                                          value!;
+                                                      if (useCurrentLocation) {
+                                                        latitude = '';
+                                                        longitude = '';
+                                                      }
+                                                    });
+                                                  },
+                                                  activeColor:
+                                                      primaryAppLightGreen,
+                                                ),
                                               ),
                                             ],
                                           ),
