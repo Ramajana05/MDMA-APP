@@ -81,20 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> alertWidgets = []; // Store the alert widgets
 
-  Future<void> _loadChartDataForDashboard() async {
-    final visitorsFromDB =
-        await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
-    final temperatureFromDB = await loginService
-        .fetchStatisticDataDashboardFromDatabase('Temperatur');
-    final airHumidityFromDB = await loginService
-        .fetchStatisticDataDashboardFromDatabase('AirHumidity');
 
-    setState(() {
-      currentVisitors = visitorsFromDB.y;
-      currentTemperature = temperatureFromDB.y;
-      currentHumidity = airHumidityFromDB.y;
-    });
-  }
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -217,7 +204,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     fetchWeatherData();
     loadAlerts();
     updateSensorCounts();
-    _loadChartDataForDashboard();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -241,7 +227,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
-
+    final visitorsFromDB =
+    await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
+    final temperatureFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('Temperatur');
+    final airHumidityFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('AirHumidity');
     // Get the statistics data hourly
     final fetchStatisticsDataHourVisitor = await loginService
         .fetchStatisticDataYesterdayFromDatabase('Visitor', 6, 12);
@@ -253,6 +244,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .fetchStatisticDataYesterdayFromDatabase('AirHumidity', 6, 12);
 
     setState(() {
+      currentVisitors = visitorsFromDB.y;
+      currentTemperature = temperatureFromDB.y;
+      currentHumidity = airHumidityFromDB.y;
       // Day charts of yesterday
       visitorChartDaily = fetchStatisticsDataHourVisitor;
       tempChartDaily = fetchStatisticsDataHourTemp;
