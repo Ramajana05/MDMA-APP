@@ -28,7 +28,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var currentVisitors = 0.0;
   var maxVisitors = 150;
 
-
   var currentSensors = 0;
   var maxSensors = 0;
 
@@ -80,8 +79,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   List<Widget> alertWidgets = []; // Store the alert widgets
-
-
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -203,7 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //checkDarkMode();
     fetchWeatherData();
     loadAlerts();
-    updateSensorCounts();
+    //updateSensorCounts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -228,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
     final visitorsFromDB =
-    await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
+        await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
     final temperatureFromDB = await loginService
         .fetchStatisticDataDashboardFromDatabase('Temperatur');
     final airHumidityFromDB = await loginService
@@ -242,8 +239,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final fetchStatisticsDataHourHumidity = await loginService
         .fetchStatisticDataYesterdayFromDatabase('AirHumidity', 6, 12);
+    final List<Widget> alerts =
+        await loginService.loadAlertsFromDatabaseWidgets();
+    final onlineCount = await loginService.countOnlineSensorsWithName();
+    final allCount = await loginService.countAllSensorsWithName();
 
+    currentSensors = onlineCount;
+    maxSensors = allCount;
+
+    print(
+        'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
     setState(() {
+      alertWidgets = alerts;
+
       currentVisitors = visitorsFromDB.y;
       currentTemperature = temperatureFromDB.y;
       currentHumidity = airHumidityFromDB.y;
@@ -266,20 +274,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  Future<void> updateSensorCounts() async {
-    try {
-      final onlineCount = await loginService.countOnlineSensorsWithName();
-      final allCount = await loginService.countAllSensorsWithName();
-
-      currentSensors = onlineCount;
-      maxSensors = allCount;
-
-      print(
-          'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
-    } catch (e) {
-      print('Error updating sensor counts: $e');
-    }
-  }
+  // Future<void> updateSensorCounts() async {
+  //   try {
+  //     final onlineCount = await loginService.countOnlineSensorsWithName();
+  //     final allCount = await loginService.countAllSensorsWithName();
+  //
+  //     currentSensors = onlineCount;
+  //     maxSensors = allCount;
+  //
+  //     print(
+  //         'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+  //   } catch (e) {
+  //     print('Error updating sensor counts: $e');
+  //   }
+  // }
 
   //News
   Widget buildNewsSection() {
