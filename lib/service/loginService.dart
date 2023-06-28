@@ -550,7 +550,7 @@ class LoginService {
     }
   }
 
-  ///fetches the data for the weeks of the month as average values
+  ///fetches the data of yesterday hourly
   Future<List<ChartData>> fetchStatisticDataYesterdayFromDatabase(
       String type, int startHour, int endHour) async {
     try {
@@ -583,7 +583,8 @@ class LoginService {
       return [];
     }
   }
-
+  
+  ///fetches the data for the weeks of the month as average values
   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
       String type) async {
     try {
