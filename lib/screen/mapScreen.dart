@@ -53,28 +53,18 @@ class _MapScreen extends State<MapScreen> {
     _circles = Set<Circle>();
     _polygons = Set<Polygon>();
 
-    MapObjects().getCircles(_handleCircleTap).then((circles) {
-      setState(() {
-        _circles = circles;
-      });
-    });
+    // Fetch circles and polygons
+    fetchCirclesAndPolygons();
+  }
 
-    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-      setState(() {
-        _polygons = polygons;
-      });
-    });
+  void fetchCirclesAndPolygons() async {
+    final circles = await MapObjects().getCircles(_handleCircleTap);
+    final polygons = await MapObjects().getPolygons(_handlePolygonTap);
 
-    _currentLocationCircle = Circle(
-      circleId: CircleId('currentLocation'),
-      center: LatLng(0, 0), // Initial center position
-      radius: 10, // Adjust the radius as needed
-      fillColor: Colors.blue.withOpacity(0.5),
-      strokeColor: Colors.blue,
-      strokeWidth: 2,
-    );
-    _dropdownItems = [];
-    //loadPlacesFromDatabase(); // Load the places from the database immediately
+    setState(() {
+      _circles = circles;
+      _polygons = polygons;
+    });
   }
 
   Future<void> loadPlacesFromDatabase() async {
@@ -96,43 +86,38 @@ class _MapScreen extends State<MapScreen> {
           : index == 1
               ? 'standorte'
               : 'sensoren';
-      switch (_selectedTab) {
-        case 'alle':
-          MapObjects().getCircles(_handleCircleTap).then((circles) {
-            setState(() {
-              _circles = circles;
-            });
-          });
-          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-            setState(() {
-              _polygons = polygons;
-            });
-          });
-          break;
-        case 'standorte':
-          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-            setState(() {
-              _circles = Set<Circle>();
-              _polygons = polygons;
-            });
-          });
-          break;
-        case 'sensoren':
-          MapObjects().getCircles(_handleCircleTap).then((circles) {
-            setState(() {
-              _circles = circles;
-              _polygons = Set<Polygon>();
-            });
-          });
-          break;
-        default:
-          setState(() {
-            _circles = Set<Circle>();
-            _polygons = Set<Polygon>();
-          });
-          break;
-      }
     });
+
+    switch (_selectedTab) {
+      case 'alle':
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+        setState(() {
+          _circles = circles;
+          _polygons = polygons;
+        });
+        break;
+      case 'standorte':
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+        setState(() {
+          _circles = Set<Circle>();
+          _polygons = polygons;
+        });
+        break;
+      case 'sensoren':
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        setState(() {
+          _circles = circles;
+          _polygons = Set<Polygon>();
+        });
+        break;
+      default:
+        setState(() {
+          _circles = Set<Circle>();
+          _polygons = Set<Polygon>();
+        });
+        break;
+    }
   }
 
   void _handleCircleTap(CircleData circle) {
@@ -731,7 +716,7 @@ class _MapScreen extends State<MapScreen> {
                                       Icons.location_on,
                                       color: isSelected
                                           ? primaryAppLightGreen
-                                          : const Color.fromARGB(255, 0, 0, 0),
+                                          : black,
                                     ),
                                     SizedBox(width: 8),
                                     Text(

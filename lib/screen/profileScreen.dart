@@ -206,6 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+            /** 
             SizedBox(height: 13),
             Container(
               alignment: Alignment.center,
@@ -218,6 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+            */
           ],
         ),
       ),
