@@ -55,6 +55,16 @@ class _MapScreen extends State<MapScreen> {
 
     // Fetch circles and polygons
     fetchCirclesAndPolygons();
+
+    _currentLocationCircle = Circle(
+      circleId: CircleId('currentLocation'),
+      center: LatLng(0, 0), // Initial center position
+      radius: 10, // Adjust the radius as needed
+      fillColor: Colors.blue.withOpacity(0.5),
+      strokeColor: Colors.blue,
+      strokeWidth: 2,
+    );
+    _dropdownItems = [];
   }
 
   void fetchCirclesAndPolygons() async {
