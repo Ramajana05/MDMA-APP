@@ -500,10 +500,44 @@ class LoginService {
     }
   }
 
+  ///fetches the data of the last hour for the dashboard circle charts
+  Future<ChartData> fetchStatisticDataDashboardFromDatabase(String type) async {
+    try {
+      final database = await _initDatabase();
+
+      final DateTime now = DateTime.now();
+      final DateFormat hourFormat = DateFormat('HH:mm');
+      final DateTime previousHour = now.subtract(const Duration(hours: 1));
+      final previousHourFormatted =
+          '${hourFormat.format(previousHour).substring(0, 2)}:00';
+
+      print("previousHour: $previousHour");
+      final statisticHourly = await database.query(
+        'StaitsicsDataHour',
+        columns: ['Hour', type],
+        where: 'Hour = ?',
+        whereArgs: [previousHourFormatted],
+      );
+
+      print("statisticHourly: $statisticHourly");
+      await database.close();
+
+      final data = statisticHourly.first;
+
+      return ChartData(
+        data['Hour'] as String,
+        (data[type] as num?)?.toDouble() ?? 0.0,
+      );
+    } catch (e) {
+      print('Error fetching statistics data from database: $e');
+      return ChartData('0', 0);
+    }
+  }
+
   ///fetches the data für a week until today
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
-    DateTime now = DateTime.now().subtract(Duration(days: 1));
+    DateTime now = DateTime.now().subtract(const Duration(days: 1));
     print(now);
     DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
 
@@ -583,7 +617,7 @@ class LoginService {
       return [];
     }
   }
-  
+
   ///fetches the data for the weeks of the month as average values
   Future<List<ChartData>> fetchStatisticDataMonthFromDatabase(
       String type) async {
