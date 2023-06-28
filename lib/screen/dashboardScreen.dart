@@ -25,14 +25,20 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var currentVisitors = 48;
-  var maxVisitors = 70;
+  var currentVisitors = 0.0;
+  var maxVisitors = 150;
+
 
   var currentSensors = 0;
   var maxSensors = 0;
 
   var currentTemperature = 0.0;
+
   var maxTemperature = 0.0;
+
+  var currentHumidity = 0.0;
+
+  var weatherTemperature = 0.0;
 
   var airHumidity = 0.0;
   var avgAirHumidity = 0.0;
@@ -54,6 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+
   LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
@@ -73,6 +80,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   List<Widget> alertWidgets = []; // Store the alert widgets
+
+  Future<void> _loadChartDataForDashboard() async {
+    final visitorsFromDB =
+        await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
+    final temperatureFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('Temperatur');
+    final airHumidityFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('AirHumidity');
+
+    setState(() {
+      currentVisitors = visitorsFromDB.y;
+      currentTemperature = temperatureFromDB.y;
+      currentHumidity = airHumidityFromDB.y;
+    });
+  }
 
   Future<List<WeatherItem>> fetchWeatherData() async {
     final response = await http.get(Uri.parse(
@@ -121,7 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         setState(() {
           airHumidity = airWHumidity;
-          currentTemperature = temperature;
+          weatherTemperature = temperature;
           weatherForecast = weatherItems;
         });
 
@@ -195,6 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     fetchWeatherData();
     loadAlerts();
     updateSensorCounts();
+    _loadChartDataForDashboard();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -567,7 +590,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         lightblue,
                                         blue,
                                         100,
-                                        airHumidity.toInt(),
+                                        currentHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
                                       ),
