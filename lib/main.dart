@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/screen/splashScreen.dart';
+import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:forestapp/db/databaseInitializer.dart';
 import 'package:forestapp/provider/userProvider.dart';
@@ -48,33 +48,36 @@ class MyApp extends StatelessWidget {
         }
 
         return ChangeNotifierProvider(
-          create: (context) => UserProvider(),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              brightness: snapshot.data! ? Brightness.dark : Brightness.light,
-              // Define your light mode theme here
-              //...
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              // Define your dark mode theme here
-              //...
-            ),
-            home: SplashScreen(),
-          ),
-        );
+            create: (context) => UserProvider(),
+            child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  brightness:
+                      snapshot.data! ? Brightness.dark : Brightness.light,
+                  // Define your light mode theme here
+                  //...
+                ),
+                darkTheme: ThemeData(
+                  brightness: Brightness.dark,
+                  // Define your dark mode theme here
+                  //...
+                ),
+                home:
+                    // SplashScreen(),
+                    StatisticsScreen()));
       },
     );
   }
 
   Future<bool> checkDarkMode(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    final isFirstStart = prefs.getBool('isFirstStart') ?? true;
+    // final prefs = await SharedPreferences.getInstance();
+    final isFirstStart =
+        // prefs.getBool('isFirstStart') ??
+        true;
 
     if (isFirstStart) {
       // First app start, default to light mode
-      prefs.setBool('isFirstStart', false);
+      // prefs.setBool('isFirstStart', false);
       return false;
     } else {
       // Retrieve dark mode preference from storage

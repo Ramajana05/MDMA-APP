@@ -11,7 +11,13 @@ import 'package:forestapp/screen/helpScreen.dart';
 import 'package:forestapp/colors/appColors.dart';
 
 import 'package:forestapp/widget/bottomnavbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+
+/* A widget representing the side panel drawer in the app.
+
+ The side panel drawer provides navigation options and settings for the app.
+ It includes options such as viewing the user profile, accessing the homepage,
+ toggling between light and dark mode, accessing help content, and logging out.*/
 
 class SidePanel extends StatefulWidget {
   final VoidCallback? onDarkModeChanged;
@@ -52,7 +58,7 @@ class _SidePanelState extends State<SidePanel> {
     final darkModeValue =
         await loginService.fetchDarkModeValue(loggedInUsername!);
 
-    if (!_isDarkModeNotifier.value) {
+    if (_isDarkModeNotifier.value != darkModeValue) {
       setState(() {
         _isDarkModeNotifier.value = darkModeValue;
       });
@@ -186,6 +192,12 @@ class _SidePanelState extends State<SidePanel> {
                               ?.call(); // Notify parent widget about dark mode change
 
                           updateAppColors(_isDarkModeNotifier.value);
+
+                          SystemChrome.setSystemUIOverlayStyle(
+                              SystemUiOverlayStyle(
+                            statusBarColor: background,
+                            systemNavigationBarColor: background,
+                          ));
 
                           // Save the current index
                           currentIndex = 2;

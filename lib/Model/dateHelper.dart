@@ -1,21 +1,21 @@
-String getWeekday(int day) {
-  switch (day) {
-    case 1:
+String getWeekday(String dayName) {
+  switch (dayName) {
+    case "Montag":
       return 'Mo';
-    case 2:
+    case "Dienstag":
       return 'Di';
-    case 3:
+    case "Mittwoch":
       return 'Mi';
-    case 4:
+    case "Donnerstag":
       return 'Do';
-    case 5:
+    case "Freitag":
       return 'Fr';
-    case 6:
+    case "Samstag":
       return 'Sa';
-    case 7:
+    case "Sonntag":
       return 'So';
     default:
-      throw Exception('Invalid day: $day');
+      throw Exception('Invalid day: $dayName');
   }
 }
 
