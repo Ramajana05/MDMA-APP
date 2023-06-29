@@ -120,6 +120,12 @@ class _SensorListScreenState extends State<SensorListScreen> {
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
+                  borderSide:
+                      BorderSide(color: black), // Set the border color to black
+                ),
+                enabledBorder: OutlineInputBorder(
+                  // Set the border color when not selected
+                  borderRadius: BorderRadius.circular(12.0),
                   borderSide: BorderSide(color: black),
                 ),
                 focusedBorder: OutlineInputBorder(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forestapp/service/loginService.dart';
 import 'package:forestapp/widget/sidePanelWidget.dart';
 import 'package:forestapp/widget/topNavBar.dart';
 import 'package:forestapp/widget/tabBarWidget.dart';
@@ -8,9 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:forestapp/dialog/informationDialog.dart';
-
+import 'package:geocoding/geocoding.dart';
 import '../colors/appColors.dart';
 import '../colors/getBatteryColors.dart';
+import 'package:forestapp/service/loginService.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreen extends State<MapScreen> {
-  CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 15.0,
   );
@@ -28,23 +28,18 @@ class _MapScreen extends State<MapScreen> {
   late Set<Circle> _circles;
   late Set<Polygon> _polygons;
   final Completer<GoogleMapController> _controller = Completer();
-
-  late GoogleMapController _mapController;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<String> dropdownItems = ['Wald', 'Current Location'];
   String? selectedDropdownItem;
+  int selectedIndex = -1;
+  bool areItemsVisible = false;
+  LoginService loginService = LoginService();
+  late Circle _currentLocationCircle;
+  bool useCurrentLocation = true;
+  bool notifyUser = false;
+  late GoogleMapController _mapController;
 
   List<Map<String, String>> _dropdownItems = [];
   List<Map<String, String>> _dropdownItemss =
       []; // Declare and initialize the variable
-
-  int selectedIndex = -1;
-  bool areItemsVisible = false;
-  LoginService loginService = LoginService();
-
-  late Circle _currentLocationCircle;
-  bool useCurrentLocation = true;
-  bool notifyUser = false;
 
   @override
   void initState() {
@@ -52,39 +47,90 @@ class _MapScreen extends State<MapScreen> {
     _selectedTab = 'alle';
     _circles = Set<Circle>();
     _polygons = Set<Polygon>();
+    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
+      setState(() {
+        _polygons = polygons;
+      });
+    });
+    MapObjects().getCircles(_handleCircleTap).then((circles) {
+      setState(() {
+        _circles = circles;
+      });
+    });
 
-    // Fetch circles and polygons
-    fetchCirclesAndPolygons();
-
-    _currentLocationCircle = Circle(
-      circleId: CircleId('currentLocation'),
-      center: LatLng(0, 0), // Initial center position
-      radius: 10, // Adjust the radius as needed
-      fillColor: Colors.blue.withOpacity(0.5),
-      strokeColor: Colors.blue,
-      strokeWidth: 2,
-    );
     _dropdownItems = [];
   }
 
-  @override
-  void dispose() {
-    // Dispose of the circles and polygons
-    setState(() {
-      _circles = Set<Circle>();
-      _polygons = Set<Polygon>();
-    });
+  void _moveToCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Handle disabled location services
+      return;
+    }
 
-    super.dispose();
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Handle denied location permission
+        return;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+
+    CameraPosition newPosition = CameraPosition(
+      target: LatLng(position.latitude, position.longitude),
+      zoom: 15.0,
+    );
+
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
-  void fetchCirclesAndPolygons() async {
-    final circles = await MapObjects().getCircles(_handleCircleTap);
-    final polygons = await MapObjects().getPolygons(_handlePolygonTap);
-
+  void _updateSelectedTab(int index) async {
     setState(() {
-      _circles = circles;
-      _polygons = polygons;
+      _selectedTab = index == 0
+          ? 'alle'
+          : index == 1
+              ? 'standorte'
+              : 'sensoren';
+      switch (_selectedTab) {
+        case 'alle':
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+            });
+          });
+          MapObjects().getPolygons((_handlePolygonTap)).then((polygons) {
+            setState(() {
+              _polygons = polygons;
+            });
+          });
+          break;
+        case 'standorte':
+          MapObjects().getPolygons((_handlePolygonTap)).then((polygons) {
+            setState(() {
+              _circles = Set<Circle>();
+              _polygons = polygons;
+            });
+          });
+          break;
+        case 'sensoren':
+          MapObjects().getCircles(_handleCircleTap).then((circles) {
+            setState(() {
+              _circles = circles;
+              _polygons = Set<Polygon>();
+            });
+          });
+          break;
+        default:
+          setState(() {
+            _circles = Set<Circle>();
+            _polygons = Set<Polygon>();
+          });
+          break;
+      }
     });
   }
 
@@ -97,50 +143,6 @@ class _MapScreen extends State<MapScreen> {
       });
     } catch (e) {
       print('Error loading places: $e');
-    }
-  }
-
-  void _updateSelectedTab(int index) async {
-    setState(() {
-      _selectedTab = index == 0
-          ? 'alle'
-          : index == 1
-              ? 'standorte'
-              : 'sensoren';
-    });
-
-    switch (_selectedTab) {
-      case 'alle':
-        final circles = await MapObjects().getCircles(_handleCircleTap);
-        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
-
-        setState(() {
-          _circles = circles;
-          _polygons = polygons;
-        });
-        break;
-      case 'standorte':
-        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
-        setState(() {
-          _circles = Set<Circle>();
-          _polygons = polygons;
-        });
-        break;
-      case 'sensoren':
-        final circles = await MapObjects().getCircles(_handleCircleTap);
-        setState(() {
-          _circles = circles;
-          _polygons = Set<Polygon>();
-        });
-        break;
-      default:
-        final circles = await MapObjects().getCircles(_handleCircleTap);
-        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
-        setState(() {
-          _circles = circles;
-          _polygons = polygons;
-        });
-        break;
     }
   }
 
@@ -297,6 +299,16 @@ class _MapScreen extends State<MapScreen> {
     );
   }
 
+  Color _getBatteryColor(int batteryLevel) {
+    if (batteryLevel > 60) {
+      return Color.fromARGB(255, 19, 240, 30); // Green
+    } else if (batteryLevel > 30) {
+      return Colors.orange; // Orange
+    } else {
+      return Colors.red; // Red
+    }
+  }
+
   void _handlePolygonTap(PolygonData polygon) {
     showBottomSheet(
       context: context,
@@ -439,7 +451,7 @@ class _MapScreen extends State<MapScreen> {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw 'Standort Service ist ausgeschaltet';
+      throw 'Location services are disabled.';
     }
 
     // Request location permission
@@ -448,46 +460,12 @@ class _MapScreen extends State<MapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        throw 'Standort Service wurde abgelehnt';
+        throw 'Location permissions are denied.';
       }
     }
 
     // Get current position
     return await Geolocator.getCurrentPosition();
-  }
-
-  void _moveToCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Handle disabled location services
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        // Handle denied location permission
-        return;
-      }
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-
-    setState(() {
-      _currentLocationCircle = _currentLocationCircle.copyWith(
-        centerParam: LatLng(position.latitude, position.longitude),
-      );
-      _circles = Set.of([_currentLocationCircle]);
-    });
-
-    CameraPosition newPosition = CameraPosition(
-      target: LatLng(position.latitude, position.longitude),
-      zoom: 15.0,
-    );
-
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
   @override
@@ -502,7 +480,7 @@ class _MapScreen extends State<MapScreen> {
 
     return Scaffold(
       drawer: SidePanel(),
-      backgroundColor: background,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: TopNavBar(
         title: 'KARTE',
         onMenuPressed: () {
@@ -514,7 +492,7 @@ class _MapScreen extends State<MapScreen> {
           Column(
             children: [
               TabBarWidget(
-                tabTexts: const ['Alle', 'Standorte', 'Sensoren'],
+                tabTexts: ['Alle', 'Standorte', 'Sensoren'],
                 onTabSelected: _updateSelectedTab,
               ),
               Expanded(
@@ -528,10 +506,6 @@ class _MapScreen extends State<MapScreen> {
                     _controller.complete(controller);
                     _mapController = controller;
                     _mapController.setMapStyle(MapStyle);
-
-                    setState(() {
-                      _circles = Set.of([_currentLocationCircle]);
-                    });
                   },
                 ),
               ),
@@ -1273,5 +1247,86 @@ class _MapScreen extends State<MapScreen> {
         ],
       ),
     );
+  }
+}
+
+class MapSample extends StatefulWidget {
+  final String selectedTab; // Added
+  const MapSample({Key? key, required this.selectedTab}) : super(key: key);
+
+  @override
+  State<MapSample> createState() => MapSampleState();
+}
+
+class MapSampleState extends State<MapSample> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+
+  MapObjects mapObjects = MapObjects();
+  Set<Circle> circles = Set<Circle>();
+  Set<Polygon> polygons = Set<Polygon>();
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
+    zoom: 10.0,
+  );
+
+  @override
+  void didUpdateWidget(covariant MapSample oldWidget) async {
+    super.didUpdateWidget(oldWidget);
+    setState(() async {
+      circles = await mapObjects.getCircles((circleData) {
+        // Define the onTap functionality for the circle here
+        print('You tapped circle: ${circleData.circleId.value}');
+      });
+      polygons = await mapObjects.getPolygons((polygonData) {
+        // Define the onTap functionality for the polygon here
+        print('You tapped polygon: ${polygonData.polygonId.value}');
+      });
+      print('Circles: $circles');
+      print('Polygons: $polygons');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switch (widget.selectedTab) {
+      case 'alle':
+        // show all circles and polygons
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _kGooglePlex,
+          zoomControlsEnabled: false,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          circles: circles,
+          polygons: polygons,
+        );
+      case 'standorte':
+// show only circles
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _kGooglePlex,
+          zoomControlsEnabled: false,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          circles: circles,
+        );
+      case 'sensoren':
+// show only polygons
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _kGooglePlex,
+          zoomControlsEnabled: false,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          polygons: polygons,
+        );
+      default:
+        return SizedBox.shrink();
+    }
   }
 }
