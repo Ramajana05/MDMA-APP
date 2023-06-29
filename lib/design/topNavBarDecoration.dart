@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../colors/appColors.dart';
 
+/// The `topNavBarDecoration` class provides static methods to retrieve the box decoration and text style
+/// used for the top navigation bar.
+
 class topNavBarDecoration {
   static const Color startGradientColor = Color.fromARGB(255, 86, 252, 108);
   static const Color endGradientColor = primaryAppLightGreen;

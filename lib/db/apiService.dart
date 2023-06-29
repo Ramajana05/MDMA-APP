@@ -1,5 +1,10 @@
 import 'package:dio/dio.dart';
 
+/* The ApiService class provides methods to interact with the backend API.
+ It handles authentication, sending requests, and processing responses.
+ This class utilizes the Dio package for making HTTP requests.
+ */
+
 class ApiService {
   final Dio _dio = Dio();
   String _token = '';

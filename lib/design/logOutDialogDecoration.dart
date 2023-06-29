@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../colors/appColors.dart';
 
+/// The `LogOutDecoration` class provides static methods to retrieve the box decoration and text style
+/// used for the log out section.
+
 class LogOutDecoration {
   static BoxDecoration getBoxDecoration() {
     return BoxDecoration(

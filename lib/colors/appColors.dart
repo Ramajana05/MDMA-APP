@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:forestapp/colors/mapDarkMode.dart';
 import 'package:forestapp/service/LoginService.dart';
 
+/* The `Colors` class provides a set of predefined color constants used throughout the application.
+ It includes color values for various UI elements, such as backgrounds, fonts, buttons, etc.
+*/
+
 ///App Colors
 const primaryAppLightGreen = Color.fromARGB(255, 40, 233, 127);
 const primaryUnselectedLabelColor = Color.fromARGB(255, 110, 110, 110);
@@ -19,6 +23,10 @@ Color white = Colors.white;
 Color black = const Color.fromARGB(255, 0, 0, 0); //Fonts
 Color cardShadow = Color.fromARGB(255, 145, 143, 143);
 String MapStyle = lightMapStyle;
+
+/// Updates the app colors based on the provided [isDarkMode] value.
+/// If [isDarkMode] is `true`, the dark mode colors will be applied.
+/// If [isDarkMode] is `false`, the light mode colors will be applied.
 
 void updateAppColors(bool isDarkMode) {
   if (isDarkMode) {
@@ -46,12 +54,12 @@ const loginGrey = Color.fromARGB(255, 158, 158, 158);
 const infoGreen = Color.fromARGB(255, 128, 197, 130);
 const infoGrey = Color.fromARGB(255, 170, 169, 169);
 
-///Visitor, Sensor, Humidity, Temperature Colors
+/// The `VisitorSensorColors` class provides color constants related to visitor, sensor, humidity, and temperature elements.
 const primaryVisitorColor = Color.fromARGB(255, 240, 113, 202);
 const red = Colors.red;
 const blue = Colors.blue;
 
-///Colors of the map
+/// The `MapColors` class provides color constants related to the map elements.
 const primaryVisitorLowCountColor = Color.fromARGB(255, 170, 169, 169);
 const primaryVisitorModerateCountColor = Color.fromARGB(255, 128, 197, 130);
 
