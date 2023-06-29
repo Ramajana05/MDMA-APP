@@ -28,6 +28,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
   double weeklyMax = 6;
   double monthlyMax = 3;
 
+  var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
+  var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
+  List<ChartData> rainPercentChartDaily = [];
+
   List<ChartData> visitorChartDaily = [];
   List<ChartData> visitorChartWeekly = [];
   List<ChartData> visitorChartMonthly = [];
@@ -39,15 +43,23 @@ class _StatisticsScreen extends State<StatisticsScreen>
   List<ChartData> airHumidityChartDaily = [];
   List<ChartData> airHumidityChartWeekly = [];
   List<ChartData> airHumidityChartMonthly = [];
+  List<ChartData> empty = [];
 
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
+  bool showRain = true;
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
   var temperatureColor = red;
   var airHumidityColor = blue;
+
+  void handleToggle(bool value) {
+    setState(() {
+      showRain = value;
+    });
+  }
 
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
@@ -68,6 +80,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
+    final fetchStatisticsDataHourRain =
+        await loginService.fetchStatisticDataHourFromDatabase('Rain');
 
     final fetchStatisticsDataHourVisitor =
         await loginService.fetchStatisticDataHourFromDatabase('Visitor');
@@ -100,6 +114,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
     setState(() {
       //day charts
+      rainPercentChartDaily = fetchStatisticsDataHourRain;
       visitorChartDaily = fetchStatisticsDataHourVisitor;
       tempChartDaily = fetchStatisticsDataHourTemp;
       airHumidityChartDaily = fetchStatisticsDataHourHumidity;
@@ -182,6 +197,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   Widget buildChartWidget(
     List<ChartData> chartData,
+    List<ChartData> rainPercentChartDaily,
     Color chartColor,
     double visibleMaximum,
     String chartName,
@@ -253,7 +269,23 @@ class _StatisticsScreen extends State<StatisticsScreen>
               color: chartColor,
               dataLabelMapper: (ChartData data, _) => data.x,
               width: 5,
-            )
+            ),
+            LineSeries<ChartData, String>(
+              dataSource: rainPercentChartDaily,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              isVisible: showRain == true && chartData == visitorChartDaily
+                  ? true
+                  : false,
+              markerSettings: const MarkerSettings(
+                borderColor: deepPurple,
+                isVisible: true,
+                color: grey,
+                shape: DataMarkerType.circle,
+              ),
+              color: const Color.fromARGB(255, 56, 162, 197),
+              width: 5,
+            ),
           ],
           tooltipBehavior: TooltipBehavior(
             animationDuration: 1,
@@ -276,6 +308,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     chartData == tempChartWeekly) {
                   formattedYWithUnit = '$formattedY°C';
                 } else if (chartData == airHumidityChartDaily ||
+                    chartData == rainPercentChartDaily ||
                     chartData == airHumidityChartMonthly ||
                     chartData == airHumidityChartWeekly) {
                   formattedYWithUnit = '$formattedY%';
@@ -317,11 +350,45 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   ),
                 );
               } else if (seriesIndex == 1) {
-                String formattedY = data.y.toString();
+                String formattedY = data.y.toStringAsFixed(1);
 
-                if (formattedY.endsWith('.0')) {
-                  formattedY = formattedY.substring(0, formattedY.length - 2);
+                if (formattedY.contains('.')) {
+                  formattedY = formattedY.split('.')[0];
                 }
+
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: backgroundCard,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: chartColor,
+                            ),
+                          ),
+                          Text(
+                            '  ${data.x} : ${data.y}%',
+                            style: TextStyle(
+                                color:
+                                    black), // Set tooltip font color to "black"
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               }
               return Container();
             },
@@ -380,6 +447,26 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         ],
                       ),
                     ),
+                  ), // Button
+                  Visibility(
+                    visible: visitorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SwitchListTile(
+                        activeColor: Colors.white, // Lighter green tone
+                        activeTrackColor:
+                            const Color.fromARGB(255, 40, 160, 40),
+                        title: Text(
+                          showRain ? rainTextVisible : rainTextHidden,
+                          style: TextStyle(
+                            color: black,
+                            fontSize: 17,
+                          ),
+                        ),
+                        value: showRain,
+                        onChanged: handleToggle,
+                      ),
+                    ),
                   ),
 
                   /// Chart - Visitor
@@ -388,6 +475,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     child: Container(
                       child: buildChartWidget(
                         visitorChartDaily,
+                        rainPercentChartDaily,
                         visitorColor,
                         dailyMax,
                         '$daily $visitor',
@@ -451,6 +539,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: tempVisible,
                     child: buildChartWidget(
                       tempChartDaily,
+                      empty,
                       temperatureColor,
                       dailyMax,
                       '$daily $temperature',
@@ -511,6 +600,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                     visible: airVisible,
                     child: buildChartWidget(
                       airHumidityChartDaily,
+                      empty,
                       airHumidityColor,
                       dailyMax,
                       '$daily $airHumidity',
@@ -578,8 +668,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                     visible: visitorVisible,
-                    child: buildChartWidget(visitorChartWeekly, visitorColor,
-                        weeklyMax, '$weekly $visitor'),
+                    child: buildChartWidget(visitorChartWeekly, empty,
+                        visitorColor, weeklyMax, '$weekly $visitor'),
                   ),
                 ],
               ),
@@ -634,8 +724,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartWeekly, temperatureColor,
-                        weeklyMax, '$weekly $temperature'),
+                    child: buildChartWidget(tempChartWeekly, empty,
+                        temperatureColor, weeklyMax, '$weekly $temperature'),
                   ),
                 ],
               ),
@@ -690,7 +780,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(airHumidityChartWeekly,
+                    child: buildChartWidget(airHumidityChartWeekly, empty,
                         airHumidityColor, weeklyMax, '$weekly $airHumidity'),
                   ),
                 ],
@@ -755,8 +845,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Visitor
                   Visibility(
                       visible: visitorVisible,
-                      child: buildChartWidget(visitorChartMonthly, visitorColor,
-                          monthlyMax, '$monthly $visitor')),
+                      child: buildChartWidget(visitorChartMonthly, empty,
+                          visitorColor, monthlyMax, '$monthly $visitor')),
                 ],
               ),
             ),
@@ -810,8 +900,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   // Chart - Temperature
                   Visibility(
                     visible: tempVisible,
-                    child: buildChartWidget(tempChartMonthly, temperatureColor,
-                        monthlyMax, '$monthly $temperature'),
+                    child: buildChartWidget(tempChartMonthly, empty,
+                        temperatureColor, monthlyMax, '$monthly $temperature'),
                   ),
                 ],
               ),
@@ -866,7 +956,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
                   /// Chart - Air Humidity
                   Visibility(
                     visible: airVisible,
-                    child: buildChartWidget(airHumidityChartMonthly,
+                    child: buildChartWidget(airHumidityChartMonthly, empty,
                         airHumidityColor, monthlyMax, '$monthly $airHumidity'),
                   ),
                 ],

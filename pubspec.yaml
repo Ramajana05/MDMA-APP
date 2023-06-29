@@ -55,7 +55,6 @@ dependencies:
   flutter_vector_icons: ^2.0.0
   video_player: ^2.2.19 
   dio: ^4.0.0
-  shared_preferences: ^2.0.10
   flutter_hooks: ^0.18.0
 
 

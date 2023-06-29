@@ -483,6 +483,7 @@ class LoginService {
         where: 'Hour <= ?',
         whereArgs: [hourFormat.format(previousHour)],
       );
+      print('Fetched StatisticsWeek: $statisticHourly');
 
       await database.close();
 
@@ -495,7 +496,7 @@ class LoginService {
         );
       });
     } catch (e) {
-      print('Error fetching statistics data from database: $e');
+      print('Error fetching statistics data hour from database: $e');
       return [];
     }
   }
@@ -511,7 +512,6 @@ class LoginService {
       final previousHourFormatted =
           '${hourFormat.format(previousHour).substring(0, 2)}:00';
 
-      print("previousHour: $previousHour");
       final statisticHourly = await database.query(
         'StaitsicsDataHour',
         columns: ['Hour', type],
@@ -519,7 +519,6 @@ class LoginService {
         whereArgs: [previousHourFormatted],
       );
 
-      print("statisticHourly: $statisticHourly");
       await database.close();
 
       final data = statisticHourly.first;
@@ -537,15 +536,15 @@ class LoginService {
   ///fetches the data für a week until today
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
-    DateTime now = DateTime.now().subtract(const Duration(days: 1));
+    DateTime now = DateTime.now();
     print(now);
     DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
 
     DateFormat dateFormat = DateFormat('yyyyMMdd');
     String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
     String todayFormatted = dateFormat.format(now);
-    print(sevenDaysAgoFormatted);
 
+    print("object");
     print(todayFormatted);
     try {
       await initializeDateFormatting('de_DE', null);
@@ -623,56 +622,36 @@ class LoginService {
       String type) async {
     try {
       final database = await _initDatabase();
-
       final DateTime now = DateTime.now();
-      final DateTime previousMonth = DateTime(now.year, now.month - 1, 1);
-      final DateTime lastDayPreviousMonth = DateTime(now.year, now.month, 0);
+      final DateTime fiveWeeksAgo = now.subtract(Duration(days: 35));
       final DateFormat dateFormat = DateFormat('yyyyMMdd');
 
       List<ChartData> statisticData = [];
 
-      // Get the first and last date of each week in the previous month
-      DateTime weekStart = previousMonth;
+      DateTime weekStart = fiveWeeksAgo;
       DateTime weekEnd;
+
       for (int i = 0; i < 4; i++) {
         weekEnd = weekStart.add(const Duration(days: 6));
-
-        // If the weekEnd exceeds the last day of the previous month, set it to the last day
-        if (weekEnd.isAfter(lastDayPreviousMonth)) {
-          weekEnd = lastDayPreviousMonth;
-        }
-
-        // If it's the last iteration and there are remaining days, add them to the last week
-        if (i == 3 && weekEnd != lastDayPreviousMonth) {
-          final remainingDays = lastDayPreviousMonth.difference(weekEnd).inDays;
-          weekEnd = lastDayPreviousMonth;
-          weekStart = weekStart.subtract(Duration(days: remainingDays));
-        }
 
         final String weekStartFormatted =
             DateFormat('dd.MM.').format(weekStart);
         final String weekEndFormatted = DateFormat('dd.MM.').format(weekEnd);
 
         final statisticWeek = await database.rawQuery('''
-        SELECT AVG($type) AS average
-        FROM StatisticsDataDay
-        WHERE substr(Date, 7) || substr(Date, 4, 2) || substr(Date, 1, 2) BETWEEN ? AND ?
-      ''', [dateFormat.format(weekStart), dateFormat.format(weekEnd)]);
+    SELECT AVG($type) AS average
+    FROM StatisticsDataDay
+    WHERE substr(Date, 7) || substr(Date, 4, 2) || substr(Date, 1, 2) BETWEEN ? AND ?
+  ''', [dateFormat.format(weekStart), dateFormat.format(weekEnd)]);
 
         double average =
             (statisticWeek.first['average'] as num?)?.toDouble() ?? 0.0;
-
-        if (type == "Visitor") {
-          average = average.roundToDouble();
-        } else {
-          average = double.parse(average.toStringAsFixed(2));
-        }
 
         ChartData chartData =
             ChartData('$weekStartFormatted - $weekEndFormatted', average);
         statisticData.add(chartData);
 
-        weekStart = weekEnd.add(const Duration(days: 1));
+        weekStart = weekStart.add(const Duration(days: 7));
       }
 
       await database.close();
