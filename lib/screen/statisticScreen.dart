@@ -28,6 +28,10 @@ class _StatisticsScreen extends State<StatisticsScreen>
   double weeklyMax = 6;
   double monthlyMax = 3;
 
+  var rainTextVisible = 'Regenwahrscheinlichkeit einblenden';
+  var rainTextHidden = 'Regenwahrscheinlichkeit ausblenden';
+  List<ChartData> rainPercentChartDaily = [];
+
   List<ChartData> visitorChartDaily = [];
   List<ChartData> visitorChartWeekly = [];
   List<ChartData> visitorChartMonthly = [];
@@ -43,11 +47,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
   bool visitorVisible = true;
   bool tempVisible = true;
   bool airVisible = true;
+  bool showRain = true;
 
   ///linechart color
   var visitorColor = primaryVisitorColor;
   var temperatureColor = red;
   var airHumidityColor = blue;
+
+  void handleToggle(bool value) {
+    setState(() {
+      showRain = value;
+    });
+  }
 
   ///box shadow color
   final visitorChartShadow = buildChartBoxDecoration(primaryVisitorShadowColor);
@@ -68,6 +79,8 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
   Future<void> _loadChartData() async {
     LoginService loginService = LoginService();
+    final fetchStatisticsDataHourRain =
+        await loginService.fetchStatisticDataHourFromDatabase('Rain');
 
     final fetchStatisticsDataHourVisitor =
         await loginService.fetchStatisticDataHourFromDatabase('Visitor');
@@ -100,6 +113,7 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
     setState(() {
       //day charts
+      rainPercentChartDaily = fetchStatisticsDataHourRain;
       visitorChartDaily = fetchStatisticsDataHourVisitor;
       tempChartDaily = fetchStatisticsDataHourTemp;
       airHumidityChartDaily = fetchStatisticsDataHourHumidity;
@@ -253,7 +267,23 @@ class _StatisticsScreen extends State<StatisticsScreen>
               color: chartColor,
               dataLabelMapper: (ChartData data, _) => data.x,
               width: 5,
-            )
+            ),
+            LineSeries<ChartData, String>(
+              dataSource: rainPercentChartDaily,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              isVisible: rainPercentChartDaily == true &&
+                      chartData == visitorChartDaily
+                  ? true
+                  : false,
+              markerSettings: const MarkerSettings(
+                borderColor: deepPurple,
+                isVisible: true,
+                color: grey,
+                shape: DataMarkerType.circle,
+              ),
+              color: const Color.fromARGB(255, 56, 162, 197),
+            ),
           ],
           tooltipBehavior: TooltipBehavior(
             animationDuration: 1,
@@ -321,6 +351,18 @@ class _StatisticsScreen extends State<StatisticsScreen>
 
                 if (formattedY.endsWith('.0')) {
                   formattedY = formattedY.substring(0, formattedY.length - 2);
+
+                  return Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: chartColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      'Regenwahrscheinlichkeit: ${data.y}%',
+                      style: TextStyle(color: black),
+                    ),
+                  );
                 }
               }
               return Container();
@@ -380,7 +422,28 @@ class _StatisticsScreen extends State<StatisticsScreen>
                         ],
                       ),
                     ),
-                  ),
+                  ), // Button
+                  // Visibility(
+                  //   visible: visitorVisible,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(left: 8),
+                  //     child: SwitchListTile(
+                  //       activeColor: const Color.fromRGBO(
+                  //           38, 158, 38, 0.2), // Lighter green tone
+                  //       activeTrackColor:
+                  //           const Color.fromARGB(255, 40, 160, 40),
+                  //       title: Text(
+                  //         showRain ? rainTextVisible : rainTextHidden,
+                  //         style: TextStyle(
+                  //           color: black,
+                  //           fontSize: 17,
+                  //         ),
+                  //       ),
+                  //       value: showRain,
+                  //       onChanged: handleToggle,
+                  //     ),
+                  //   ),
+                  // ),
 
                   /// Chart - Visitor
                   Visibility(
