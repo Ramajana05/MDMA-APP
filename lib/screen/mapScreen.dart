@@ -50,20 +50,11 @@ class _MapScreen extends State<MapScreen> {
   void initState() {
     super.initState();
     _selectedTab = 'alle';
-    _circles = <Circle>{};
-    _polygons = <Polygon>{};
+    _circles = Set<Circle>();
+    _polygons = Set<Polygon>();
 
-    MapObjects().getCircles(_handleCircleTap).then((circles) {
-      setState(() {
-        _circles = circles;
-      });
-    });
-
-    MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-      setState(() {
-        _polygons = polygons;
-      });
-    });
+    // Fetch circles and polygons
+    fetchCirclesAndPolygons();
 
     _currentLocationCircle = Circle(
       circleId: CircleId('currentLocation'),
@@ -74,7 +65,27 @@ class _MapScreen extends State<MapScreen> {
       strokeWidth: 2,
     );
     _dropdownItems = [];
-    loadPlacesFromDatabase(); // Load the places from the database immediately
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the circles and polygons
+    setState(() {
+      _circles = Set<Circle>();
+      _polygons = Set<Polygon>();
+    });
+
+    super.dispose();
+  }
+
+  void fetchCirclesAndPolygons() async {
+    final circles = await MapObjects().getCircles(_handleCircleTap);
+    final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+
+    setState(() {
+      _circles = circles;
+      _polygons = polygons;
+    });
   }
 
   Future<void> loadPlacesFromDatabase() async {
@@ -96,43 +107,41 @@ class _MapScreen extends State<MapScreen> {
           : index == 1
               ? 'standorte'
               : 'sensoren';
-      switch (_selectedTab) {
-        case 'alle':
-          MapObjects().getCircles(_handleCircleTap).then((circles) {
-            setState(() {
-              _circles = circles;
-            });
-          });
-          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-            setState(() {
-              _polygons = polygons;
-            });
-          });
-          break;
-        case 'standorte':
-          MapObjects().getPolygons(_handlePolygonTap).then((polygons) {
-            setState(() {
-              _circles = <Circle>{};
-              _polygons = polygons;
-            });
-          });
-          break;
-        case 'sensoren':
-          MapObjects().getCircles(_handleCircleTap).then((circles) {
-            setState(() {
-              _circles = circles;
-              _polygons = <Polygon>{};
-            });
-          });
-          break;
-        default:
-          setState(() {
-            _circles = <Circle>{};
-            _polygons = <Polygon>{};
-          });
-          break;
-      }
     });
+
+    switch (_selectedTab) {
+      case 'alle':
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+
+        setState(() {
+          _circles = circles;
+          _polygons = polygons;
+        });
+        break;
+      case 'standorte':
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+        setState(() {
+          _circles = Set<Circle>();
+          _polygons = polygons;
+        });
+        break;
+      case 'sensoren':
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        setState(() {
+          _circles = circles;
+          _polygons = Set<Polygon>();
+        });
+        break;
+      default:
+        final circles = await MapObjects().getCircles(_handleCircleTap);
+        final polygons = await MapObjects().getPolygons(_handlePolygonTap);
+        setState(() {
+          _circles = circles;
+          _polygons = polygons;
+        });
+        break;
+    }
   }
 
   void _handleCircleTap(CircleData circle) {
@@ -518,6 +527,7 @@ class _MapScreen extends State<MapScreen> {
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     _mapController = controller;
+                    _mapController.setMapStyle(MapStyle);
 
                     setState(() {
                       _circles = Set.of([_currentLocationCircle]);
@@ -546,7 +556,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Voll',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -557,7 +567,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Mittel',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -568,7 +578,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Niedrig',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
@@ -596,7 +606,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '+10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -607,7 +617,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '5 - 10',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                       SizedBox(width: 16),
                       Icon(
@@ -618,7 +628,7 @@ class _MapScreen extends State<MapScreen> {
                       SizedBox(width: 8),
                       Text(
                         '< 5',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: black),
                       ),
                     ],
                   ],
@@ -640,7 +650,7 @@ class _MapScreen extends State<MapScreen> {
               child: Icon(
                 Icons.info_outline,
                 size: 35,
-                color: const Color.fromARGB(255, 0, 112, 204),
+                color: grey,
               ),
             ),
           ),
@@ -676,7 +686,7 @@ class _MapScreen extends State<MapScreen> {
               child: Icon(
                 areItemsVisible ? Icons.forest_outlined : Icons.forest_outlined,
                 size: 35,
-                color: const Color.fromARGB(255, 0, 0, 0),
+                color: green,
               ),
             ),
           ),
@@ -772,11 +782,13 @@ class _MapScreen extends State<MapScreen> {
                                   String longitude = '';
 
                                   return AlertDialog(
+                                    backgroundColor: background,
                                     title: Text(
                                       'Neues Gebiet',
                                       style: TextStyle(
                                         fontSize: 24.0,
                                         fontWeight: FontWeight.bold,
+                                        color: black,
                                       ),
                                     ),
                                     content: Column(
@@ -794,8 +806,8 @@ class _MapScreen extends State<MapScreen> {
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
-                                              borderSide: const BorderSide(
-                                                color: grey,
+                                              borderSide: BorderSide(
+                                                color: black,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
@@ -812,6 +824,8 @@ class _MapScreen extends State<MapScreen> {
                                             focusColor: const Color.fromARGB(
                                                 255, 40, 233, 127),
                                           ),
+                                          style: TextStyle(
+                                              fontSize: 16.0, color: black),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -821,22 +835,30 @@ class _MapScreen extends State<MapScreen> {
                                               Text(
                                                 'Aktueller Standort',
                                                 style: TextStyle(
-                                                  fontSize: 17.0,
-                                                ),
+                                                    fontSize: 17.0,
+                                                    color: black),
                                               ),
-                                              Checkbox(
-                                                value: useCurrentLocation,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    useCurrentLocation = value!;
-                                                    if (useCurrentLocation) {
-                                                      latitude = '';
-                                                      longitude = '';
-                                                    }
-                                                  });
-                                                },
-                                                activeColor:
-                                                    primaryAppLightGreen,
+                                              Theme(
+                                                data:
+                                                    Theme.of(context).copyWith(
+                                                  unselectedWidgetColor:
+                                                      Colors.black,
+                                                ),
+                                                child: Checkbox(
+                                                  value: useCurrentLocation,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      useCurrentLocation =
+                                                          value!;
+                                                      if (useCurrentLocation) {
+                                                        latitude = '';
+                                                        longitude = '';
+                                                      }
+                                                    });
+                                                  },
+                                                  activeColor:
+                                                      primaryAppLightGreen,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -851,12 +873,12 @@ class _MapScreen extends State<MapScreen> {
                                             decoration: InputDecoration(
                                               labelText: 'Latitude',
                                               enabled: !useCurrentLocation,
-                                              fillColor: Colors.white,
+                                              fillColor: background,
                                               enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12.0),
-                                                borderSide: const BorderSide(
-                                                  color: Colors.grey,
+                                                borderSide: BorderSide(
+                                                  color: black,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -868,12 +890,14 @@ class _MapScreen extends State<MapScreen> {
                                                   width: 2.0,
                                                 ),
                                               ),
-                                              labelStyle: const TextStyle(
-                                                color: Colors.grey,
+                                              labelStyle: TextStyle(
+                                                color: black,
                                               ),
                                               focusColor: const Color.fromARGB(
                                                   255, 40, 233, 127),
                                             ),
+                                            style: TextStyle(
+                                                fontSize: 16.0, color: black),
                                             readOnly: useCurrentLocation,
                                             controller: TextEditingController(
                                                 text: latitude),
@@ -894,8 +918,8 @@ class _MapScreen extends State<MapScreen> {
                                               enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12.0),
-                                                borderSide: const BorderSide(
-                                                  color: Colors.grey,
+                                                borderSide: BorderSide(
+                                                  color: black,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -907,12 +931,14 @@ class _MapScreen extends State<MapScreen> {
                                                   width: 2.0,
                                                 ),
                                               ),
-                                              labelStyle: const TextStyle(
-                                                color: Colors.grey,
+                                              labelStyle: TextStyle(
+                                                color: black,
                                               ),
                                               focusColor: const Color.fromARGB(
                                                   255, 40, 233, 127),
                                             ),
+                                            style: TextStyle(
+                                                fontSize: 16.0, color: black),
                                             readOnly: useCurrentLocation,
                                             controller: TextEditingController(
                                                 text: longitude),
@@ -931,7 +957,7 @@ class _MapScreen extends State<MapScreen> {
                                             child: Text(
                                               'Abbrechen',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: black,
                                                 fontSize: 18.0,
                                               ),
                                             ),
@@ -943,7 +969,7 @@ class _MapScreen extends State<MapScreen> {
                                             child: Text(
                                               'Hinzufügen',
                                               style: TextStyle(
-                                                color: Colors.white,
+                                                color: black,
                                                 fontSize: 18.0,
                                               ),
                                             ),
@@ -1095,11 +1121,13 @@ class _MapScreen extends State<MapScreen> {
                                       builder: (BuildContext context,
                                           StateSetter setState) {
                                         return AlertDialog(
+                                          backgroundColor: background,
                                           title: Text(
                                             'Gebiet Entfernen',
                                             style: TextStyle(
                                               fontSize: 24.0,
                                               fontWeight: FontWeight.bold,
+                                              color: black,
                                             ),
                                           ),
                                           content: SingleChildScrollView(
@@ -1109,7 +1137,7 @@ class _MapScreen extends State<MapScreen> {
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 border: Border.all(
-                                                  color: Colors.grey,
+                                                  color: black,
                                                   width: 1.0,
                                                 ),
                                                 borderRadius:
@@ -1140,8 +1168,8 @@ class _MapScreen extends State<MapScreen> {
                                                 style: TextStyle(
                                                   fontSize:
                                                       18.0, // Adjust the font size as needed
-                                                  color: Colors
-                                                      .black, // Customize the text color
+                                                  color:
+                                                      black, // Customize the text color
                                                 ),
                                                 underline:
                                                     Container(), // Remove the default underline
@@ -1160,7 +1188,7 @@ class _MapScreen extends State<MapScreen> {
                                                   child: Text(
                                                     'Abbrechen',
                                                     style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: black,
                                                       fontSize: 18.0,
                                                     ),
                                                   ),
@@ -1263,30 +1291,12 @@ class MapSampleState extends State<MapSample> {
   MapObjects mapObjects = MapObjects();
   Set<Circle> circles = Set<Circle>();
   Set<Polygon> polygons = Set<Polygon>();
-  Set<Marker> _markers = {};
   late GoogleMapController _mapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(49.120208, 9.273522), // Heilbronn's latitude and longitude
     zoom: 1.0,
   );
-
-  @override
-  void didUpdateWidget(covariant MapSample oldWidget) async {
-    super.didUpdateWidget(oldWidget);
-    setState(() async {
-      circles = await mapObjects.getCircles((circleData) {
-        // Define the onTap functionality for the circle here
-        print('You tapped circle: ${circleData.circleId.value}');
-      });
-      polygons = await mapObjects.getPolygons((polygonData) {
-        // Define the onTap functionality for the polygon here
-        print('You tapped polygon: ${polygonData.polygonId.value}');
-      });
-      print('Circles: $circles');
-      print('Polygons: $polygons');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

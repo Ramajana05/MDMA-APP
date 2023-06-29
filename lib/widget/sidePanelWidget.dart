@@ -11,6 +11,13 @@ import 'package:forestapp/screen/helpScreen.dart';
 import 'package:forestapp/colors/appColors.dart';
 
 import 'package:forestapp/widget/bottomnavbar.dart';
+import 'package:flutter/services.dart';
+
+/* A widget representing the side panel drawer in the app.
+
+ The side panel drawer provides navigation options and settings for the app.
+ It includes options such as viewing the user profile, accessing the homepage,
+ toggling between light and dark mode, accessing help content, and logging out.*/
 
 class SidePanel extends StatefulWidget {
   final VoidCallback? onDarkModeChanged;
@@ -29,7 +36,7 @@ class _SidePanelState extends State<SidePanel> {
     return loggedInUsername ?? '';
   }
 
-  ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isDarkModeNotifier = ValueNotifier<bool>(false);
   int currentIndex = 0; // Store the current index
 
   @override
@@ -45,13 +52,19 @@ class _SidePanelState extends State<SidePanel> {
   }
 
   void checkDarkMode() async {
-    LoginService loginService = LoginService();
+    final loginService = LoginService();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final loggedInUsername = userProvider.loggedInUsername;
     final darkModeValue =
         await loginService.fetchDarkModeValue(loggedInUsername!);
 
-    _isDarkModeNotifier.value = darkModeValue;
+    if (_isDarkModeNotifier.value != darkModeValue) {
+      setState(() {
+        _isDarkModeNotifier.value = darkModeValue;
+      });
+    }
+
+    print('_isDarkModeNotifier: ${_isDarkModeNotifier.value}');
   }
 
   @override
@@ -99,7 +112,7 @@ class _SidePanelState extends State<SidePanel> {
                         title: Text(
                           'Profil',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: black,
                           ),
                         ),
@@ -123,7 +136,7 @@ class _SidePanelState extends State<SidePanel> {
                         title: Text(
                           'Startseite',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: black,
                           ),
                         ),
@@ -146,18 +159,18 @@ class _SidePanelState extends State<SidePanel> {
                               Widget? child) {
                             return Icon(
                               value
-                                  ? Icons.dark_mode_outlined
-                                  : Icons.wb_sunny_outlined,
+                                  ? Icons.wb_sunny_outlined
+                                  : Icons.dark_mode_outlined,
                               size: 28,
-                              color: value ? blue : yellow,
+                              color: value ? yellow : black,
                             );
                           },
                         ),
                         title: Text(
                           _isDarkModeNotifier.value
-                              ? 'Dunkler Modus'
-                              : 'Heller Modus',
-                          style: TextStyle(fontSize: 18, color: black),
+                              ? 'Heller Modus'
+                              : 'Dunkler Modus',
+                          style: TextStyle(fontSize: 20, color: black),
                         ),
                         onTap: () async {
                           final loggedInUsername =
@@ -180,14 +193,19 @@ class _SidePanelState extends State<SidePanel> {
 
                           updateAppColors(_isDarkModeNotifier.value);
 
+                          SystemChrome.setSystemUIOverlayStyle(
+                              SystemUiOverlayStyle(
+                            statusBarColor: background,
+                            systemNavigationBarColor: background,
+                          ));
+
                           // Save the current index
                           currentIndex = 2;
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CustomBottomTabBar(
-                                trans_index: 0,
-                              ),
+                              builder: (context) =>
+                                  CustomBottomTabBar(trans_index: 0),
                             ),
                           );
                         },
@@ -201,7 +219,7 @@ class _SidePanelState extends State<SidePanel> {
                         title: Text(
                           'Hilfe',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: black,
                           ),
                         ),
@@ -224,7 +242,7 @@ class _SidePanelState extends State<SidePanel> {
                         ),
                         title: Text(
                           'Ausloggen',
-                          style: TextStyle(fontSize: 18, color: black),
+                          style: TextStyle(fontSize: 20, color: black),
                         ),
                         iconColor: red,
                         onTap: () {

@@ -1,10 +1,6 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -18,10 +14,6 @@ import '../widget/topNavBar.dart';
 import '../widget/bottomNavBar.dart';
 import 'dart:async';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:forestapp/screen/mapScreen.dart';
-
 import 'package:forestapp/widget/mapObjects.dart';
 import 'package:forestapp/service/loginService.dart';
 
@@ -33,14 +25,19 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var currentVisitors = 48;
-  var maxVisitors = 70;
+  var currentVisitors = 0.0;
+  var maxVisitors = 150;
 
   var currentSensors = 0;
   var maxSensors = 0;
 
   var currentTemperature = 0.0;
+
   var maxTemperature = 0.0;
+
+  var currentHumidity = 0.0;
+
+  var weatherTemperature = 0.0;
 
   var airHumidity = 0.0;
   var avgAirHumidity = 0.0;
@@ -50,10 +47,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool showStatistics = true;
   bool showWeatherForecast = true;
 
-  late List<ChartData> visitorChartDaily;
-  late List<ChartData> tempChartDaily;
-  late List<ChartData> airHumidityChartDaily;
-  late List<ChartData> rainPercentChartDaily;
+  List<ChartData> visitorChartDaily = [];
+  late List<ChartData> tempChartDaily = [];
+  late List<ChartData> airHumidityChartDaily = [];
 
   late PageController _pageController;
   int _currentPage = 0;
@@ -63,6 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String dailyVisitors = "Gestrige Besucher";
   String dailyTemps = "Gestrige Temperatur";
   String dailyAir = 'Gestrige Luftfeuchtigkeit';
+
   LoginService loginService = LoginService();
 
   late List<Statistic> _statistics;
@@ -70,7 +67,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool isMapDataLoaded =
       false; // Add a boolean variable to track if map data is loaded
 
-  List<WeatherItem> weatherForecast = [];
+  List<WeatherItem> weatherForecast = [
+    WeatherItem(
+      weekday: "Freitag",
+      date: DateTime.now().toString(),
+      weatherIcon: "Kein Bild verfügbar",
+      temperature: 20.0,
+      rainPercentage: 42.0,
+      windSpeed: 18.0,
+    ),
+  ];
 
   List<Widget> alertWidgets = []; // Store the alert widgets
 
@@ -121,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         setState(() {
           airHumidity = airWHumidity;
-          currentTemperature = temperature;
+          weatherTemperature = temperature;
           weatherForecast = weatherItems;
         });
 
@@ -129,7 +135,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
 
-    return [];
+    return [
+      WeatherItem(
+        weekday: "Freitag",
+        date: DateTime.now().toString(),
+        weatherIcon: "Kein Bild verfügbar",
+        temperature: 21,
+        rainPercentage: 23,
+        windSpeed: 24.9,
+      )
+    ];
   }
 
   String getGermanWeekday(int weekday) {
@@ -185,7 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //checkDarkMode();
     fetchWeatherData();
     loadAlerts();
-    updateSensorCounts();
+    //updateSensorCounts();
 
     _statistics = [
       Statistic(dailyVisitors),
@@ -195,8 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: _statistics.length);
     _currentPage = _statistics.length;
     _startAutoScroll();
-    generateData();
-
+    _loadChartData();
     super.initState();
   }
 
@@ -206,6 +220,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _scrollTimer?.cancel();
 
     super.dispose();
+  }
+
+  Future<void> _loadChartData() async {
+    LoginService loginService = LoginService();
+    final visitorsFromDB =
+        await loginService.fetchStatisticDataDashboardFromDatabase('Visitor');
+    final temperatureFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('Temperatur');
+    final airHumidityFromDB = await loginService
+        .fetchStatisticDataDashboardFromDatabase('AirHumidity');
+    // Get the statistics data hourly
+    final fetchStatisticsDataHourVisitor = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('Visitor', 6, 12);
+
+    final fetchStatisticsDataHourTemp = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('Temperatur', 6, 12);
+
+    final fetchStatisticsDataHourHumidity = await loginService
+        .fetchStatisticDataYesterdayFromDatabase('AirHumidity', 6, 12);
+    final List<Widget> alerts =
+        await loginService.loadAlertsFromDatabaseWidgets();
+    final onlineCount = await loginService.countOnlineSensorsWithName();
+    final allCount = await loginService.countAllSensorsWithName();
+
+    currentSensors = onlineCount;
+    maxSensors = allCount;
+
+    print(
+        'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+    setState(() {
+      alertWidgets = alerts;
+
+      currentVisitors = visitorsFromDB.y;
+      currentTemperature = temperatureFromDB.y;
+      currentHumidity = airHumidityFromDB.y;
+      // Day charts of yesterday
+      visitorChartDaily = fetchStatisticsDataHourVisitor;
+      tempChartDaily = fetchStatisticsDataHourTemp;
+      airHumidityChartDaily = fetchStatisticsDataHourHumidity;
+    });
   }
 
   Future<void> loadAlerts() async {
@@ -220,20 +274,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  Future<void> updateSensorCounts() async {
-    try {
-      final onlineCount = await loginService.countOnlineSensorsWithName();
-      final allCount = await loginService.countAllSensorsWithName();
-
-      currentSensors = onlineCount;
-      maxSensors = allCount;
-
-      print(
-          'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
-    } catch (e) {
-      print('Error updating sensor counts: $e');
-    }
-  }
+  // Future<void> updateSensorCounts() async {
+  //   try {
+  //     final onlineCount = await loginService.countOnlineSensorsWithName();
+  //     final allCount = await loginService.countAllSensorsWithName();
+  //
+  //     currentSensors = onlineCount;
+  //     maxSensors = allCount;
+  //
+  //     print(
+  //         'Updated sensor counts: currentSensors=$currentSensors, maxSensors=$maxSensors');
+  //   } catch (e) {
+  //     print('Error updating sensor counts: $e');
+  //   }
+  // }
 
   //News
   Widget buildNewsSection() {
@@ -246,33 +300,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Neuigkeiten",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: black,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showWarningWidget = !showWarningWidget;
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Neuigkeiten",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: black,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          showWarningWidget = !showWarningWidget;
-                          loadAlerts();
-                        });
-                      },
-                      icon: Icon(
-                        showWarningWidget
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
-                        color: black,
-                        size: 30.0,
-                      ),
-                    )
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showWarningWidget = !showWarningWidget;
+                            loadAlerts();
+                          });
+                        },
+                        icon: Icon(
+                          showWarningWidget
+                              ? Icons.arrow_drop_up
+                              : Icons.arrow_drop_down,
+                          color: black,
+                          size: 30.0,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -531,7 +592,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         lightblue,
                                         blue,
                                         100,
-                                        airHumidity.toInt(),
+                                        currentHumidity.toInt(),
                                         [Icons.water_drop_outlined],
                                         "%",
                                       ),
@@ -724,6 +785,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (!_userScrolled) {
         if (_currentPage < _statistics.length * 3 - 1) {
           _currentPage++;
+          _loadChartData();
         } else {
           _currentPage = _statistics.length;
         }
@@ -736,37 +798,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _userScrolled = false; // Reset the user scrolling flag
       }
     });
-  }
-
-  void generateData() {
-    visitorChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(50) + 100);
-    });
-
-    tempChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(15) - 5);
-    });
-
-    airHumidityChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(10) + 50);
-    });
-
-    rainPercentChartDaily = generateChartData(7, (hour) {
-      return ChartData(getHours(hour + 6), Random().nextInt(40) + 10);
-    });
-  }
-
-  List<ChartData> generateChartData(
-      int count, ChartData Function(int) generator) {
-    return List.generate(count, generator);
-  }
-
-  String getHours(int hour) {
-    if (hour >= 6 && hour <= 12) {
-      String hourString = hour.toString().padLeft(2, '0');
-      return '$hourString:00';
-    }
-    return '';
   }
 
   void _handleCircleTap(CircleData circle) {
@@ -800,38 +831,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Flexible(
       child: Container(
         color: background,
-        child: SfCartesianChart(
-          primaryXAxis: CategoryAxis(
-            crossesAt: 0,
-            placeLabelsNearAxisLine: false,
-            axisLine: AxisLine(color: black, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: black),
-          ), // Set the maximum number of visible categories
-          primaryYAxis: NumericAxis(
-            labelFormat: (chartData == airHumidityChartDaily)
-                ? '{value}%'
-                : (chartData == tempChartDaily)
-                    ? '{value}°C'
-                    : '',
-            majorTickLines: MajorTickLines(size: 6, width: 2, color: black),
-            axisLine: AxisLine(color: black, width: 1.5),
-            labelStyle: TextStyle(fontSize: 15, color: black),
-          ),
-          series: <ChartSeries>[
-            LineSeries<ChartData, String>(
-              dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              markerSettings: const MarkerSettings(
-                borderColor: deepPurple,
-                isVisible: true,
-                color: grey,
-                shape: DataMarkerType.circle,
-              ),
-              color: chartColor,
-              dataLabelMapper: (ChartData data, _) => '${data.y}',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SfCartesianChart(
+            primaryXAxis: CategoryAxis(
+              crossesAt: 0,
+              placeLabelsNearAxisLine: false,
+              axisLine: AxisLine(color: black, width: 1.5),
+              labelStyle: TextStyle(fontSize: 15, color: black),
+            ), // Set the maximum number of visible categories
+            primaryYAxis: NumericAxis(
+              labelFormat: (chartData == airHumidityChartDaily)
+                  ? '{value}%'
+                  : (chartData == tempChartDaily)
+                      ? '{value}°C'
+                      : '',
+              majorTickLines: MajorTickLines(size: 6, width: 2, color: black),
+              axisLine: AxisLine(color: black, width: 1.5),
+              labelStyle: TextStyle(fontSize: 15, color: black),
             ),
-          ],
+            series: <ChartSeries>[
+              LineSeries<ChartData, String>(
+                dataSource: chartData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                markerSettings: const MarkerSettings(
+                  borderColor: deepPurple,
+                  isVisible: true,
+                  color: grey,
+                  shape: DataMarkerType.circle,
+                ),
+                color: chartColor,
+                dataLabelMapper: (ChartData data, _) => '${data.y}',
+              ),
+            ],
+          ),
         ),
       ),
     );
