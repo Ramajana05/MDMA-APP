@@ -142,14 +142,13 @@ class _SidePanelState extends State<SidePanel> {
                         ),
                         iconColor: blue,
                         onTap: () async {
-                          const url = 'https://mdma.haveachin.de/';
+                          const url =
+                              'https://www.hs-heilbronn.de/de/exmatrikulation-464d4cf6799a8fe9';
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
                             throw 'Die Website $url konnte nicht geladen werden.';
                           }
-
-                          updateAppColors(_isDarkModeNotifier.value);
                         },
                       ),
                       ListTile(
