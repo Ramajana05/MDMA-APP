@@ -67,16 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool isMapDataLoaded =
       false; // Add a boolean variable to track if map data is loaded
 
-  List<WeatherItem> weatherForecast = [
-    WeatherItem(
-      weekday: "Freitag",
-      date: DateTime.now().toString(),
-      weatherIcon: "Kein Bild verfügbar",
-      temperature: 20.0,
-      rainPercentage: 42.0,
-      windSpeed: 18.0,
-    ),
-  ];
+  List<WeatherItem> weatherForecast = [];
 
   List<Widget> alertWidgets = []; // Store the alert widgets
 
@@ -104,8 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           maxTemperature = maxTempValue;
         }
 
-        List<WeatherItem> weatherItems =
-            forecastData.skip(1).map<WeatherItem>((item) {
+        List<WeatherItem> weatherItems = forecastData.map<WeatherItem>((item) {
           final maxTemp = (item['day']['maxtemp_c']);
           final rainPercentage =
               (item['day']['daily_chance_of_rain"'] as num?)?.toDouble() ?? 0;

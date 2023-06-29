@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/screen/splashScreen.dart';
-import 'package:forestapp/screen/statisticScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -50,21 +49,19 @@ class MyApp extends StatelessWidget {
         return ChangeNotifierProvider(
             create: (context) => UserProvider(),
             child: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  brightness:
-                      snapshot.data! ? Brightness.dark : Brightness.light,
-                  // Define your light mode theme here
-                  //...
-                ),
-                darkTheme: ThemeData(
-                  brightness: Brightness.dark,
-                  // Define your dark mode theme here
-                  //...
-                ),
-                home:
-                    // SplashScreen(),
-                    StatisticsScreen()));
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                brightness: snapshot.data! ? Brightness.dark : Brightness.light,
+                // Define your light mode theme here
+                //...
+              ),
+              darkTheme: ThemeData(
+                brightness: Brightness.dark,
+                // Define your dark mode theme here
+                //...
+              ),
+              home: SplashScreen(),
+            ));
       },
     );
   }
