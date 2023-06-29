@@ -399,6 +399,7 @@ class _ScanScreen extends State<ScanScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: background,
             title: Row(
               children: [
                 Icon(
@@ -412,7 +413,10 @@ class _ScanScreen extends State<ScanScreen> {
                 ),
               ],
             ),
-            content: Text('Der Sensor existiert nicht.'),
+            content: Text(
+              'Der Sensor existiert nicht.',
+              style: TextStyle(color: black),
+            ),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
