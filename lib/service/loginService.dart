@@ -538,14 +538,17 @@ class LoginService {
       String type) async {
     DateTime now = DateTime.now();
     print(now);
-    DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
+    DateTime yesterday = now.subtract(const Duration(days: 1));
+    DateTime sevenDaysAgo = now.subtract(const Duration(days: 7));
 
     DateFormat dateFormat = DateFormat('yyyyMMdd');
     String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
-    String todayFormatted = dateFormat.format(now);
+    //String todayFormatted = dateFormat.format(now);
+    String yesterdayFormatted = dateFormat.format(yesterday);
+
 
     print("object");
-    print(todayFormatted);
+    //print(todayFormatted);
     try {
       await initializeDateFormatting('de_DE', null);
 
@@ -554,7 +557,7 @@ class LoginService {
       // Query the database
       final statisticWeek = await database.rawQuery(
           'SELECT Date,$type FROM StatisticsDataDay where substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) BETWEEN ? AND ?',
-          [sevenDaysAgoFormatted, todayFormatted]);
+          [sevenDaysAgoFormatted, yesterdayFormatted]);
 
       print('Fetched StatisticsWeek: $statisticWeek');
       DateFormat dateFormat1 = DateFormat('dd.MM.yyyy');
