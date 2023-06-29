@@ -26,7 +26,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   var currentVisitors = 0.0;
-  var maxVisitors = 150;
+  var maxVisitors = 30;
 
   var currentSensors = 0;
   var maxSensors = 0;
