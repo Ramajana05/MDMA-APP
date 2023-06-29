@@ -536,14 +536,16 @@ class LoginService {
   ///fetches the data für a week until today
   Future<List<ChartData>> fetchStatisticDataWeekFromDatabase(
       String type) async {
-    DateTime now = DateTime.now().subtract(const Duration(days: 1));
-
+    DateTime now = DateTime.now();
+    print(now);
     DateTime sevenDaysAgo = now.subtract(const Duration(days: 6));
 
     DateFormat dateFormat = DateFormat('yyyyMMdd');
     String sevenDaysAgoFormatted = dateFormat.format(sevenDaysAgo);
     String todayFormatted = dateFormat.format(now);
 
+    print("object");
+    print(todayFormatted);
     try {
       await initializeDateFormatting('de_DE', null);
 
