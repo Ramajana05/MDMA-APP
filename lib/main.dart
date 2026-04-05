@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:forestapp/colors/appColors.dart';
 import 'package:forestapp/screen/splashScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:forestapp/db/databaseInitializer.dart';
@@ -67,10 +68,8 @@ class MyApp extends StatelessWidget {
   }
 
   Future<bool> checkDarkMode(BuildContext context) async {
-    // final prefs = await SharedPreferences.getInstance();
-    final isFirstStart =
-        // prefs.getBool('isFirstStart') ??
-        true;
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstStart = prefs.getBool('isFirstStart') ?? true;
 
     if (isFirstStart) {
       // First app start, default to light mode
